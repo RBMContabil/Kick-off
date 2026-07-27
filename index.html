@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RBM Contabilidade - Kick-off de Entrada de Cliente</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- Printable A4 Sheet Container (Visible on print, hidden on screen) -->
+  <div id="print-sheet-container"></div>
+
+  <!-- App Wrapper -->
+  <div class="app-container">
+    
+    <!-- Header -->
+    <header class="app-header">
+      <div class="brand">
+        <img src="logo_rbm.png" alt="RBM Logo" class="brand-logo" onerror="this.src='logo_rbm_horizontal.png'; this.onerror=function(){this.style.display='none';}">
+        <div>
+          <div class="brand-title">RBM CONTABILIDADE</div>
+          <div class="brand-subtitle">Kick-off & Onboarding de Clientes</div>
+        </div>
+      </div>
+      <div class="header-actions">
+        <span id="cloud-status-badge" class="cloud-badge offline admin-only" title="Banco de dados local (Offline)" style="display:none;">Local</span>
+        <button class="btn btn-outline btn-sm admin-only" id="btn-cloud-settings" style="color: white; border-color: rgba(255,255,255,0.3); display:none;">
+          <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24" style="margin-right:4px;"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM19 18v-3h-2v3h-2v-3h-2v3H9v-5h10v5h-2z"/></svg>
+          Nuvem
+        </button>
+        <button class="btn btn-accent btn-sm admin-only" id="btn-export-db" style="display:none;">
+          <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM17 13l-5 5-5-5h3V9h4v4h3z"/></svg>
+          Exportar Banco
+        </button>
+        <label for="import-db-file" class="btn btn-outline btn-sm admin-only" style="color: white; border-color: rgba(255,255,255,0.3); margin-bottom:0; cursor:pointer; display:none;">
+          <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM19 15h-3v-4h-4v4H9l5 5 5-5z"/></svg>
+          Importar Banco
+        </label>
+        <input type="file" id="import-db-file" style="display:none;" accept=".json">
+        <button class="btn btn-outline btn-sm" id="btn-admin-toggle" style="color: white; border-color: rgba(255,255,255,0.3);">
+          🔒 Acesso Restrito
+        </button>
+      </div>
+    </header>
+
+    <!-- Navigation Tabs -->
+    <nav class="nav-tabs">
+      <button class="tab-btn active" data-tab="dashboard" id="tab-dashboard-btn">Banco de Dados (Fichas)</button>
+      <button class="tab-btn admin-only" data-tab="formulario" id="tab-formulario-btn" style="display:none;">Nova Ficha / Preenchimento</button>
+    </nav>
+
+    <!-- Main Content Container -->
+    <main class="main-content">
+      
+      <!-- TAB 1: DASHBOARD -->
+      <section id="tab-dashboard" class="tab-content active">
+
+        <!-- AVISO DE TRANSIÇÃO / CONSTITUIÇÃO EM ANDAMENTO (TELA PRINCIPAL) -->
+        <div class="alert-banner" style="margin-bottom: 1.5rem; background-color: #fffbeb; border: 1px solid var(--accent); color: var(--primary); padding: 0.75rem 1.25rem; border-radius: var(--radius-md); font-size: 0.875rem; line-height: 1.5; border-left: 5px solid var(--accent); box-shadow: var(--shadow-sm);">
+          <strong>Nota de Transição & Abertura:</strong> Este sistema compila dados societários e cadastrais provisórios fornecidos preliminarmente para fins de abertura ou migração de contabilidade anterior. Em processos de abertura, nos quais a empresa jurídica ainda não se encontra formalmente constituída, as informações estão sujeitas a revisões e alterações cadastrais ou tributárias posteriores à sua efetiva implantação na RBM Contabilidade.
+        </div>
+        
+        <!-- Metrics -->
+        <div class="metrics-grid">
+          <div class="metric-card">
+            <div class="metric-icon">📋</div>
+            <div class="metric-info">
+              <span class="metric-value" id="metric-total">0</span>
+              <span class="metric-label">Fichas de Kick-off</span>
+            </div>
+          </div>
+          <div class="metric-card simples">
+            <div class="metric-icon">🟢</div>
+            <div class="metric-info">
+              <span class="metric-value" id="metric-simples">0</span>
+              <span class="metric-label">Simples Nacional</span>
+            </div>
+          </div>
+          <div class="metric-card presumido">
+            <div class="metric-icon">🟡</div>
+            <div class="metric-info">
+              <span class="metric-value" id="metric-presumido">0</span>
+              <span class="metric-label">Lucro Presumido</span>
+            </div>
+          </div>
+          <div class="metric-card real">
+            <div class="metric-icon">🔵</div>
+            <div class="metric-info">
+              <span class="metric-value" id="metric-real">0</span>
+              <span class="metric-label">Lucro Real / Outros</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Filter and Action bar -->
+        <div class="db-controls">
+          <div class="search-box">
+            <svg class="search-icon" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin='round' d='M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z'/></svg>
+            <input type="text" id="search-input" placeholder="Pesquisar por Razão Social, CNPJ, Sócio, Colaborador...">
+          </div>
+          <div class="filter-group">
+            <select id="filter-regime" class="filter-select">
+              <option value="">Todos os Regimes</option>
+              <option value="Simples Nacional">Simples Nacional</option>
+              <option value="Lucro Presumido">Lucro Presumido</option>
+              <option value="Lucro Real">Lucro Real</option>
+              <option value="MEI">MEI</option>
+            </select>
+            
+            <label for="import-file" class="btn btn-outline admin-only" style="margin-bottom:0; cursor:pointer; display:none;">
+              <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24" style="margin-right:6px;"><path d="M9 16h6v-6h4l-7-7-7 7h4v6zm-4 2h14v2H5v-2z"/></svg>
+              Importar Ficha (.json)
+            </label>
+            <input type="file" id="import-file" style="display:none;" accept=".json">
+          </div>
+        </div>
+
+        <!-- Table of Clients -->
+        <div class="table-card">
+          <div class="table-responsive">
+            <table>
+              <thead>
+                <tr>
+                  <th>Razão Social / CNPJ</th>
+                  <th>Regime / Atividade</th>
+                  <th>Sócios</th>
+                  <th>Certificado Digital</th>
+                  <th>Data Kick-off / Implantador</th>
+                  <th style="text-align: right;">Ações</th>
+                </tr>
+              </thead>
+              <tbody id="client-table-body">
+                <!-- Dynamically populated -->
+              </tbody>
+            </table>
+          </div>
+          <div id="table-empty-state" class="empty-state" style="display: none;">
+            <div class="empty-state-icon">📂</div>
+            <h3>Nenhum kick-off registrado</h3>
+            <p>Cadastre uma nova ficha na aba ao lado ou importe um arquivo JSON.</p>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- TAB 2: FORM -->
+      <section id="tab-formulario" class="tab-content">
+        
+        <!-- Tela de Sucesso do Cliente -->
+        <div id="success-screen" class="success-card" style="display: none;">
+          <div class="success-icon-wrapper">
+            <div class="success-icon">✓</div>
+          </div>
+          <h2 class="success-title">Formulário Enviado com Sucesso!</h2>
+          <p class="success-message">Agradecemos o preenchimento dos seus dados societários e cadastrais.</p>
+          <p class="success-submessage">As informações foram salvas com segurança na <strong>RBM Contabilidade</strong>. Nossa equipe de onboarding revisará tudo e entrará em contato em breve para dar andamento ao processo de migração ou abertura.</p>
+          <div class="success-badge">Conexão Segura SSL</div>
+          <div class="privacy-badge-note">
+            🛡️ Suas informações estão criptografadas e salvas sob estrita confidencialidade de acordo com a LGPD.
+          </div>
+        </div>
+        
+        <!-- Tela de Boas-vindas e Seleção do Cliente -->
+        <div id="welcome-selection-card" class="welcome-card" style="display: none;">
+          <div class="welcome-logo-wrapper">
+            <img src="logo_rbm.png" alt="RBM Logo" class="welcome-logo" onerror="this.src='logo_rbm_horizontal.png'; this.onerror=function(){this.style.display='none';}">
+          </div>
+          <h2 class="welcome-title">Seja bem-vindo à RBM Contabilidade!</h2>
+          <p class="welcome-subtitle">Para darmos início ao seu processo societário e de onboarding, selecione uma das opções abaixo para preenchimento da ficha cadastral:</p>
+          
+          <div class="selection-buttons-grid">
+            <button type="button" class="btn-selection" id="btn-select-abertura">
+              <span class="btn-selection-icon">🏢</span>
+              <span class="btn-selection-title">Abrir uma Nova Empresa</span>
+              <span class="btn-selection-desc">Quero registrar um novo CNPJ do zero com a RBM</span>
+            </button>
+            
+            <button type="button" class="btn-selection" id="btn-select-migracao">
+              <span class="btn-selection-icon">🔄</span>
+              <span class="btn-selection-title">Trazer minha Empresa (Migração)</span>
+              <span class="btn-selection-desc">Já tenho empresa e quero transferir a contabilidade para a RBM</span>
+            </button>
+          </div>
+          <div class="privacy-notice">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; margin-right: 6px; color: var(--accent); flex-shrink: 0;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+            <span><strong>Privacidade & Segurança:</strong> Suas informações são tratadas sob estrito sigilo profissional e em total conformidade com a Lei Geral de Proteção de Dados (LGPD). A conexão é criptografada e segura, impedindo qualquer vazamento.</span>
+          </div>
+        </div>
+
+        <div class="form-card" style="display: none;">
+          <div class="form-header-area">
+            <h2 id="form-action-title">Novo Kick-off de Entrada</h2>
+            <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 0.25rem;">Preencha todos os dados essenciais abaixo. Ao concluir, salve para o banco e exporte para a pasta do cliente.</p>
+            <div class="alert-banner" style="margin-top: 1rem; background-color: #fffbeb; border: 1px solid var(--accent); color: var(--primary); padding: 0.75rem 1rem; border-radius: var(--radius-sm); font-size: 0.85rem; line-height: 1.45; border-left: 4px solid var(--accent);">
+              <strong>Nota de Transição & Abertura:</strong> Este documento compila dados societários e cadastrais provisórios fornecidos preliminarmente para fins de abertura ou migração de contabilidade anterior. Em processos de abertura, a empresa jurídica pode não estar totalmente constituída no momento deste preenchimento, estando sujeita a revisões societárias ou tributárias posteriores à sua efetiva implantação na RBM Contabilidade.
+            </div>
+          </div>
+
+          <form id="kickoff-form" autocomplete="off">
+            <input type="hidden" id="edit-client-id" value="">
+
+            <!-- SEÇÃO 1: DADOS DA EMPRESA -->
+            <div class="form-section">
+              <div class="section-header">
+                <span class="section-number">1</span>
+                <h3 class="section-title">Dados da Empresa</h3>
+              </div>
+              <div class="grid-3">
+                <div class="form-group full-width-2">
+                  <label for="company-razao-social">Razão Social</label>
+                  <input type="text" id="company-razao-social" placeholder="Ex: RBM Contabilidade S/S Ltda">
+                </div>
+                <div class="form-group">
+                  <label for="company-nome-fantasia">Nome Fantasia</label>
+                  <input type="text" id="company-nome-fantasia" placeholder="Nome Comercial da Empresa">
+                </div>
+                <div class="form-group">
+                  <label for="company-cnpj">CNPJ</label>
+                  <input type="text" id="company-cnpj" placeholder="00.000.000/0000-00">
+                </div>
+                <div class="form-group">
+                  <label for="company-regime">Regime Tributário</label>
+                  <select id="company-regime">
+                    <option value="" disabled selected>Selecione...</option>
+                    <option value="Simples Nacional">Simples Nacional</option>
+                    <option value="Lucro Presumido">Lucro Presumido</option>
+                    <option value="Lucro Real">Lucro Real</option>
+                    <option value="MEI">MEI</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="company-telefone">Telefone de Contato</label>
+                  <input type="text" id="company-telefone" placeholder="(00) 00000-0000">
+                </div>
+                <div class="form-group full-width-2">
+                  <label for="company-email">E-mail da Empresa</label>
+                  <input type="email" id="company-email" placeholder="financeiro@empresa.com.br">
+                </div>
+                <div class="form-group full-width-3" style="grid-column: span 3; background-color: #f8fafc; border: 1px solid var(--border); padding: 10px; border-radius: 6px; margin-top: 5px;">
+                  <label style="display: block; font-weight: 700; color: var(--primary); margin-bottom: 4px;">A empresa será subestabelecida?</label>
+                  <div style="display: flex; gap: 20px; align-items: center;">
+                    <label style="display: flex; align-items: center; gap: 6px; cursor: pointer;">
+                      <input type="radio" name="company-subestablished" id="company-subestablished-yes" value="Sim" style="cursor: pointer;">
+                      <span>Sim</span>
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 6px; cursor: pointer;">
+                      <input type="radio" name="company-subestablished" id="company-subestablished-no" value="Não" checked style="cursor: pointer;">
+                      <span>Não</span>
+                    </label>
+                  </div>
+                  <small style="color: var(--text-muted); display: block; margin-top: 6px; font-size: 0.75rem; line-height: 1.35;">
+                    💡 <strong>O que é Subestabelecida?</strong> Significa que a empresa funcionará compartilhando o espaço físico ou endereço fiscal de outra entidade (ex: escritório virtual, coworking, caixa postal ou sede de parceiros).
+                  </small>
+                </div>
+              </div>
+
+              <!-- Endereço -->
+              <h4 class="sub-section-title" style="margin-top:1.5rem;">Endereço</h4>
+              <div class="grid-4">
+                <div class="form-group">
+                  <label for="address-cep">CEP</label>
+                  <div class="cep-input-group">
+                    <input type="text" id="address-cep" placeholder="00000-000">
+                    <button type="button" class="btn btn-outline btn-sm" id="btn-search-cep">Buscar</button>
+                  </div>
+                </div>
+                <div class="form-group full-width-2">
+                  <label for="address-logradouro">Logradouro</label>
+                  <input type="text" id="address-logradouro" placeholder="Rua, Avenida, etc.">
+                </div>
+                <div class="form-group">
+                  <label for="address-numero">Número</label>
+                  <input type="text" id="address-numero" placeholder="Ex: 123">
+                </div>
+                <div class="form-group">
+                  <label for="address-complemento">Complemento</label>
+                  <input type="text" id="address-complemento" placeholder="Sala, Bloco, etc.">
+                </div>
+                <div class="form-group">
+                  <label for="address-bairro">Bairro</label>
+                  <input type="text" id="address-bairro">
+                </div>
+                <div class="form-group">
+                  <label for="address-cidade">Cidade</label>
+                  <input type="text" id="address-cidade">
+                </div>
+                <div class="form-group">
+                  <label for="address-uf">UF</label>
+                  <input type="text" id="address-uf" maxlength="2" style="text-transform: uppercase;">
+                </div>
+              </div>
+
+              <!-- Documentos da Empresa (Anexos adicionais) -->
+              <h4 class="sub-section-title" style="margin-top:1.5rem;">Documentos da Empresa (Anexos Opcionais)</h4>
+              <div class="grid-2">
+                <div class="form-group">
+                  <label for="company-proof-address-file">Comprovante de Endereço da Empresa (PDF ou Imagem)</label>
+                  <div class="file-upload-box">
+                    <input type="file" id="company-proof-address-file" class="file-input" accept="image/*,application/pdf">
+                    <div class="file-upload-label">
+                      <span>Clique para anexar comprovante</span>
+                      <small class="file-status" id="company-proof-address-file-status">Nenhum arquivo anexado</small>
+                    </div>
+                    <button type="button" class="btn btn-outline btn-sm btn-clear-file" id="btn-clear-company-proof-address" style="display:none;">Remover</button>
+                    <a href="#" class="btn btn-accent btn-sm btn-download-file" id="btn-download-company-proof-address" style="display:none;" target="_blank">Baixar</a>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="company-iptu-file">Cópia do IPTU do Imóvel (PDF ou Imagem)</label>
+                  <div class="file-upload-box">
+                    <input type="file" id="company-iptu-file" class="file-input" accept="image/*,application/pdf">
+                    <div class="file-upload-label">
+                      <span>Clique para anexar IPTU</span>
+                      <small class="file-status" id="company-iptu-file-status">Nenhum arquivo anexado</small>
+                    </div>
+                    <button type="button" class="btn btn-outline btn-sm btn-clear-file" id="btn-clear-company-iptu" style="display:none;">Remover</button>
+                    <a href="#" class="btn btn-accent btn-sm btn-download-file" id="btn-download-company-iptu" style="display:none;" target="_blank">Baixar</a>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Contabilidade Anterior (Transição) -->
+              <h4 class="sub-section-title" style="margin-top:1.5rem;">Contabilidade Anterior (Transição)</h4>
+              <div class="grid-3">
+                <div class="form-group">
+                  <label>Tipo de Entrada / Origem</label>
+                  <div class="radio-group">
+                    <label class="radio-label">
+                      <input type="radio" name="prev-accounting-has" value="Nova" checked>
+                      <span>Empresa Nova (Abertura)</span>
+                    </label>
+                    <label class="radio-label">
+                      <input type="radio" name="prev-accounting-has" value="Migração">
+                      <span>Migração</span>
+                    </label>
+                  </div>
+                </div>
+                <div class="form-group prev-accounting-fields" style="display:none;">
+                  <label for="prev-accounting-name">Nome da Contabilidade Anterior</label>
+                  <input type="text" id="prev-accounting-name" placeholder="Ex: ABC Contabilidade">
+                </div>
+                <div class="form-group prev-accounting-fields" style="display:none;">
+                  <label for="prev-accounting-phone">Telefone de Contato</label>
+                  <input type="text" id="prev-accounting-phone" placeholder="(00) 00000-0000">
+                </div>
+                <div class="form-group prev-accounting-fields" style="display:none; grid-column: span 3;">
+                  <label for="prev-accounting-contact">Nome do Contato na Contabilidade</label>
+                  <input type="text" id="prev-accounting-contact" placeholder="Ex: Maria (Transição de Contas)">
+                </div>
+              </div>
+            </div>
+
+            <!-- SEÇÃO 2: ATIVIDADE DA EMPRESA -->
+            <div class="form-section">
+              <div class="section-header">
+                <span class="section-number">2</span>
+                <h3 class="section-title">Atividade da Empresa</h3>
+              </div>
+              <div class="grid-2">
+                <div class="form-group full-width">
+                  <label for="activity-desc">Descrição Detalhada da Atividade (O que a empresa realmente faz)</label>
+                  <textarea id="activity-desc" rows="3" placeholder="Descreva os serviços prestados ou comércio realizado pelo cliente..."></textarea>
+                </div>
+                <div class="form-group">
+                  <label for="activity-cnae">CNAE Principal</label>
+                  <input type="text" id="activity-cnae" placeholder="Ex: 6201-5/01">
+                </div>
+                <div class="form-group">
+                  <label for="activity-cnaes-file">Relatório Completo de CNAEs (PDF ou Imagem)</label>
+                  <div class="file-upload-box">
+                    <input type="file" id="activity-cnaes-file" class="file-input" accept="image/*,application/pdf">
+                    <div class="file-upload-label">
+                      <span>Clique para anexar arquivo</span>
+                      <small class="file-status" id="cnaes-file-status">Nenhum arquivo anexado</small>
+                    </div>
+                    <button type="button" class="btn btn-outline btn-sm btn-clear-file" id="btn-clear-cnaes-file" style="display:none;">Remover</button>
+                    <a href="#" class="btn btn-accent btn-sm btn-download-file" id="btn-download-cnaes-file" style="display:none;" target="_blank">Baixar</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- SEÇÃO 3: DADOS DOS SÓCIOS -->
+            <div class="form-section">
+              <div class="section-header">
+                <span class="section-number">3</span>
+                <h3 class="section-title">Dados dos Sócios</h3>
+                <button type="button" class="btn btn-outline btn-sm" id="btn-add-partner" style="margin-left: auto;">+ Adicionar Sócio</button>
+              </div>
+              <div id="partners-container">
+                <!-- Dynamic Partner Cards will go here -->
+              </div>
+            </div>
+
+            <!-- SEÇÃO 4: FUNCIONÁRIOS -->
+            <div class="form-section">
+              <div class="section-header">
+                <span class="section-number">4</span>
+                <h3 class="section-title">Funcionários</h3>
+              </div>
+              <div class="grid-3">
+                <div class="form-group">
+                  <label for="employees-qty">Quantidade de Funcionários</label>
+                  <input type="number" id="employees-qty" min="0" value="0">
+                </div>
+              </div>
+            </div>
+
+            <!-- SEÇÃO 5: CERTIFICADO DIGITAL -->
+            <div class="form-section">
+              <div class="section-header">
+                <span class="section-number">5</span>
+                <h3 class="section-title">Certificado Digital</h3>
+              </div>
+              <div class="grid-3">
+                <div class="form-group">
+                  <label>Possui Certificado Digital?</label>
+                  <div class="radio-group">
+                    <label class="radio-label">
+                      <input type="radio" name="cert-has" value="Sim">
+                      <span>Sim</span>
+                    </label>
+                    <label class="radio-label">
+                      <input type="radio" name="cert-has" value="Não" checked>
+                      <span>Não</span>
+                    </label>
+                  </div>
+                </div>
+                <div class="form-group cert-fields" style="display:none;">
+                  <label for="cert-type">Tipo do Certificado</label>
+                  <select id="cert-type">
+                    <option value="" disabled selected>Selecione...</option>
+                    <option value="A1 (Arquivo)">A1 (Arquivo)</option>
+                    <option value="A3 (Cartão/Token)">A3 (Cartão/Token)</option>
+                  </select>
+                </div>
+                <div class="form-group cert-fields" style="display:none;">
+                  <label for="cert-validity">Validade do Certificado</label>
+                  <input type="date" id="cert-validity">
+                </div>
+              </div>
+            </div>
+
+            <!-- SEÇÃO 6: SENHAS DE ACESSO (ÁREA FISCAL) -->
+            <div class="form-section">
+              <div class="section-header">
+                <span class="section-number">6</span>
+                <h3 class="section-title">Senhas de Acesso (Área Fiscal)</h3>
+              </div>
+              <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:1rem;">Preencha as senhas de acesso municipais, estaduais e federais da empresa, se aplicável (campos opcionais).</p>
+              
+              <div class="grid-3" style="margin-bottom:1rem;">
+                <div class="form-group">
+                  <label for="fiscal-pwd-web">Senha Web / Nota do Milhão (Municipal)</label>
+                  <input type="text" id="fiscal-pwd-web" placeholder="Senha Nota do Milhão/Senha Web">
+                </div>
+                <div class="form-group">
+                  <label for="fiscal-pwd-prodigi">PRODIGI (Municipal)</label>
+                  <input type="text" id="fiscal-pwd-prodigi" placeholder="Senha PRODIGI">
+                </div>
+                <div class="form-group">
+                  <label for="fiscal-pwd-ginfes">GINFES (Municipal)</label>
+                  <input type="text" id="fiscal-pwd-ginfes" placeholder="Senha GINFES">
+                </div>
+              </div>
+              
+              <div class="grid-3" style="margin-bottom:1rem;">
+                <div class="form-group">
+                  <label for="fiscal-pwd-giss">GISS (Municipal)</label>
+                  <input type="text" id="fiscal-pwd-giss" placeholder="Senha GISS">
+                </div>
+                <div class="form-group">
+                  <label for="fiscal-pwd-simples">Senha Simples Nacional</label>
+                  <input type="text" id="fiscal-pwd-simples" placeholder="Senha / Código Simples Nacional">
+                </div>
+                <div class="form-group">
+                  <label for="fiscal-pwd-state">Senha Estadual (Posto Fiscal)</label>
+                  <input type="text" id="fiscal-pwd-state" placeholder="Senha Posto Fiscal / Estadual">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="fiscal-pwd-others">Outras Senhas Pertinentes</label>
+                <textarea id="fiscal-pwd-others" rows="2" placeholder="Insira outras senhas relevantes (ex: Conectividade Social, senha gov.br, cadastros municipais adicionais)..."></textarea>
+              </div>
+            </div>
+
+            <!-- SEÇÃO 7: DATA, IMPLANTADOR E ASSINATURA -->
+            <div id="form-section-7" class="form-section" style="border-bottom:none; margin-bottom:0;">
+              <div class="section-header">
+                <span class="section-number">7</span>
+                <h3 class="section-title">Dados de Implantação e Assinatura</h3>
+              </div>
+              <div class="grid-3">
+                <div class="form-group">
+                  <label for="kickoff-date">Data do Kick-off</label>
+                  <input type="date" id="kickoff-date">
+                </div>
+                <div class="form-group">
+                  <label for="kickoff-user">Colaborador Responsável (RBM)</label>
+                  <input type="text" id="kickoff-user" placeholder="Nome de quem fez a implantação">
+                </div>
+
+              </div>
+              <div class="form-group" style="margin-top: 1.25rem;">
+                <label for="implantation-notes">Observações Internas (Uso Exclusivo RBM)</label>
+                <textarea id="implantation-notes" rows="3" placeholder="Insira observações relevantes sobre o cliente ou implantação (ex: funcionários informais/por fora, pendências específicas, acordos especiais)..."></textarea>
+              </div>
+            </div>
+
+            <!-- Action buttons -->
+            <div class="form-actions">
+              <button type="button" class="btn btn-outline" id="btn-cancel-form">Cancelar</button>
+              <button type="submit" class="btn btn-primary" id="btn-save-client">Salvar no Banco</button>
+            </div>
+
+          </form>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+      <p>&copy; 2026 RBM Contabilidade. Todos os direitos reservados. Desenvolvimento Premium.</p>
+    </footer>
+
+  </div>
+
+  <!-- Modal de Configurações da Nuvem -->
+  <div id="cloud-modal" class="modal-overlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:2000; align-items:center; justify-content:center;">
+    <div class="modal-content" style="background:white; padding:2rem; border-radius:12px; width:450px; box-shadow:0 10px 25px rgba(0,0,0,0.15); border: 2px solid var(--border); position:relative; box-sizing:border-box;">
+      <h3 style="margin-top:0; color:var(--primary); font-size:1.15rem; font-weight:700; margin-bottom:1rem; border-bottom:2px solid var(--accent); padding-bottom:8px;">Configurações de Sincronização em Nuvem (Supabase)</h3>
+      <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:1.25rem; line-height:1.4;">Preencha com as credenciais do seu projeto gratuito no Supabase para sincronizar as fichas online em tempo real.</p>
+      
+      <div class="form-group" style="margin-bottom:12px;">
+        <label for="cloud-supabase-url" style="display:block; font-size:0.75rem; font-weight:700; margin-bottom:4px; color:var(--primary);">URL do Supabase</label>
+        <input type="text" id="cloud-supabase-url" placeholder="Ex: https://xyz.supabase.co" style="width:100%; padding:8px; border:1px solid var(--border); border-radius:6px; font-size:0.85rem; box-sizing:border-box;">
+      </div>
+      
+      <div class="form-group" style="margin-bottom:12px;">
+        <label for="cloud-supabase-key" style="display:block; font-size:0.75rem; font-weight:700; margin-bottom:4px; color:var(--primary);">Chave Pública Anon (Anon Key)</label>
+        <input type="text" id="cloud-supabase-key" placeholder="Ex: eyJhbGciOiJIUzI1NiIsIn..." style="width:100%; padding:8px; border:1px solid var(--border); border-radius:6px; font-size:0.85rem; box-sizing:border-box;">
+      </div>
+
+      <div class="form-group" style="margin-bottom:1.5rem;">
+        <label style="display:flex; align-items:center; gap:0.5rem; cursor:pointer; font-size:0.8rem; font-weight:600; color:var(--primary);">
+          <input type="checkbox" id="cloud-active-checkbox">
+          <span>Ativar Sincronização em Nuvem</span>
+        </label>
+      </div>
+
+      <div style="display:flex; justify-content:flex-end; gap:8px;">
+        <button type="button" class="btn btn-outline btn-sm" id="btn-close-cloud-modal">Cancelar</button>
+        <button type="button" class="btn btn-primary btn-sm" id="btn-save-cloud-settings">Salvar Configurações</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de Acesso Restrito (Admin) -->
+  <div id="admin-modal" class="modal-overlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:2000; align-items:center; justify-content:center;">
+    <div class="modal-content" style="background:white; padding:2rem; border-radius:12px; width:360px; box-shadow:0 10px 25px rgba(0,0,0,0.15); border: 2px solid var(--border); position:relative; box-sizing:border-box;">
+      <h3 style="margin-top:0; color:var(--primary); font-size:1.15rem; font-weight:700; margin-bottom:0.75rem; border-bottom:2px solid var(--accent); padding-bottom:8px;">Acesso Restrito - Admin</h3>
+      <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:1.25rem; line-height:1.4;">Digite a senha do administrador para habilitar o preenchimento, edição, exclusão e configurações de nuvem.</p>
+      
+      <div class="form-group" style="margin-bottom:1.5rem;">
+        <label for="admin-password-input" style="display:block; font-size:0.75rem; font-weight:700; margin-bottom:4px; color:var(--primary);">Senha de Acesso</label>
+        <input type="password" id="admin-password-input" placeholder="Digite a senha..." style="width:100%; padding:8px; border:1px solid var(--border); border-radius:6px; font-size:0.85rem; box-sizing:border-box;">
+      </div>
+
+      <div style="display:flex; justify-content:flex-end; gap:8px;">
+        <button type="button" class="btn btn-outline btn-sm" id="btn-close-admin-modal">Cancelar</button>
+        <button type="button" class="btn btn-primary btn-sm" id="btn-login-admin">Acessar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de Visualização da Ficha do Cliente -->
+  <div id="view-client-modal" class="modal-overlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:2000; align-items:center; justify-content:center; overflow-y:auto; padding:20px 10px; box-sizing:border-box;">
+    <div class="modal-content" style="background:white; padding:1.75rem; border-radius:12px; width:100%; max-width:850px; max-height:90vh; overflow-y:auto; box-shadow:0 15px 35px rgba(0,0,0,0.25); border: 2px solid var(--border); position:relative; box-sizing:border-box; margin:auto;">
+      <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid var(--accent); padding-bottom:10px; margin-bottom:15px;">
+        <h3 id="view-modal-company-title" style="margin:0; color:var(--primary); font-size:1.25rem; font-weight:700;">Ficha de Kick-off do Cliente</h3>
+        <button type="button" id="btn-close-view-modal" style="background:none; border:none; font-size:1.5rem; font-weight:bold; cursor:pointer; color:var(--text-muted);">&times;</button>
+      </div>
+
+      <div id="view-modal-body" style="font-size:0.85rem; color:var(--text); line-height:1.5;">
+        <!-- Preenchido dinamicamente via JS -->
+      </div>
+
+      <div style="display:flex; justify-content:flex-end; gap:8px; border-top:1px solid var(--border); padding-top:12px; margin-top:15px;">
+        <button type="button" class="btn btn-outline btn-sm" id="btn-close-view-modal-bottom">Fechar</button>
+        <button type="button" class="btn btn-accent btn-sm" id="btn-view-modal-json">Baixar JSON</button>
+        <button type="button" class="btn btn-primary btn-sm" id="btn-view-modal-pdf">Gerar PDF / Imprimir</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
