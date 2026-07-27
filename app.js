@@ -44,12 +44,8 @@ function getCloudConfig() {
 
 // --- CONFIGURAÇÃO E IDENTIFICAÇÃO DO MODO CLIENTE ---
 function checkClientMode() {
-  // Se o administrador estiver logado, NÃO é modo cliente
-  if (checkAdminStatus()) {
-    return false;
-  }
-  // Se não estiver logado, entra em modo cliente seguro por padrão
-  return true;
+  const params = new URLSearchParams(window.location.search);
+  return (params.get('mode') === 'client' || params.get('cliente') === 'true');
 }
 
 function applyClientMode() {

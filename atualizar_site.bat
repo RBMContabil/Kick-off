@@ -18,15 +18,15 @@ if %errorlevel% neq 0 (
 
 cd /d "%~dp0"
 
+:: URL do repositorio ja salva para automacao total
+set repo_url=https://github.com/RBMContabil/Kick-off.git
+
 if exist ".git" goto :run_update
 
 echo [AVISO] Esta pasta ainda nao esta conectada ao GitHub.
-echo Vamos configurar a conexao agora!
+echo Configurando a conexao automaticamente...
 echo.
-set /p repo_url="Cole aqui o link do seu repositorio do GitHub: "
 
-echo.
-echo Configurando o repositorio local...
 git init
 git add .
 git commit -m "Configuracao inicial RBM"
@@ -34,7 +34,8 @@ git branch -M main
 git remote add origin %repo_url%
 
 echo.
-echo Enviando arquivos...
+echo Enviando arquivos pela primeira vez...
+echo (Pode aparecer uma janela do navegador para autorizar o acesso).
 git push -u origin main
 
 if %errorlevel% equ 0 (
