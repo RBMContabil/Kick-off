@@ -140,6 +140,135 @@ async function sendEmailNotification(kickoff) {
   }
 }
 
+// --- AUTO-SALVAMENTO DE RASCUNHO (CLIENTE) ---
+function saveFormDraft() {
+  if (!checkClientMode()) return; // So salva rascunho em modo cliente
+
+  const draftData = {
+    company: {
+      razaoSocial: document.getElementById('company-razao-social').value,
+      nomeFantasia: document.getElementById('company-nome-fantasia').value,
+      cnpj: document.getElementById('company-cnpj').value,
+      regime: document.getElementById('company-regime').value,
+      telefone: document.getElementById('company-telefone').value,
+      email: document.getElementById('company-email').value,
+      cep: document.getElementById('address-cep').value,
+      logradouro: document.getElementById('address-logradouro').value,
+      numero: document.getElementById('address-numero').value,
+      complemento: document.getElementById('address-complemento').value,
+      bairro: document.getElementById('address-bairro').value,
+      cidade: document.getElementById('address-cidade').value,
+      uf: document.getElementById('address-uf').value,
+      prevAccountingHas: document.querySelector('input[name="prev-accounting-has"]:checked') ? document.querySelector('input[name="prev-accounting-has"]:checked').value : 'Nova',
+      prevAccountingName: document.getElementById('prev-accounting-name').value,
+      prevAccountingPhone: document.getElementById('prev-accounting-phone').value,
+      prevAccountingContact: document.getElementById('prev-accounting-contact').value,
+      subestablished: document.querySelector('input[name="company-subestablished"]:checked') ? document.querySelector('input[name="company-subestablished"]:checked').value : 'Não'
+    },
+    activity: {
+      desc: document.getElementById('activity-desc').value,
+      cnae: document.getElementById('activity-cnae').value
+    },
+    employeesQty: document.getElementById('employees-qty').value,
+    certificate: {
+      has: document.querySelector('input[name="cert-has"]:checked') ? document.querySelector('input[name="cert-has"]:checked').value : 'Não',
+      type: document.getElementById('cert-type').value,
+      validity: document.getElementById('cert-validity').value
+    },
+    fiscalPasswords: {
+      web: document.getElementById('fiscal-pwd-web').value,
+      prodigi: document.getElementById('fiscal-pwd-prodigi').value,
+      ginfes: document.getElementById('fiscal-pwd-ginfes').value,
+      giss: document.getElementById('fiscal-pwd-giss').value,
+      simples: document.getElementById('fiscal-pwd-simples').value,
+      state: document.getElementById('fiscal-pwd-state').value,
+      others: document.getElementById('fiscal-pwd-others').value
+    }
+  };
+
+  localStorage.setItem('rbm_kickoff_draft', JSON.stringify(draftData));
+}
+
+function loadFormDraft() {
+  if (!checkClientMode()) return;
+  const raw = localStorage.getItem('rbm_kickoff_draft');
+  if (!raw) return;
+
+  try {
+    const draft = JSON.parse(raw);
+    if (!draft) return;
+
+    if (draft.company) {
+      document.getElementById('company-razao-social').value = draft.company.razaoSocial || '';
+      document.getElementById('company-nome-fantasia').value = draft.company.nomeFantasia || '';
+      document.getElementById('company-cnpj').value = draft.company.cnpj || '';
+      if (draft.company.regime) document.getElementById('company-regime').value = draft.company.regime;
+      document.getElementById('company-telefone').value = draft.company.telefone || '';
+      document.getElementById('company-email').value = draft.company.email || '';
+      document.getElementById('address-cep').value = draft.company.cep || '';
+      document.getElementById('address-logradouro').value = draft.company.logradouro || '';
+      document.getElementById('address-numero').value = draft.company.numero || '';
+      document.getElementById('address-complemento').value = draft.company.complemento || '';
+      document.getElementById('address-bairro').value = draft.company.bairro || '';
+      document.getElementById('address-cidade').value = draft.company.cidade || '';
+      document.getElementById('address-uf').value = draft.company.uf || '';
+
+      if (draft.company.prevAccountingHas) {
+        const rad = document.querySelector(`input[name="prev-accounting-has"][value="${draft.company.prevAccountingHas}"]`);
+        if (rad) {
+          rad.checked = true;
+          rad.dispatchEvent(new Event('change'));
+        }
+      }
+      document.getElementById('prev-accounting-name').value = draft.company.prevAccountingName || '';
+      document.getElementById('prev-accounting-phone').value = draft.company.prevAccountingPhone || '';
+      document.getElementById('prev-accounting-contact').value = draft.company.prevAccountingContact || '';
+
+      if (draft.company.subestablished) {
+        const radSub = document.querySelector(`input[name="company-subestablished"][value="${draft.company.subestablished}"]`);
+        if (radSub) radSub.checked = true;
+      }
+    }
+
+    if (draft.activity) {
+      document.getElementById('activity-desc').value = draft.activity.desc || '';
+      document.getElementById('activity-cnae').value = draft.activity.cnae || '';
+    }
+
+    if (draft.employeesQty) {
+      document.getElementById('employees-qty').value = draft.employeesQty;
+    }
+
+    if (draft.certificate) {
+      if (draft.certificate.has) {
+        const radCert = document.querySelector(`input[name="cert-has"][value="${draft.certificate.has}"]`);
+        if (radCert) {
+          radCert.checked = true;
+          radCert.dispatchEvent(new Event('change'));
+        }
+      }
+      if (draft.certificate.type) document.getElementById('cert-type').value = draft.certificate.type;
+      if (draft.certificate.validity) document.getElementById('cert-validity').value = draft.certificate.validity;
+    }
+
+    if (draft.fiscalPasswords) {
+      document.getElementById('fiscal-pwd-web').value = draft.fiscalPasswords.web || '';
+      document.getElementById('fiscal-pwd-prodigi').value = draft.fiscalPasswords.prodigi || '';
+      document.getElementById('fiscal-pwd-ginfes').value = draft.fiscalPasswords.ginfes || '';
+      document.getElementById('fiscal-pwd-giss').value = draft.fiscalPasswords.giss || '';
+      document.getElementById('fiscal-pwd-simples').value = draft.fiscalPasswords.simples || '';
+      document.getElementById('fiscal-pwd-state').value = draft.fiscalPasswords.state || '';
+      document.getElementById('fiscal-pwd-others').value = draft.fiscalPasswords.others || '';
+    }
+  } catch (err) {
+    console.error("Erro ao carregar rascunho:", err);
+  }
+}
+
+function clearFormDraft() {
+  localStorage.removeItem('rbm_kickoff_draft');
+}
+
 // --- 1. BANCO DE DADOS INDEXEDDB ---
 function initDatabase() {
   return new Promise((resolve, reject) => {
@@ -288,6 +417,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       applyClientMode();
       resetForm();
       switchTab('formulario');
+      loadFormDraft();
     } else {
       await updateCloudStatusUI();
       await seedDemoDataIfEmpty();
@@ -497,6 +627,13 @@ function setupEventListeners() {
   // View Modal close triggers
   document.getElementById('btn-close-view-modal').addEventListener('click', closeViewModal);
   document.getElementById('btn-close-view-modal-bottom').addEventListener('click', closeViewModal);
+
+  // Auto-salvamento de rascunhos para o cliente
+  const kickoffForm = document.getElementById('kickoff-form');
+  if (kickoffForm) {
+    kickoffForm.addEventListener('input', saveFormDraft);
+    kickoffForm.addEventListener('change', saveFormDraft);
+  }
 
   // Input masks binding
   bindMasks();
@@ -1506,6 +1643,9 @@ async function handleFormSubmit(e) {
 
   try {
     await dbSave(kickoffData);
+    
+    // Limpa o rascunho temporario do cliente apos enviar com sucesso
+    clearFormDraft();
     
     // Tenta enviar a notificacao por e-mail (se configurado)
     await sendEmailNotification(kickoffData);

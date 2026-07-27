@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40">
+<head>
+  <meta charset="utf-8">
+  <title>Ficha de Kick-off - RBM Contabilidade</title>
+  <!--[if gte mso 9]>
+  <xml>
+    <w:WordDocument>
+      <w:View>Print</w:View>
+      <w:Zoom>100</w:Zoom>
+    </w:WordDocument>
+  </xml>
+  <![endif]-->
+  <style>
+    body {
+      font-family: 'Calibri', 'Arial', sans-serif;
+      color: #333333;
+      line-height: 1.4;
+      margin: 20px;
+    }
+    h1 {
+      color: #0f2042;
+      font-size: 18pt;
+      margin-bottom: 5px;
+      border-bottom: 2px solid #cfa153;
+      padding-bottom: 5px;
+    }
+    h2 {
+      color: #0f2042;
+      font-size: 14pt;
+      margin-top: 20px;
+      margin-bottom: 10px;
+      background-color: #f0f4f8;
+      padding: 6px;
+      border-left: 4px solid #cfa153;
+    }
+    p.instruction {
+      font-size: 10pt;
+      color: #555555;
+      font-style: italic;
+      margin-bottom: 15px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 15px;
+    }
+    th, td {
+      border: 1px solid #cccccc;
+      padding: 8px;
+      font-size: 10.5pt;
+      vertical-align: top;
+    }
+    th {
+      background-color: #f7fafc;
+      font-weight: bold;
+      color: #0f2042;
+      text-align: left;
+      width: 30%;
+    }
+    td.input-field {
+      background-color: #ffffff;
+      color: #2b6cb0;
+    }
+    .note-box {
+      background-color: #fffbeb;
+      border: 1px solid #cfa153;
+      padding: 10px;
+      font-size: 9.5pt;
+      margin-bottom: 15px;
+      border-left: 4px solid #cfa153;
+    }
+  </style>
+</head>
+<body>
+
+  <div style="text-align: center; margin-bottom: 20px;">
+    <h1 style="border: none; margin-bottom: 2px;">RBM CONTABILIDADE</h1>
+    <span style="font-size: 12pt; font-weight: bold; color: #555555;">Ficha Cadastral e Societária de Kick-off</span>
+  </div>
+
+  <div class="note-box">
+    <strong>Prezado Cliente,</strong><br>
+    Por favor, preencha as informações abaixo diretamente no arquivo utilizando o Word no seu computador. Ao terminar, salve o documento e envie-o de volta para a RBM Contabilidade juntamente com as cópias em PDF dos documentos solicitados (CNH/RG, Comprovante de Endereço e IPTU).
+  </div>
+
+  <h2>1. Dados da Empresa</h2>
+  <p class="instruction">Se a sua empresa for nova (Abertura), informe os dados desejados e deixe o CNPJ em branco.</p>
+  <table>
+    <tr>
+      <th>Tipo de Processo:</th>
+      <td class="input-field">[ ] Abertura de Nova Empresa  /  [ ] Migração de Contabilidade Anterior</td>
+    </tr>
+    <tr>
+      <th>Razão Social Sugerida/Atual:</th>
+      <td class="input-field">[ Digite aqui a Razão Social ]</td>
+    </tr>
+    <tr>
+      <th>Nome Fantasia:</th>
+      <td class="input-field">[ Digite aqui o Nome Fantasia ]</td>
+    </tr>
+    <tr>
+      <th>CNPJ (se já existir):</th>
+      <td class="input-field">[ Digite aqui o CNPJ ]</td>
+    </tr>
+    <tr>
+      <th>Regime Tributário Pretendido:</th>
+      <td class="input-field">[ ] Simples Nacional  /  [ ] Lucro Presumido  /  [ ] Lucro Real  /  [ ] MEI</td>
+    </tr>
+    <tr>
+      <th>Telefone de Contato:</th>
+      <td class="input-field">[ Digite aqui o Telefone ]</td>
+    </tr>
+    <tr>
+      <th>E-mail Principal:</th>
+      <td class="input-field">[ Digite aqui o E-mail ]</td>
+    </tr>
+    <tr>
+      <th>A empresa será Subestabelecida?<br><span style="font-size: 8pt; font-weight: normal; color: #666;">(Usará endereço fiscal de coworking/escritório virtual)</span></th>
+      <td class="input-field">[ ] Sim (Subestabelecida)<br>[ ] Não (Endereço poderá ser o da minha própria residência)</td>
+    </tr>
+  </table>
+
+  <h2>2. Endereço da Empresa</h2>
+  <table>
+    <tr>
+      <th>CEP:</th>
+      <td class="input-field">[ Digite o CEP ]</td>
+    </tr>
+    <tr>
+      <th>Logradouro (Rua, Av):</th>
+      <td class="input-field">[ Digite o Logradouro ]</td>
+    </tr>
+    <tr>
+      <th>Número e Complemento:</th>
+      <td class="input-field">[ Digite o Número / Bloco / Sala ]</td>
+    </tr>
+    <tr>
+      <th>Bairro:</th>
+      <td class="input-field">[ Digite o Bairro ]</td>
+    </tr>
+    <tr>
+      <th>Cidade / UF:</th>
+      <td class="input-field">[ Digite a Cidade e Estado ]</td>
+    </tr>
+  </table>
+
+  <h2>3. Atividade e Funcionários</h2>
+  <table>
+    <tr>
+      <th>Descrição das Atividades:<br><span style="font-size: 8pt; font-weight: normal; color: #666;">(O que a empresa realmente faz/fará)</span></th>
+      <td class="input-field">[ Descreva aqui detalhadamente a atividade comercial ou de serviços prestados ]</td>
+    </tr>
+    <tr>
+      <th>Quantidade de Funcionários:</th>
+      <td class="input-field">[ Digite a quantidade de funcionários CLT, se houver ]</td>
+    </tr>
+  </table>
+
+  <h2>4. Dados do Sócio Principal</h2>
+  <p class="instruction">Se houver mais de um sócio, copie e preencha esta tabela para cada sócio adicional.</p>
+  <table>
+    <tr>
+      <th>Nome Completo:</th>
+      <td class="input-field">[ Digite o Nome Completo ]</td>
+    </tr>
+    <tr>
+      <th>CPF:</th>
+      <td class="input-field">[ Digite o CPF ]</td>
+    </tr>
+    <tr>
+      <th>RG e Órgão Emissor:</th>
+      <td class="input-field">[ Digite o RG e UF de emissão ]</td>
+    </tr>
+    <tr>
+      <th>Data de Nascimento:</th>
+      <td class="input-field">[ Digite a Data de Nascimento ]</td>
+    </tr>
+    <tr>
+      <th>Nacionalidade e Estado Civil:</th>
+      <td class="input-field">[ Digite Nacionalidade e Estado Civil ]</td>
+    </tr>
+    <tr>
+      <th>Regime de Bens (se casado):</th>
+      <td class="input-field">[ Digite o Regime de Bens ]</td>
+    </tr>
+    <tr>
+      <th>Nome do Pai:</th>
+      <td class="input-field">[ Digite o Nome do Pai ]</td>
+    </tr>
+    <tr>
+      <th>Nome da Mãe:</th>
+      <td class="input-field">[ Digite o Nome da Mãe ]</td>
+    </tr>
+    <tr>
+      <th>E-mail do Sócio:</th>
+      <td class="input-field">[ Digite o E-mail ]</td>
+    </tr>
+    <tr>
+      <th>Telefone (WhatsApp):</th>
+      <td class="input-field">[ Digite o Telefone ]</td>
+    </tr>
+    <tr>
+      <th>Endereço Residencial Completo:<br><span style="font-size: 8.5pt; font-weight: normal; color: #666;">(Rua, nº, complemento, Bairro, Cidade, UF, CEP)</span></th>
+      <td class="input-field">[ Digite o Endereço Residencial Completo ]</td>
+    </tr>
+    <tr>
+      <th>Contribui com INSS em outra empresa?<br><span style="font-size: 8pt; font-weight: normal; color: #666;">(Se sim, informe o valor/empresa)</span></th>
+      <td class="input-field">[ ] Não<br>[ ] Sim: [ Digite os detalhes da contribuição ]</td>
+    </tr>
+    <tr>
+      <th>É Aposentado?</th>
+      <td class="input-field">[ ] Sim  /  [ ] Não</td>
+    </tr>
+    <tr>
+      <th>Sócio Administrador? (Assina pela empresa)</th>
+      <td class="input-field">[ ] Sim  /  [ ] Não</td>
+    </tr>
+    <tr>
+      <th>Responsável perante a Receita Federal?</th>
+      <td class="input-field">[ ] Sim  /  [ ] Não</td>
+    </tr>
+    <tr>
+      <th>Dependentes para Imposto de Renda?<br><span style="font-size: 8pt; font-weight: normal; color: #666;">(Se sim, informe Nome, CPF e Nascimento)</span></th>
+      <td class="input-field">[ Digite Nome, CPF e Data de Nascimento dos dependentes, se houver ]</td>
+    </tr>
+  </table>
+
+  <h2>5. Certificado Digital e Senhas Fiscais</h2>
+  <p class="instruction">Se a sua empresa for nova (Abertura), deixe todos os campos desta seção em branco.</p>
+  <table>
+    <tr>
+      <th>Possui Certificado Digital?</th>
+      <td class="input-field">[ ] Não<br>[ ] Sim (Tipo: _________ / Validade: ___/___/_____)</td>
+    </tr>
+    <tr>
+      <th>Senha Web / Nota do Milhão (Municipal):</th>
+      <td class="input-field">[ Digite aqui ]</td>
+    </tr>
+    <tr>
+      <th>Senha PRODIGI (Municipal):</th>
+      <td class="input-field">[ Digite aqui ]</td>
+    </tr>
+    <tr>
+      <th>Senha GINFES (Municipal):</th>
+      <td class="input-field">[ Digite aqui ]</td>
+    </tr>
+    <tr>
+      <th>Senha GISS (Municipal):</th>
+      <td class="input-field">[ Digite aqui ]</td>
+    </tr>
+    <tr>
+      <th>Senha Simples Nacional / Código de Acesso:</th>
+      <td class="input-field">[ Digite aqui ]</td>
+    </tr>
+    <tr>
+      <th>Senha Estadual (Posto Fiscal):</th>
+      <td class="input-field">[ Digite aqui ]</td>
+    </tr>
+  </table>
+
+  <br>
+  <div style="font-size: 9pt; color: #777777; text-align: center; border-top: 1px solid #eeeeee; padding-top: 10px;">
+    RBM Contabilidade - Onboarding de Clientes
+  </div>
+
+</body>
+</html>
