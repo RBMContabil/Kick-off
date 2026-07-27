@@ -213,6 +213,14 @@
       <td class="input-field">[ ] Sim  /  [ ] Não</td>
     </tr>
     <tr>
+      <th>Terá retirada de Pró-labore?<br><span style="font-size: 8.5pt; font-weight: normal; color: #666;">(INSS sobre Pró-labore de 11%)</span></th>
+      <td class="input-field">
+        [ ] Não<br>
+        [ ] Sim (Valor Mensal Pretendido: R$ ______________)<br>
+        <span style="font-size: 8.5pt; color: #666666;">💡 <strong>Nota:</strong> A retirada não é obrigatória. Porém, quando há retirada, incide 11% de INSS sobre o valor escolhido. A RBM Contabilidade sempre orienta e recomenda realizar a retirada mínima (1 salário mínimo) para fins de direitos previdenciários (afastamentos por doença, licença maternidade e aposentadoria).</span>
+      </td>
+    </tr>
+    <tr>
       <th>Sócio Administrador? (Assina pela empresa)</th>
       <td class="input-field">[ ] Sim  /  [ ] Não</td>
     </tr>

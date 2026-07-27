@@ -1064,7 +1064,7 @@ function addPartnerCard(partnerData = null) {
 
     <!-- Informações Previdenciárias do Sócio -->
     <div style="margin-top: 1.25rem; border-top: 1px dashed var(--border); padding-top: 1rem;">
-      <h5 style="font-size:0.8rem; font-weight:700; color:var(--primary-light); margin-bottom:0.75rem; text-transform:uppercase; border-left:3px solid var(--accent); padding-left:6px;">Informações Previdenciárias</h5>
+      <h5 style="font-size:0.8rem; font-weight:700; color:var(--primary-light); margin-bottom:0.75rem; text-transform:uppercase; border-left:3px solid var(--accent); padding-left:6px;">Informações Previdenciárias & Pró-labore</h5>
       <div class="grid-3">
         <div class="form-group">
           <label>Contribui com INSS em outra empresa?</label>
@@ -1095,6 +1095,28 @@ function addPartnerCard(partnerData = null) {
               <span>Não</span>
             </label>
           </div>
+        </div>
+        <div class="form-group">
+          <label>Terá retirada de Pró-labore?</label>
+          <div class="radio-group">
+            <label class="radio-label">
+              <input type="radio" name="partner-prolabore-has-${partnerId}" value="Sim" class="partner-prolabore-yes">
+              <span>Sim</span>
+            </label>
+            <label class="radio-label">
+              <input type="radio" name="partner-prolabore-has-${partnerId}" value="Não" checked class="partner-prolabore-no">
+              <span>Não</span>
+            </label>
+          </div>
+        </div>
+        <div class="form-group partner-prolabore-val-group" style="display:none; grid-column: span 2;">
+          <label>Qual o valor da retirada mensal (Pró-labore)?</label>
+          <input type="text" class="partner-prolabore-val" placeholder="Mínimo 1 salário mínimo (R$ 1.412,00 ou valor vigente)">
+        </div>
+        <div class="form-group full-width" style="grid-column: span 3; background-color: #f8fafc; border: 1px solid var(--border); padding: 8px 12px; border-radius: 6px; margin-top: 5px;">
+          <small style="color: var(--text-muted); font-size: 0.8rem; line-height: 1.45;">
+            💡 <strong>Nota sobre Pró-labore:</strong> A retirada não é obrigatória. Contudo, quando há retirada, é obrigatório pagar 11% de INSS sobre o valor escolhido. A RBM Contabilidade sempre orienta e recomenda realizar a retirada mínima para fins de direitos previdenciários (afastamentos por doença, licença maternidade e aposentadoria).
+          </small>
         </div>
       </div>
     </div>
@@ -1257,6 +1279,20 @@ function addPartnerCard(partnerData = null) {
   inssNo.addEventListener('change', () => {
     inssDetailsGroup.style.display = 'none';
     card.querySelector('.partner-inss-details').value = '';
+  });
+
+  // Bind Pró-labore details radio
+  const prolaboreYes = card.querySelector('.partner-prolabore-yes');
+  const prolaboreNo = card.querySelector('.partner-prolabore-no');
+  const prolaboreValGroup = card.querySelector('.partner-prolabore-val-group');
+  const prolaboreValInput = card.querySelector('.partner-prolabore-val');
+
+  prolaboreYes.addEventListener('change', () => {
+    prolaboreValGroup.style.display = 'block';
+  });
+  prolaboreNo.addEventListener('change', () => {
+    prolaboreValGroup.style.display = 'none';
+    prolaboreValInput.value = '';
   });
 
   // Configuração de Múltiplos Documentos do Sócio
@@ -1433,6 +1469,15 @@ function addPartnerCard(partnerData = null) {
       card.querySelector('.partner-retired-no').checked = true;
     }
 
+    // Pro-labore
+    if (partnerData.prolaboreHas === 'Sim') {
+      card.querySelector('.partner-prolabore-yes').checked = true;
+      prolaboreValGroup.style.display = 'block';
+      card.querySelector('.partner-prolabore-val').value = partnerData.prolaboreVal || '';
+    } else {
+      card.querySelector('.partner-prolabore-no').checked = true;
+    }
+
     // Regime de bens
     if (partnerData.maritalStatus === 'Casado(a)' || partnerData.maritalStatus === 'União Estável') {
       regimeGroup.style.display = 'block';
@@ -1537,6 +1582,8 @@ async function handleFormSubmit(e) {
     const inssVal = card.querySelector('.partner-inss-contrib-yes').checked ? 'Sim' : 'Não';
     const retiredVal = card.querySelector('.partner-retired-yes').checked ? 'Sim' : 'Não';
     const inssDet = inssVal === 'Sim' ? card.querySelector('.partner-inss-details').value : '';
+    const prolaboreVal = card.querySelector('.partner-prolabore-yes').checked ? 'Sim' : 'Não';
+    const prolaboreAmount = prolaboreVal === 'Sim' ? card.querySelector('.partner-prolabore-val').value : '';
 
     partners.push({
       id: card.id,
@@ -1564,6 +1611,8 @@ async function handleFormSubmit(e) {
       inssContrib: inssVal,
       inssDetails: inssDet,
       retired: retiredVal,
+      prolaboreHas: prolaboreVal,
+      prolaboreVal: prolaboreAmount,
        photoIdFiles: Array.from(card.querySelectorAll('.partner-doc-item')).map(div => ({
         file: div.photoFile,
         name: div.photoName
@@ -2219,7 +2268,7 @@ window.printClientPDF = async function(id) {
             </tr>
             <tr style="border:none;">
               <td style="border:none; padding:2px;" colspan="4">
-                <span class="print-field-label">INSS e Aposentadoria</span>
+                <span class="print-field-label">Previdência & Pró-labore</span>
                 <div style="font-size:8pt; margin-top:2px;">
                   <div class="print-checkbox">
                     <span class="print-checkbox-box">${p.inssContrib === 'Sim' ? 'X' : '&nbsp;&nbsp;'}</span>
@@ -2228,6 +2277,10 @@ window.printClientPDF = async function(id) {
                   <div class="print-checkbox">
                     <span class="print-checkbox-box">${p.retired === 'Sim' ? 'X' : '&nbsp;&nbsp;'}</span>
                     <span>É aposentado</span>
+                  </div>
+                  <div class="print-checkbox">
+                    <span class="print-checkbox-box">${p.prolaboreHas === 'Sim' ? 'X' : '&nbsp;&nbsp;'}</span>
+                    <span>Terá retirada de Pró-labore ${p.prolaboreHas === 'Sim' && p.prolaboreVal ? '(Valor: ' + p.prolaboreVal + ')' : ''}</span>
                   </div>
                 </div>
               </td>
@@ -2780,7 +2833,7 @@ window.viewClient = async function(id) {
               <div><strong>E-mail:</strong> ${p.email || '-'}</div>
             </div>
             <div style="margin-bottom:6px;"><strong>Filiação:</strong> Pai: ${p.father || '-'} | Mãe: ${p.mother || '-'}</div>
-            <div style="margin-bottom:6px;"><strong>Previdência:</strong> INSS outra empresa: ${p.inssContrib === 'Sim' ? 'Sim (' + (p.inssDetails || '') + ')' : 'Não'} | Aposentado: ${p.retired || 'Não'}</div>
+            <div style="margin-bottom:6px;"><strong>Previdência & Pró-labore:</strong> INSS outra empresa: ${p.inssContrib === 'Sim' ? 'Sim (' + (p.inssDetails || '') + ')' : 'Não'} | Aposentado: ${p.retired || 'Não'} | Pró-labore: ${p.prolaboreHas === 'Sim' ? 'Sim (' + (p.prolaboreVal || '') + ')' : 'Não'}</div>
             <div style="margin-bottom:6px;"><strong>Endereço Residencial:</strong> ${p.logradouro || ''}, ${p.numCompl || ''} - ${p.bairro || ''} - ${p.cidade || ''}/${p.uf || ''} (CEP: ${p.cep || '-'})</div>
             <div style="margin-bottom:6px; display:flex; align-items:center; gap:8px; flex-wrap:wrap;"><strong>Doc. Sócio (Múltiplos):</strong> ${docsLinkHtml}</div>
             <div style="margin-top:6px; font-weight:600; font-size:0.8rem; color:var(--primary);">Dependentes IR:</div>
