@@ -20,6 +20,12 @@ const DEFAULT_CLOUD_CONFIG = {
   active: true
 };
 
+// --- CONFIGURAÇÃO DE NOTIFICAÇÃO DE E-MAIL ---
+const EMAIL_NOTIFICATION_CONFIG = {
+  active: true, 
+  toEmail: 'comercial@rbmcontabil.com.br' 
+};
+
 function getCloudConfig() {
   const saved = localStorage.getItem('rbm_cloud_config');
   let config = { ...DEFAULT_CLOUD_CONFIG };
@@ -95,6 +101,43 @@ function applyClientMode() {
   // Garante que os botões administrativos individuais no header fiquem ocultos
   const adminElements = document.querySelectorAll('.admin-only');
   adminElements.forEach(el => el.style.display = 'none');
+}
+
+async function sendEmailNotification(kickoff) {
+  if (!EMAIL_NOTIFICATION_CONFIG.active || !EMAIL_NOTIFICATION_CONFIG.toEmail) {
+    console.log("Notificacao de e-mail inativa.");
+    return;
+  }
+  
+  try {
+    const payload = {
+      _subject: `Novo Kick-off Recebido: ${kickoff.company.razaoSocial || 'Empresa sem Razao Social'}`,
+      _template: 'table',
+      "Tipo de Processo": kickoff.company.prevAccountingHas === 'Migracao' || kickoff.company.prevAccountingHas === 'Sim' ? 'Migracao de Contabilidade' : 'Abertura de Empresa Nova',
+      "Razao Social": kickoff.company.razaoSocial || 'Empresa sem Razao Social',
+      "CNPJ": kickoff.company.cnpj || 'Nao Informado',
+      "E-mail da Empresa": kickoff.company.email || 'Nao Informado',
+      "Telefone da Empresa": kickoff.company.telefone || 'Nao Informado',
+      "Socio Principal": kickoff.partners && kickoff.partners[0] ? kickoff.partners[0].name : 'Nao Informado',
+      "Telefone do Socio": kickoff.partners && kickoff.partners[0] ? kickoff.partners[0].phone : 'Nao Informado',
+      "Regime Tributario": kickoff.company.regime || 'Nao Informado',
+      "Link do Painel": window.location.origin + window.location.pathname
+    };
+
+    const response = await fetch(`https://formsubmit.co/ajax/${EMAIL_NOTIFICATION_CONFIG.toEmail}`, {
+      method: "POST",
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify(payload)
+    });
+    
+    const result = await response.json();
+    console.log("Notificacao enviada por FormSubmit:", result);
+  } catch (error) {
+    console.error("Falha ao enviar notificacao por e-mail:", error);
+  }
 }
 
 // --- 1. BANCO DE DADOS INDEXEDDB ---
@@ -1385,6 +1428,9 @@ async function handleFormSubmit(e) {
 
   try {
     await dbSave(kickoffData);
+    
+    // Tenta enviar a notificacao por e-mail (se configurado)
+    await sendEmailNotification(kickoffData);
     
     if (checkClientMode()) {
       // Oculta o formulário
