@@ -1101,11 +1101,10 @@ tr:hover td {
 }
 
 .welcome-logo {
-  max-height: 70px;
+  max-height: 80px;
   object-fit: contain;
-  background-color: var(--primary);
-  padding: 8px 16px;
-  border-radius: var(--radius-sm);
+  background-color: transparent;
+  padding: 0;
 }
 
 .welcome-title {
