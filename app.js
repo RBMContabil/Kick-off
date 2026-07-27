@@ -294,7 +294,40 @@ function initDatabase() {
 }
 
 // Retorna todos os registros mesclando com o Supabase se ativo
+// Converte recursivamente strings de um objeto para maiúsculas (ignorando senhas, emails e anexos)
+function uppercaseObject(obj) {
+  if (!obj || typeof obj !== 'object') return obj;
+  if (Array.isArray(obj)) {
+    return obj.map(item => uppercaseObject(item));
+  }
+  const newObj = {};
+  for (let key in obj) {
+    if (Object.prototype.hasOwnProperty.call(obj, key)) {
+      let val = obj[key];
+      const skipKeys = [
+        'id', 'email', 'password', 'file', 'photoIdFile', 'photoIdFileName', 
+        'proofAddressFile', 'proofAddressFileName', 'iptuFile', 'iptuFileName',
+        'cnaesFile', 'cnaesFileName', 'web', 'prodigi', 'ginfes', 'giss', 
+        'simples', 'state', 'others', 'signatureName', 'date', 'validity', 'birthDate'
+      ];
+      
+      if (skipKeys.includes(key) || key.toLowerCase().includes('email') || key.toLowerCase().includes('pwd') || key.toLowerCase().includes('password')) {
+        newObj[key] = val;
+      } else if (typeof val === 'string') {
+        newObj[key] = val.toUpperCase();
+      } else if (typeof val === 'object') {
+        newObj[key] = uppercaseObject(val);
+      } else {
+        newObj[key] = val;
+      }
+    }
+  }
+  return newObj;
+}
+
+// Retorna todos os registros mesclando com o Supabase se ativo
 async function dbGetAll() {
+  let records = [];
   const config = getCloudConfig();
   if (config.active && config.url && config.key) {
     try {
@@ -307,7 +340,7 @@ async function dbGetAll() {
       });
       if (response.ok) {
         const rows = await response.json();
-        const records = rows.map(r => r.data);
+        records = rows.map(r => r.data);
         
         // Atualiza o IndexedDB local com os dados atualizados da nuvem
         const transaction = db.transaction([STORE_NAME], 'readwrite');
@@ -316,7 +349,6 @@ async function dbGetAll() {
         for (let rec of records) {
           store.put(rec);
         }
-        return records;
       } else {
         console.warn("Falha na resposta do Supabase, usando banco local:", await response.text());
       }
@@ -325,24 +357,32 @@ async function dbGetAll() {
     }
   }
 
-  // Fallback para o IndexedDB local (Modo Offline)
-  return new Promise((resolve, reject) => {
-    const transaction = db.transaction([STORE_NAME], 'readonly');
-    const store = transaction.objectStore(STORE_NAME);
-    const request = store.getAll();
+  if (records.length === 0) {
+    // Fallback para o IndexedDB local (Modo Offline)
+    records = await new Promise((resolve, reject) => {
+      const transaction = db.transaction([STORE_NAME], 'readonly');
+      const store = transaction.objectStore(STORE_NAME);
+      const request = store.getAll();
 
-    request.onsuccess = () => resolve(request.result || []);
-    request.onerror = () => reject(request.error);
-  });
+      request.onsuccess = () => resolve(request.result || []);
+      request.onerror = () => reject(request.error);
+    });
+  }
+
+  // Converte dinamicamente todas as strings para maiúsculas (menos e-mail e senhas)
+  return records.map(r => uppercaseObject(r));
 }
 
 // Salva localmente (IndexedDB) e sincroniza na nuvem (Supabase) se ativo
 async function dbSave(kickoff) {
+  // Garante que tudo esteja em letras maiúsculas ao salvar (exceto senhas, e-mails e anexos)
+  const cleanKickoff = uppercaseObject(kickoff);
+
   // 1. Salva no IndexedDB local primeiro
   await new Promise((resolve, reject) => {
     const transaction = db.transaction([STORE_NAME], 'readwrite');
     const store = transaction.objectStore(STORE_NAME);
-    const request = store.put(kickoff);
+    const request = store.put(cleanKickoff);
 
     request.onsuccess = () => resolve();
     request.onerror = () => reject(request.error);
@@ -361,8 +401,8 @@ async function dbSave(kickoff) {
           'Prefer': 'resolution=merge-duplicates' // Comportamento de UPSERT
         },
         body: JSON.stringify({
-          id: kickoff.id,
-          data: kickoff,
+          id: cleanKickoff.id,
+          data: cleanKickoff,
           updated_at: new Date().toISOString()
         })
       });
