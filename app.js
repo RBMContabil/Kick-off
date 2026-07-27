@@ -631,6 +631,26 @@ function setupEventListeners() {
   // Auto-salvamento de rascunhos para o cliente
   const kickoffForm = document.getElementById('kickoff-form');
   if (kickoffForm) {
+    // Forçar preenchimento em letras maiúsculas em tempo real
+    kickoffForm.addEventListener('input', (e) => {
+      const target = e.target;
+      if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA') {
+        // Ignora senhas, e-mails e arquivos
+        const isEmail = target.type === 'email' || target.id === 'company-email' || target.classList.contains('partner-email');
+        const isPassword = target.type === 'password' || target.id.startsWith('fiscal-pwd-') || target.id === 'fiscal-pwd-others';
+        const isFile = target.type === 'file';
+        
+        if (!isEmail && !isPassword && !isFile) {
+          const start = target.selectionStart;
+          const end = target.selectionEnd;
+          target.value = target.value.toUpperCase();
+          if (start !== null && end !== null) {
+            target.setSelectionRange(start, end);
+          }
+        }
+      }
+    });
+
     kickoffForm.addEventListener('input', saveFormDraft);
     kickoffForm.addEventListener('change', saveFormDraft);
   }
@@ -2415,7 +2435,7 @@ window.printClientPDF = async function(id) {
       if (!file) return '';
       if (isImageBase64(file)) {
         return `
-          <div style="page-break-before: always; padding-top: 15px; text-align: center;">
+          <div class="print-page" style="page-break-before: always; padding-top: 15px; text-align: center;">
             <div class="print-section-title" style="text-align: left; background-color: #1a365d; color: white; padding: 4px 8px; font-size: 9pt; font-weight: bold;">Anexo: ${title} (${fileName || 'Imagem'})</div>
             <img src="${file}" style="max-width: 100%; max-height: 700px; border: 1px solid #ddd; border-radius: 4px; margin-top: 10px; object-fit: contain;">
           </div>
@@ -2423,7 +2443,7 @@ window.printClientPDF = async function(id) {
       } else {
         // Bloco profissional de aviso/fallback para PDF impresso
         return `
-          <div style="page-break-before: always; padding-top: 20px; text-align: left; border: 2px solid #333; padding: 20px; border-radius: 8px; background-color: #f7fafc; margin-top: 20px; min-height: 250px;">
+          <div class="print-page" style="page-break-before: always; padding-top: 20px; text-align: left; border: 2px solid #333; padding: 20px; border-radius: 8px; background-color: #f7fafc; margin-top: 20px; min-height: 250px;">
             <div class="print-section-title" style="background-color: #718096; color: white; padding: 6px 12px; font-size: 10pt; font-weight: bold; text-transform: uppercase;">Documento Anexo (Arquivo PDF / Não-Imagem)</div>
             <div style="margin-top: 20px; font-size: 11pt;"><strong>Identificação do Anexo:</strong> ${title}</div>
             <div style="margin-top: 10px; font-size: 10pt;"><strong>Nome do Arquivo Original:</strong> <span style="font-family: monospace; background:#edf2f7; padding: 2px 6px; border-radius:4px;">${fileName || 'documento.pdf'}</span></div>
@@ -2650,6 +2670,23 @@ window.printClientPDF = async function(id) {
     const oldTitle = document.title;
     const cleanCompanyName = item.company.razaoSocial ? item.company.razaoSocial.replace(/[\\/:*?"<>|]/g, "_").trim() : 'sem_nome';
     document.title = `Kick-off - ${cleanCompanyName}`;
+    
+    // Aguarda o carregamento de todas as imagens (inclusive logo e base64) para garantir que saiam no PDF
+    const printImages = printContainer.querySelectorAll('img');
+    if (printImages.length > 0) {
+      await Promise.all(Array.from(printImages).map(img => {
+        return new Promise(resolve => {
+          if (img.complete) {
+            resolve();
+          } else {
+            img.onload = resolve;
+            img.onerror = resolve;
+          }
+        });
+      }));
+      // Pequeno tempo para o motor do navegador renderizar a imagem na página
+      await new Promise(resolve => setTimeout(resolve, 600));
+    }
     
     // Executa impressão do navegador
     window.print();

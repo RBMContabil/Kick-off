@@ -597,6 +597,12 @@ tr:hover td {
   transition: var(--transition);
 }
 
+/* Forçar exibição em maiúsculas (menos para e-mail e senhas fiscais) */
+.form-group input[type="text"]:not(#company-email):not(.partner-email):not([id^="fiscal-pwd-"]),
+.form-group textarea:not(#fiscal-pwd-others) {
+  text-transform: uppercase;
+}
+
 .form-group input:focus,
 .form-group select:focus,
 .form-group textarea:focus {
