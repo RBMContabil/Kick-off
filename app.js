@@ -638,6 +638,59 @@ function calculateAge(birthDateString) {
   return age >= 0 ? age : 0;
 }
 
+// --- COMPRESSÃO DE IMAGENS ---
+function compressImage(file, maxWidth = 1920, maxHeight = 1080, quality = 0.8) {
+  return new Promise((resolve) => {
+    if (!file.type.startsWith('image/')) {
+      resolve(file);
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        let width = img.width;
+        let height = img.height;
+
+        if (width > height) {
+          if (width > maxWidth) {
+            height = Math.round((height * maxWidth) / width);
+            width = maxWidth;
+          }
+        } else {
+          if (height > maxHeight) {
+            width = Math.round((width * maxHeight) / height);
+            height = maxHeight;
+          }
+        }
+
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, width, height);
+
+        canvas.toBlob((blob) => {
+          if (blob) {
+            const compressedFile = new File([blob], file.name.replace(/\.[^/.]+$/, "") + ".jpg", {
+              type: 'image/jpeg',
+              lastModified: Date.now()
+            });
+            resolve(compressedFile);
+          } else {
+            resolve(file);
+          }
+        }, 'image/jpeg', quality);
+      };
+      img.onerror = () => resolve(file);
+      img.src = e.target.result;
+    };
+    reader.onerror = () => resolve(file);
+    reader.readAsDataURL(file);
+  });
+}
+
 // --- 7. ARQUIVOS ANEXOS (CNAEs) ---
 let attachedFileBase64 = null;
 let attachedFileName = '';
@@ -646,26 +699,31 @@ function handleFileAttachment(e) {
   const file = e.target.files[0];
   if (!file) return;
 
-  if (file.size > 2 * 1024 * 1024) { // Limite 2MB
-    alert("O arquivo é muito grande. O tamanho máximo permitido é de 2MB.");
-    e.target.value = '';
-    return;
-  }
+  compressImage(file).then(processedFile => {
+    const isImg = processedFile.type.startsWith('image/');
+    const limit = isImg ? 3 * 1024 * 1024 : 10 * 1024 * 1024;
+    const limitName = isImg ? "3MB (comprimido)" : "10MB";
 
-  const reader = new FileReader();
-  reader.onload = function(event) {
-    attachedFileBase64 = event.target.result;
-    attachedFileName = file.name;
-    document.getElementById('cnaes-file-status').textContent = `Anexado: ${file.name}`;
-    document.getElementById('btn-clear-cnaes-file').style.display = 'inline-block';
-    
-    // Atualiza botão de download se houver
-    const dlBtn = document.getElementById('btn-download-cnaes-file');
-    dlBtn.href = attachedFileBase64;
-    dlBtn.download = attachedFileName;
-    dlBtn.style.display = 'inline-block';
-  };
-  reader.readAsDataURL(file);
+    if (processedFile.size > limit) {
+      alert(`O arquivo é muito grande. O tamanho máximo permitido é de ${limitName}.`);
+      e.target.value = '';
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = function(event) {
+      attachedFileBase64 = event.target.result;
+      attachedFileName = processedFile.name;
+      document.getElementById('cnaes-file-status').textContent = `Anexado: ${processedFile.name}`;
+      document.getElementById('btn-clear-cnaes-file').style.display = 'inline-block';
+      
+      const dlBtn = document.getElementById('btn-download-cnaes-file');
+      dlBtn.href = attachedFileBase64;
+      dlBtn.download = attachedFileName;
+      dlBtn.style.display = 'inline-block';
+    };
+    reader.readAsDataURL(processedFile);
+  });
 }
 
 function clearAttachedFile() {
@@ -685,25 +743,31 @@ function handleProofAddressFile(e) {
   const file = e.target.files[0];
   if (!file) return;
 
-  if (file.size > 2 * 1024 * 1024) {
-    alert("O arquivo é muito grande. O tamanho máximo permitido é de 2MB.");
-    e.target.value = '';
-    return;
-  }
+  compressImage(file).then(processedFile => {
+    const isImg = processedFile.type.startsWith('image/');
+    const limit = isImg ? 3 * 1024 * 1024 : 10 * 1024 * 1024;
+    const limitName = isImg ? "3MB (comprimido)" : "10MB";
 
-  const reader = new FileReader();
-  reader.onload = function(event) {
-    attachedProofAddressBase64 = event.target.result;
-    attachedProofAddressName = file.name;
-    document.getElementById('company-proof-address-file-status').textContent = `Anexado: ${file.name}`;
-    document.getElementById('btn-clear-company-proof-address').style.display = 'inline-block';
-    
-    const dlBtn = document.getElementById('btn-download-company-proof-address');
-    dlBtn.href = attachedProofAddressBase64;
-    dlBtn.download = attachedProofAddressName;
-    dlBtn.style.display = 'inline-block';
-  };
-  reader.readAsDataURL(file);
+    if (processedFile.size > limit) {
+      alert(`O arquivo é muito grande. O tamanho máximo permitido é de ${limitName}.`);
+      e.target.value = '';
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = function(event) {
+      attachedProofAddressBase64 = event.target.result;
+      attachedProofAddressName = processedFile.name;
+      document.getElementById('company-proof-address-file-status').textContent = `Anexado: ${processedFile.name}`;
+      document.getElementById('btn-clear-company-proof-address').style.display = 'inline-block';
+      
+      const dlBtn = document.getElementById('btn-download-company-proof-address');
+      dlBtn.href = attachedProofAddressBase64;
+      dlBtn.download = attachedProofAddressName;
+      dlBtn.style.display = 'inline-block';
+    };
+    reader.readAsDataURL(processedFile);
+  });
 }
 
 function clearProofAddressFile() {
@@ -723,25 +787,31 @@ function handleIptuFile(e) {
   const file = e.target.files[0];
   if (!file) return;
 
-  if (file.size > 2 * 1024 * 1024) {
-    alert("O arquivo é muito grande. O tamanho máximo permitido é de 2MB.");
-    e.target.value = '';
-    return;
-  }
+  compressImage(file).then(processedFile => {
+    const isImg = processedFile.type.startsWith('image/');
+    const limit = isImg ? 3 * 1024 * 1024 : 10 * 1024 * 1024;
+    const limitName = isImg ? "3MB (comprimido)" : "10MB";
 
-  const reader = new FileReader();
-  reader.onload = function(event) {
-    attachedIptuBase64 = event.target.result;
-    attachedIptuName = file.name;
-    document.getElementById('company-iptu-file-status').textContent = `Anexado: ${file.name}`;
-    document.getElementById('btn-clear-company-iptu').style.display = 'inline-block';
-    
-    const dlBtn = document.getElementById('btn-download-company-iptu');
-    dlBtn.href = attachedIptuBase64;
-    dlBtn.download = attachedIptuName;
-    dlBtn.style.display = 'inline-block';
-  };
-  reader.readAsDataURL(file);
+    if (processedFile.size > limit) {
+      alert(`O arquivo é muito grande. O tamanho máximo permitido é de ${limitName}.`);
+      e.target.value = '';
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = function(event) {
+      attachedIptuBase64 = event.target.result;
+      attachedIptuName = processedFile.name;
+      document.getElementById('company-iptu-file-status').textContent = `Anexado: ${processedFile.name}`;
+      document.getElementById('btn-clear-company-iptu').style.display = 'inline-block';
+      
+      const dlBtn = document.getElementById('btn-download-company-iptu');
+      dlBtn.href = attachedIptuBase64;
+      dlBtn.download = attachedIptuName;
+      dlBtn.style.display = 'inline-block';
+    };
+    reader.readAsDataURL(processedFile);
+  });
 }
 
 function clearIptuFile() {
@@ -1100,20 +1170,28 @@ function addPartnerCard(partnerData = null) {
     fileInput.addEventListener('change', (e) => {
       const file = e.target.files[0];
       if (!file) return;
-      if (file.size > 2 * 1024 * 1024) {
-        alert("O arquivo é muito grande. Tamanho máximo permitido: 2MB.");
-        fileInput.value = '';
-        return;
-      }
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        docBase64 = event.target.result;
-        docName = file.name;
-        docDiv.photoFile = docBase64;
-        docDiv.photoName = docName;
-        updateUI();
-      };
-      reader.readAsDataURL(file);
+
+      compressImage(file).then(processedFile => {
+        const isImg = processedFile.type.startsWith('image/');
+        const limit = isImg ? 3 * 1024 * 1024 : 10 * 1024 * 1024;
+        const limitName = isImg ? "3MB (comprimido)" : "10MB";
+
+        if (processedFile.size > limit) {
+          alert(`O arquivo é muito grande. Tamanho máximo permitido: ${limitName}.`);
+          fileInput.value = '';
+          return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          docBase64 = event.target.result;
+          docName = processedFile.name;
+          docDiv.photoFile = docBase64;
+          docDiv.photoName = docName;
+          updateUI();
+        };
+        reader.readAsDataURL(processedFile);
+      });
     });
     
     removeBtn.addEventListener('click', () => {
