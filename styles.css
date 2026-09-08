@@ -1090,7 +1090,7 @@ tr:hover td {
   border-radius: var(--radius-lg);
   padding: 3.5rem 2rem;
   text-align: center;
-  max-width: 750px;
+  max-width: 880px;
   margin: 3rem auto;
   box-shadow: var(--shadow-lg);
   border: 1px solid var(--border);
@@ -1124,20 +1124,20 @@ tr:hover td {
 .welcome-subtitle {
   font-size: 1.05rem;
   color: var(--text-muted);
-  max-width: 580px;
+  max-width: 650px;
   line-height: 1.5;
   margin: 0;
 }
 
 .selection-buttons-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1.5rem;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.25rem;
   width: 100%;
   margin-top: 1.5rem;
 }
 
-@media (max-width: 600px) {
+@media (max-width: 800px) {
   .selection-buttons-grid {
     grid-template-columns: 1fr;
   }

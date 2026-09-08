@@ -181,6 +181,12 @@
               <span class="btn-selection-title">Trazer minha Empresa (Migração)</span>
               <span class="btn-selection-desc">Já tenho empresa e quero transferir a contabilidade para a RBM</span>
             </button>
+
+            <button type="button" class="btn-selection" id="btn-select-alteracao">
+              <span class="btn-selection-icon">📝</span>
+              <span class="btn-selection-title">Alteração Contratual</span>
+              <span class="btn-selection-desc">Já tenho empresa e quero realizar alteração contratual / societária</span>
+            </button>
           </div>
           <div class="privacy-notice">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; margin-right: 6px; color: var(--accent); flex-shrink: 0;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
@@ -200,44 +206,158 @@
           <form id="kickoff-form" autocomplete="off">
             <input type="hidden" id="edit-client-id" value="">
 
+            <!-- Seleção de Tipo de Processo e Checklist de Alteração Contratual -->
+            <div id="tipo-processo-card" style="background: #f8fafc; border: 1px solid var(--border); padding: 1rem 1.25rem; border-radius: var(--radius-md); margin-bottom: 1.5rem;">
+              <label style="font-weight: 700; color: var(--primary); font-size: 0.95rem; display: block; margin-bottom: 0.5rem;">
+                Tipo de Serviço / Processo:
+              </label>
+              <div style="display: flex; gap: 20px; flex-wrap: wrap; align-items: center;">
+                <label style="display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 0.9rem; font-weight: 600; color: var(--primary);">
+                  <input type="radio" name="tipo_servico" value="abertura" checked style="cursor: pointer;">
+                  <span>🏢 Abertura de Empresa</span>
+                </label>
+                <label style="display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 0.9rem; font-weight: 600; color: var(--primary);">
+                  <input type="radio" name="tipo_servico" value="migracao" style="cursor: pointer;">
+                  <span>🔄 Migração de Contabilidade</span>
+                </label>
+                <label style="display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 0.9rem; font-weight: 600; color: var(--primary);">
+                  <input type="radio" name="tipo_servico" value="alteracao" style="cursor: pointer;">
+                  <span>📝 Alteração Contratual</span>
+                </label>
+              </div>
+
+              <!-- Checklist para Alteração Contratual (Visível apenas quando 'alteracao' é marcado) -->
+              <div id="alteracao-checklist-box" style="display: none; background: #ffffff; border: 1px solid var(--accent); border-left: 4px solid var(--accent); padding: 1rem; border-radius: var(--radius-sm); margin-top: 1rem;">
+                <strong style="color: var(--primary); display: block; margin-bottom: 0.75rem; font-size: 0.9rem;">
+                  <span style="font-size: 1.1rem;">☑️</span> Selecione o que será alterado no contrato:
+                </strong>
+                <div class="alteracao-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 10px;">
+                  <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 0.85rem; font-weight: 600; background: #f1f5f9; padding: 8px 12px; border-radius: 6px; border: 1px solid var(--border);">
+                    <input type="checkbox" id="chk-alt-nome" class="chk-alt-item" value="nome">
+                    <span>✏️ Razão Social / Fantasia</span>
+                  </label>
+                  <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 0.85rem; font-weight: 600; background: #f1f5f9; padding: 8px 12px; border-radius: 6px; border: 1px solid var(--border);">
+                    <input type="checkbox" id="chk-alt-endereco" class="chk-alt-item" value="endereco">
+                    <span>📍 Endereço da Empresa</span>
+                  </label>
+                  <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 0.85rem; font-weight: 600; background: #f1f5f9; padding: 8px 12px; border-radius: 6px; border: 1px solid var(--border);">
+                    <input type="checkbox" id="chk-alt-atividade" class="chk-alt-item" value="atividade">
+                    <span>💼 Atividades (CNAEs)</span>
+                  </label>
+                  <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 0.85rem; font-weight: 600; background: #f1f5f9; padding: 8px 12px; border-radius: 6px; border: 1px solid var(--border);">
+                    <input type="checkbox" id="chk-alt-socio" class="chk-alt-item" value="socio">
+                    <span>👥 Quadro Societário (Sócios)</span>
+                  </label>
+                  <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 0.85rem; font-weight: 600; background: #f1f5f9; padding: 8px 12px; border-radius: 6px; border: 1px solid var(--border);">
+                    <input type="checkbox" id="chk-alt-regime" class="chk-alt-item" value="regime">
+                    <span>📊 Regime Tributário</span>
+                  </label>
+                  <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 0.85rem; font-weight: 600; background: #f1f5f9; padding: 8px 12px; border-radius: 6px; border: 1px solid var(--border);">
+                    <input type="checkbox" id="chk-alt-cert-fiscal" class="chk-alt-item" value="cert_fiscal">
+                    <span>🔑 Certificado / Senhas Fiscais</span>
+                  </label>
+                  <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 0.85rem; font-weight: 600; background: #f1f5f9; padding: 8px 12px; border-radius: 6px; border: 1px solid var(--border);">
+                    <input type="checkbox" id="chk-alt-outros" class="chk-alt-item" value="outros">
+                    <span>📝 Outras Alterações</span>
+                  </label>
+                </div>
+                <small style="color: var(--text-muted); display: block; margin-top: 8px; font-size: 0.8rem; line-height: 1.4;">
+                  💡 <strong>Como funciona:</strong> Ao marcar um item acima, o campo correspondente para preenchimento abre automaticamente abaixo.
+                </small>
+              </div>
+            </div>
+
             <!-- SEÇÃO 1: DADOS DA EMPRESA -->
-            <div class="form-section">
+            <div class="form-section" id="sec-dados-empresa">
               <div class="section-header">
                 <span class="section-number">1</span>
-                <h3 class="section-title">Dados da Empresa</h3>
+                <h3 class="section-title">Dados da Empresa / Identificação</h3>
               </div>
+              
+              <!-- Identificação da empresa (sempre visível) -->
               <div class="grid-3">
-                <div class="form-group full-width-2">
-                  <label for="company-razao-social">Razão Social</label>
-                  <input type="text" id="company-razao-social" placeholder="Ex: RBM Contabilidade S/S Ltda">
-                </div>
-                <div class="form-group">
-                  <label for="company-nome-fantasia">Nome Fantasia</label>
-                  <input type="text" id="company-nome-fantasia" placeholder="Nome Comercial da Empresa">
-                </div>
                 <div class="form-group">
                   <label for="company-cnpj">CNPJ</label>
                   <input type="text" id="company-cnpj" placeholder="00.000.000/0000-00">
                 </div>
                 <div class="form-group">
-                  <label for="company-regime">Regime Tributário</label>
-                  <select id="company-regime">
-                    <option value="" disabled selected>Selecione...</option>
-                    <option value="Simples Nacional">Simples Nacional</option>
-                    <option value="Lucro Presumido">Lucro Presumido</option>
-                    <option value="Lucro Real">Lucro Real</option>
-                    <option value="MEI">MEI</option>
-                  </select>
-                </div>
-                <div class="form-group">
                   <label for="company-telefone">Telefone de Contato</label>
                   <input type="text" id="company-telefone" placeholder="(00) 00000-0000">
                 </div>
-                <div class="form-group full-width-2">
+                <div class="form-group">
                   <label for="company-email">E-mail da Empresa</label>
                   <input type="email" id="company-email" placeholder="financeiro@empresa.com.br">
                 </div>
-                <div class="form-group full-width-3" style="grid-column: span 3; background-color: #f8fafc; border: 1px solid var(--border); padding: 10px; border-radius: 6px; margin-top: 5px;">
+              </div>
+
+              <!-- Bloco: Razão Social e Fantasia -->
+              <div id="block-alt-nome" class="alt-toggle-block" style="margin-top:1.25rem;">
+                <div class="grid-2">
+                  <div class="form-group">
+                    <label for="company-razao-social">Razão Social</label>
+                    <input type="text" id="company-razao-social" placeholder="Ex: RBM Contabilidade S/S Ltda">
+                  </div>
+                  <div class="form-group">
+                    <label for="company-nome-fantasia">Nome Fantasia</label>
+                    <input type="text" id="company-nome-fantasia" placeholder="Nome Comercial da Empresa">
+                  </div>
+                </div>
+              </div>
+
+              <!-- Bloco: Regime Tributário -->
+              <div id="block-alt-regime" class="alt-toggle-block" style="margin-top:1.25rem;">
+                <div class="grid-3">
+                  <div class="form-group">
+                    <label for="company-regime">Regime Tributário</label>
+                    <select id="company-regime">
+                      <option value="" disabled selected>Selecione...</option>
+                      <option value="Simples Nacional">Simples Nacional</option>
+                      <option value="Lucro Presumido">Lucro Presumido</option>
+                      <option value="Lucro Real">Lucro Real</option>
+                      <option value="MEI">MEI</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Bloco: Endereço & Subestabelecimento & Anexos -->
+              <div id="block-alt-endereco" class="alt-toggle-block" style="margin-top:1.5rem;">
+                <h4 class="sub-section-title">Endereço da Empresa</h4>
+                <div class="grid-4">
+                  <div class="form-group">
+                    <label for="address-cep">CEP</label>
+                    <div class="cep-input-group">
+                      <input type="text" id="address-cep" placeholder="00000-000">
+                      <button type="button" class="btn btn-outline btn-sm" id="btn-search-cep">Buscar</button>
+                    </div>
+                  </div>
+                  <div class="form-group full-width-2">
+                    <label for="address-logradouro">Logradouro</label>
+                    <input type="text" id="address-logradouro" placeholder="Rua, Avenida, etc.">
+                  </div>
+                  <div class="form-group">
+                    <label for="address-numero">Número</label>
+                    <input type="text" id="address-numero" placeholder="Ex: 123">
+                  </div>
+                  <div class="form-group">
+                    <label for="address-complemento">Complemento</label>
+                    <input type="text" id="address-complemento" placeholder="Sala, Bloco, etc.">
+                  </div>
+                  <div class="form-group">
+                    <label for="address-bairro">Bairro</label>
+                    <input type="text" id="address-bairro">
+                  </div>
+                  <div class="form-group">
+                    <label for="address-cidade">Cidade</label>
+                    <input type="text" id="address-cidade">
+                  </div>
+                  <div class="form-group">
+                    <label for="address-uf">UF</label>
+                    <input type="text" id="address-uf" maxlength="2" style="text-transform: uppercase;">
+                  </div>
+                </div>
+
+                <div class="form-group full-width-3" style="grid-column: span 3; background-color: #f8fafc; border: 1px solid var(--border); padding: 10px; border-radius: 6px; margin-top: 1rem;">
                   <label style="display: block; font-weight: 700; color: var(--primary); margin-bottom: 4px;">A empresa será subestabelecida?</label>
                   <div style="display: flex; gap: 20px; align-items: center;">
                     <label style="display: flex; align-items: center; gap: 6px; cursor: pointer;">
@@ -255,106 +375,72 @@
                     • <strong>Não (Não Subestabelecida):</strong> Significa que a empresa não tem local comercial próprio (ex: é prestadora de serviços que trabalha no local de seus clientes). Neste caso, <strong>o endereço informado abaixo pode ser o da sua própria residência</strong>.
                   </small>
                 </div>
-              </div>
 
-              <!-- Endereço -->
-              <h4 class="sub-section-title" style="margin-top:1.5rem;">Endereço</h4>
-              <div class="grid-4">
-                <div class="form-group">
-                  <label for="address-cep">CEP</label>
-                  <div class="cep-input-group">
-                    <input type="text" id="address-cep" placeholder="00000-000">
-                    <button type="button" class="btn btn-outline btn-sm" id="btn-search-cep">Buscar</button>
-                  </div>
-                </div>
-                <div class="form-group full-width-2">
-                  <label for="address-logradouro">Logradouro</label>
-                  <input type="text" id="address-logradouro" placeholder="Rua, Avenida, etc.">
-                </div>
-                <div class="form-group">
-                  <label for="address-numero">Número</label>
-                  <input type="text" id="address-numero" placeholder="Ex: 123">
-                </div>
-                <div class="form-group">
-                  <label for="address-complemento">Complemento</label>
-                  <input type="text" id="address-complemento" placeholder="Sala, Bloco, etc.">
-                </div>
-                <div class="form-group">
-                  <label for="address-bairro">Bairro</label>
-                  <input type="text" id="address-bairro">
-                </div>
-                <div class="form-group">
-                  <label for="address-cidade">Cidade</label>
-                  <input type="text" id="address-cidade">
-                </div>
-                <div class="form-group">
-                  <label for="address-uf">UF</label>
-                  <input type="text" id="address-uf" maxlength="2" style="text-transform: uppercase;">
-                </div>
-              </div>
-
-              <!-- Documentos da Empresa (Anexos adicionais) -->
-              <h4 class="sub-section-title" style="margin-top:1.5rem;">Documentos da Empresa (Anexos Opcionais)</h4>
-              <div class="grid-2">
-                <div class="form-group">
-                  <label for="company-proof-address-file">Comprovante de Endereço da Empresa (PDF ou Imagem)</label>
-                  <div class="file-upload-box">
-                    <input type="file" id="company-proof-address-file" class="file-input" accept="image/*,application/pdf">
-                    <div class="file-upload-label">
-                      <span>Clique para anexar comprovante</span>
-                      <small class="file-status" id="company-proof-address-file-status">Nenhum arquivo anexado</small>
+                <!-- Documentos da Empresa (Anexos adicionais) -->
+                <h4 class="sub-section-title" style="margin-top:1.5rem;">Documentos do Imóvel (Comprovante / IPTU)</h4>
+                <div class="grid-2">
+                  <div class="form-group">
+                    <label for="company-proof-address-file">Comprovante de Endereço da Empresa (PDF ou Imagem)</label>
+                    <div class="file-upload-box">
+                      <input type="file" id="company-proof-address-file" class="file-input" accept="image/*,application/pdf">
+                      <div class="file-upload-label">
+                        <span>Clique para anexar comprovante</span>
+                        <small class="file-status" id="company-proof-address-file-status">Nenhum arquivo anexado</small>
+                      </div>
+                      <button type="button" class="btn btn-outline btn-sm btn-clear-file" id="btn-clear-company-proof-address" style="display:none;">Remover</button>
+                      <a href="#" class="btn btn-accent btn-sm btn-download-file" id="btn-download-company-proof-address" style="display:none;" target="_blank">Baixar</a>
                     </div>
-                    <button type="button" class="btn btn-outline btn-sm btn-clear-file" id="btn-clear-company-proof-address" style="display:none;">Remover</button>
-                    <a href="#" class="btn btn-accent btn-sm btn-download-file" id="btn-download-company-proof-address" style="display:none;" target="_blank">Baixar</a>
                   </div>
-                </div>
-                <div class="form-group">
-                  <label for="company-iptu-file">Cópia do IPTU do Imóvel (PDF ou Imagem)</label>
-                  <div class="file-upload-box">
-                    <input type="file" id="company-iptu-file" class="file-input" accept="image/*,application/pdf">
-                    <div class="file-upload-label">
-                      <span>Clique para anexar IPTU</span>
-                      <small class="file-status" id="company-iptu-file-status">Nenhum arquivo anexado</small>
+                  <div class="form-group">
+                    <label for="company-iptu-file">Cópia do IPTU do Imóvel (PDF ou Imagem)</label>
+                    <div class="file-upload-box">
+                      <input type="file" id="company-iptu-file" class="file-input" accept="image/*,application/pdf">
+                      <div class="file-upload-label">
+                        <span>Clique para anexar IPTU</span>
+                        <small class="file-status" id="company-iptu-file-status">Nenhum arquivo anexado</small>
+                      </div>
+                      <button type="button" class="btn btn-outline btn-sm btn-clear-file" id="btn-clear-company-iptu" style="display:none;">Remover</button>
+                      <a href="#" class="btn btn-accent btn-sm btn-download-file" id="btn-download-company-iptu" style="display:none;" target="_blank">Baixar</a>
                     </div>
-                    <button type="button" class="btn btn-outline btn-sm btn-clear-file" id="btn-clear-company-iptu" style="display:none;">Remover</button>
-                    <a href="#" class="btn btn-accent btn-sm btn-download-file" id="btn-download-company-iptu" style="display:none;" target="_blank">Baixar</a>
                   </div>
                 </div>
               </div>
 
               <!-- Contabilidade Anterior (Transição) -->
-              <h4 class="sub-section-title" style="margin-top:1.5rem;">Contabilidade Anterior (Transição)</h4>
-              <div class="grid-3">
-                <div class="form-group">
-                  <label>Tipo de Entrada / Origem</label>
-                  <div class="radio-group">
-                    <label class="radio-label">
-                      <input type="radio" name="prev-accounting-has" value="Nova" checked>
-                      <span>Empresa Nova (Abertura)</span>
-                    </label>
-                    <label class="radio-label">
-                      <input type="radio" name="prev-accounting-has" value="Migração">
-                      <span>Migração</span>
-                    </label>
+              <div id="block-alt-prev-acc" class="alt-toggle-block" style="margin-top:1.5rem;">
+                <h4 class="sub-section-title">Contabilidade Anterior (Transição)</h4>
+                <div class="grid-3">
+                  <div class="form-group">
+                    <label>Tipo de Entrada / Origem</label>
+                    <div class="radio-group">
+                      <label class="radio-label">
+                        <input type="radio" name="prev-accounting-has" value="Nova" checked>
+                        <span>Empresa Nova (Abertura)</span>
+                      </label>
+                      <label class="radio-label">
+                        <input type="radio" name="prev-accounting-has" value="Migração">
+                        <span>Migração</span>
+                      </label>
+                    </div>
                   </div>
-                </div>
-                <div class="form-group prev-accounting-fields" style="display:none;">
-                  <label for="prev-accounting-name">Nome da Contabilidade Anterior</label>
-                  <input type="text" id="prev-accounting-name" placeholder="Ex: ABC Contabilidade">
-                </div>
-                <div class="form-group prev-accounting-fields" style="display:none;">
-                  <label for="prev-accounting-phone">Telefone de Contato</label>
-                  <input type="text" id="prev-accounting-phone" placeholder="(00) 00000-0000">
-                </div>
-                <div class="form-group prev-accounting-fields" style="display:none; grid-column: span 3;">
-                  <label for="prev-accounting-contact">Nome do Contato na Contabilidade</label>
-                  <input type="text" id="prev-accounting-contact" placeholder="Ex: Maria (Transição de Contas)">
+                  <div class="form-group prev-accounting-fields" style="display:none;">
+                    <label for="prev-accounting-name">Nome da Contabilidade Anterior</label>
+                    <input type="text" id="prev-accounting-name" placeholder="Ex: ABC Contabilidade">
+                  </div>
+                  <div class="form-group prev-accounting-fields" style="display:none;">
+                    <label for="prev-accounting-phone">Telefone de Contato</label>
+                    <input type="text" id="prev-accounting-phone" placeholder="(00) 00000-0000">
+                  </div>
+                  <div class="form-group prev-accounting-fields" style="display:none; grid-column: span 3;">
+                    <label for="prev-accounting-contact">Nome do Contato na Contabilidade</label>
+                    <input type="text" id="prev-accounting-contact" placeholder="Ex: Maria (Transição de Contas)">
+                  </div>
                 </div>
               </div>
             </div>
 
             <!-- SEÇÃO 2: ATIVIDADE DA EMPRESA -->
-            <div class="form-section">
+            <div class="form-section alt-toggle-block" id="sec-atividade">
               <div class="section-header">
                 <span class="section-number">2</span>
                 <h3 class="section-title">Atividade da Empresa</h3>
@@ -384,7 +470,7 @@
             </div>
 
             <!-- SEÇÃO 3: DADOS DOS SÓCIOS -->
-            <div class="form-section">
+            <div class="form-section alt-toggle-block" id="sec-socios">
               <div class="section-header">
                 <span class="section-number">3</span>
                 <h3 class="section-title">Dados dos Sócios</h3>
@@ -396,7 +482,7 @@
             </div>
 
             <!-- SEÇÃO 4: FUNCIONÁRIOS -->
-            <div class="form-section">
+            <div class="form-section alt-toggle-block" id="sec-funcionarios">
               <div class="section-header">
                 <span class="section-number">4</span>
                 <h3 class="section-title">Funcionários</h3>
@@ -410,7 +496,7 @@
             </div>
 
             <!-- SEÇÃO 5: CERTIFICADO DIGITAL -->
-            <div class="form-section">
+            <div class="form-section alt-toggle-block" id="sec-certificado">
               <div class="section-header">
                 <span class="section-number">5</span>
                 <h3 class="section-title">Certificado Digital</h3>
@@ -448,7 +534,7 @@
             </div>
 
             <!-- SEÇÃO 6: SENHAS DE ACESSO (ÁREA FISCAL) -->
-            <div class="form-section">
+            <div class="form-section alt-toggle-block" id="sec-senhas-fiscais">
               <div class="section-header">
                 <span class="section-number">6</span>
                 <h3 class="section-title">Senhas de Acesso (Área Fiscal)</h3>
@@ -491,6 +577,18 @@
               <div class="form-group">
                 <label for="fiscal-pwd-others">Outras Senhas Pertinentes</label>
                 <textarea id="fiscal-pwd-others" rows="2" placeholder="Insira outras senhas relevantes (ex: Conectividade Social, senha gov.br, cadastros municipais adicionais)..."></textarea>
+              </div>
+            </div>
+
+            <!-- SEÇÃO DE OUTRAS ALTERAÇÕES CONTRATUAIS -->
+            <div id="block-alt-outros" class="form-section alt-toggle-block">
+              <div class="section-header">
+                <span class="section-number">📝</span>
+                <h3 class="section-title">Outras Alterações / Observações Societárias</h3>
+              </div>
+              <div class="form-group">
+                <label for="alteracao-outros-desc">Descreva detalhadamente as demais alterações a serem realizadas</label>
+                <textarea id="alteracao-outros-desc" rows="4" placeholder="Ex: Alteração da cláusula de administração, redistribuição de quotas entre os sócios, aumento de capital social..."></textarea>
               </div>
             </div>
 

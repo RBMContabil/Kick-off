@@ -110,10 +110,17 @@ async function sendEmailNotification(kickoff) {
   }
   
   try {
+    let tipoLabel = 'Abertura de Empresa Nova';
+    if (kickoff.tipoServico === 'alteracao') {
+      tipoLabel = 'Alteração Contratual / Societária';
+    } else if (kickoff.tipoServico === 'migracao' || kickoff.company.prevAccountingHas === 'Migração' || kickoff.company.prevAccountingHas === 'Sim') {
+      tipoLabel = 'Migração de Contabilidade';
+    }
+
     const payload = {
-      _subject: `Novo Kick-off Recebido: ${kickoff.company.razaoSocial || 'Empresa sem Razao Social'}`,
+      _subject: `Novo Kick-off Recebido [${tipoLabel}]: ${kickoff.company.razaoSocial || 'Empresa sem Razao Social'}`,
       _template: 'table',
-      "Tipo de Processo": kickoff.company.prevAccountingHas === 'Migracao' || kickoff.company.prevAccountingHas === 'Sim' ? 'Migracao de Contabilidade' : 'Abertura de Empresa Nova',
+      "Tipo de Processo": tipoLabel,
       "Razao Social": kickoff.company.razaoSocial || 'Empresa sem Razao Social',
       "CNPJ": kickoff.company.cnpj || 'Nao Informado',
       "E-mail da Empresa": kickoff.company.email || 'Nao Informado',
@@ -144,7 +151,21 @@ async function sendEmailNotification(kickoff) {
 function saveFormDraft() {
   if (!checkClientMode()) return; // So salva rascunho em modo cliente
 
+  const tipoServicoRadio = document.querySelector('input[name="tipo_servico"]:checked');
+  const tipoServico = tipoServicoRadio ? tipoServicoRadio.value : 'abertura';
+
   const draftData = {
+    tipoServico: tipoServico,
+    alterationItems: {
+      nome: document.getElementById('chk-alt-nome')?.checked || false,
+      endereco: document.getElementById('chk-alt-endereco')?.checked || false,
+      atividade: document.getElementById('chk-alt-atividade')?.checked || false,
+      socio: document.getElementById('chk-alt-socio')?.checked || false,
+      regime: document.getElementById('chk-alt-regime')?.checked || false,
+      certFiscal: document.getElementById('chk-alt-cert-fiscal')?.checked || false,
+      outros: document.getElementById('chk-alt-outros')?.checked || false,
+      outrosDesc: document.getElementById('alteracao-outros-desc')?.value || ''
+    },
     company: {
       razaoSocial: document.getElementById('company-razao-social').value,
       nomeFantasia: document.getElementById('company-nome-fantasia').value,
@@ -197,6 +218,30 @@ function loadFormDraft() {
   try {
     const draft = JSON.parse(raw);
     if (!draft) return;
+
+    if (draft.tipoServico) {
+      const rad = document.querySelector(`input[name="tipo_servico"][value="${draft.tipoServico}"]`);
+      if (rad) rad.checked = true;
+    }
+
+    if (draft.alterationItems) {
+      const setChk = (id, val) => {
+        const el = document.getElementById(id);
+        if (el) el.checked = !!val;
+      };
+      setChk('chk-alt-nome', draft.alterationItems.nome);
+      setChk('chk-alt-endereco', draft.alterationItems.endereco);
+      setChk('chk-alt-atividade', draft.alterationItems.atividade);
+      setChk('chk-alt-socio', draft.alterationItems.socio);
+      setChk('chk-alt-regime', draft.alterationItems.regime);
+      setChk('chk-alt-cert-fiscal', draft.alterationItems.certFiscal);
+      setChk('chk-alt-outros', draft.alterationItems.outros);
+
+      const descEl = document.getElementById('alteracao-outros-desc');
+      if (descEl) descEl.value = draft.alterationItems.outrosDesc || '';
+    }
+
+    updateAlterationFieldsVisibility();
 
     if (draft.company) {
       document.getElementById('company-razao-social').value = draft.company.razaoSocial || '';
@@ -556,31 +601,69 @@ async function seedDemoDataIfEmpty() {
 
 // --- 3. CONTROLE DE EVENTOS & ABAS ---
 function setupEventListeners() {
-  // Seleção de Tipo de Processo (Abertura vs Migração) no Modo Cliente
-  document.getElementById('btn-select-abertura').addEventListener('click', () => {
-    const welcomeCard = document.getElementById('welcome-selection-card');
-    if (welcomeCard) welcomeCard.style.display = 'none';
-    const formCard = document.querySelector('.form-card');
-    if (formCard) formCard.style.display = 'block';
+  // Seleção de Tipo de Processo (Abertura, Migração, Alteração) no Modo Cliente
+  const selectAberturaBtn = document.getElementById('btn-select-abertura');
+  if (selectAberturaBtn) {
+    selectAberturaBtn.addEventListener('click', () => {
+      const welcomeCard = document.getElementById('welcome-selection-card');
+      if (welcomeCard) welcomeCard.style.display = 'none';
+      const formCard = document.querySelector('.form-card');
+      if (formCard) formCard.style.display = 'block';
 
-    const newRadio = document.querySelector('input[name="prev-accounting-has"][value="Nova"]');
-    if (newRadio) {
-      newRadio.checked = true;
-      newRadio.dispatchEvent(new Event('change'));
-    }
+      const rad = document.querySelector('input[name="tipo_servico"][value="abertura"]');
+      if (rad) rad.checked = true;
+
+      const newRadio = document.querySelector('input[name="prev-accounting-has"][value="Nova"]');
+      if (newRadio) {
+        newRadio.checked = true;
+        newRadio.dispatchEvent(new Event('change'));
+      }
+      updateAlterationFieldsVisibility();
+    });
+  }
+
+  const selectMigracaoBtn = document.getElementById('btn-select-migracao');
+  if (selectMigracaoBtn) {
+    selectMigracaoBtn.addEventListener('click', () => {
+      const welcomeCard = document.getElementById('welcome-selection-card');
+      if (welcomeCard) welcomeCard.style.display = 'none';
+      const formCard = document.querySelector('.form-card');
+      if (formCard) formCard.style.display = 'block';
+
+      const rad = document.querySelector('input[name="tipo_servico"][value="migracao"]');
+      if (rad) rad.checked = true;
+
+      const migRadio = document.querySelector('input[name="prev-accounting-has"][value="Migração"]');
+      if (migRadio) {
+        migRadio.checked = true;
+        migRadio.dispatchEvent(new Event('change'));
+      }
+      updateAlterationFieldsVisibility();
+    });
+  }
+
+  const selectAlteracaoBtn = document.getElementById('btn-select-alteracao');
+  if (selectAlteracaoBtn) {
+    selectAlteracaoBtn.addEventListener('click', () => {
+      const welcomeCard = document.getElementById('welcome-selection-card');
+      if (welcomeCard) welcomeCard.style.display = 'none';
+      const formCard = document.querySelector('.form-card');
+      if (formCard) formCard.style.display = 'block';
+
+      const rad = document.querySelector('input[name="tipo_servico"][value="alteracao"]');
+      if (rad) rad.checked = true;
+
+      updateAlterationFieldsVisibility();
+    });
+  }
+
+  // Radios de Tipo de Serviço e Checkboxes de Alteração
+  document.querySelectorAll('input[name="tipo_servico"]').forEach(radio => {
+    radio.addEventListener('change', updateAlterationFieldsVisibility);
   });
 
-  document.getElementById('btn-select-migracao').addEventListener('click', () => {
-    const welcomeCard = document.getElementById('welcome-selection-card');
-    if (welcomeCard) welcomeCard.style.display = 'none';
-    const formCard = document.querySelector('.form-card');
-    if (formCard) formCard.style.display = 'block';
-
-    const migRadio = document.querySelector('input[name="prev-accounting-has"][value="Migração"]');
-    if (migRadio) {
-      migRadio.checked = true;
-      migRadio.dispatchEvent(new Event('change'));
-    }
+  document.querySelectorAll('.chk-alt-item').forEach(chk => {
+    chk.addEventListener('change', updateAlterationFieldsVisibility);
   });
 
   // Tabs switching
@@ -694,6 +777,65 @@ function setupEventListeners() {
 
   // Input masks binding
   bindMasks();
+
+  // Inicializa a visibilidade dinâmica do formulário
+  updateAlterationFieldsVisibility();
+}
+
+// --- CONTROLE DE VISIBILIDADE DOS CAMPOS DE ALTERAÇÃO CONTRATUAL ---
+function updateAlterationFieldsVisibility() {
+  const tipoServicoRadio = document.querySelector('input[name="tipo_servico"]:checked');
+  const tipoServico = tipoServicoRadio ? tipoServicoRadio.value : 'abertura';
+  
+  const checklistBox = document.getElementById('alteracao-checklist-box');
+  const prevAccBlock = document.getElementById('block-alt-prev-acc');
+
+  if (tipoServico === 'alteracao') {
+    if (checklistBox) checklistBox.style.display = 'block';
+    if (prevAccBlock) prevAccBlock.style.display = 'none';
+
+    // Obtém estado das caixas de alteração
+    const chkNome = document.getElementById('chk-alt-nome')?.checked;
+    const chkEndereco = document.getElementById('chk-alt-endereco')?.checked;
+    const chkAtividade = document.getElementById('chk-alt-atividade')?.checked;
+    const chkSocio = document.getElementById('chk-alt-socio')?.checked;
+    const chkRegime = document.getElementById('chk-alt-regime')?.checked;
+    const chkCertFiscal = document.getElementById('chk-alt-cert-fiscal')?.checked;
+    const chkOutros = document.getElementById('chk-alt-outros')?.checked;
+
+    toggleElementDisplay('block-alt-nome', chkNome);
+    toggleElementDisplay('block-alt-endereco', chkEndereco);
+    toggleElementDisplay('sec-atividade', chkAtividade);
+    toggleElementDisplay('sec-socios', chkSocio);
+    toggleElementDisplay('block-alt-regime', chkRegime);
+    toggleElementDisplay('sec-certificado', chkCertFiscal);
+    toggleElementDisplay('sec-senhas-fiscais', chkCertFiscal);
+    toggleElementDisplay('sec-funcionarios', chkCertFiscal);
+    toggleElementDisplay('block-alt-outros', chkOutros);
+
+  } else {
+    // Abertura ou Migração
+    if (checklistBox) checklistBox.style.display = 'none';
+    if (prevAccBlock) prevAccBlock.style.display = (tipoServico === 'migracao') ? 'block' : 'none';
+
+    // Exibe todos os blocos principais para Abertura/Migração
+    toggleElementDisplay('block-alt-nome', true);
+    toggleElementDisplay('block-alt-endereco', true);
+    toggleElementDisplay('sec-atividade', true);
+    toggleElementDisplay('sec-socios', true);
+    toggleElementDisplay('block-alt-regime', true);
+    toggleElementDisplay('sec-certificado', true);
+    toggleElementDisplay('sec-senhas-fiscais', true);
+    toggleElementDisplay('sec-funcionarios', true);
+    toggleElementDisplay('block-alt-outros', false);
+  }
+}
+
+function toggleElementDisplay(id, visible) {
+  const el = document.getElementById(id);
+  if (el) {
+    el.style.display = visible ? 'block' : 'none';
+  }
 }
 
 function switchTab(tabId) {
@@ -1607,6 +1749,14 @@ function resetForm() {
   clearProofAddressFile();
   clearIptuFile();
 
+  // Reseta tipo de serviço e checkboxes de alteração
+  const aberturaRadio = document.querySelector('input[name="tipo_servico"][value="abertura"]');
+  if (aberturaRadio) aberturaRadio.checked = true;
+
+  document.querySelectorAll('.chk-alt-item').forEach(c => c.checked = false);
+  const outrosDesc = document.getElementById('alteracao-outros-desc');
+  if (outrosDesc) outrosDesc.value = '';
+
   // Reseta contabilidade anterior
   document.querySelectorAll('.prev-accounting-fields').forEach(f => f.style.display = 'none');
 
@@ -1623,6 +1773,9 @@ function resetForm() {
 
   // Adiciona um sócio em branco por padrão
   addPartnerCard();
+
+  // Atualiza visibilidade dos blocos
+  updateAlterationFieldsVisibility();
 }
 
 // --- 10. SUBMISSÃO DE FORMULÁRIO (SALVAMENTO) ---
@@ -1708,8 +1861,22 @@ async function handleFormSubmit(e) {
     id = 'kickoff_' + Date.now();
   }
 
+  const tipoServicoRadio = document.querySelector('input[name="tipo_servico"]:checked');
+  const tipoServico = tipoServicoRadio ? tipoServicoRadio.value : 'abertura';
+
   const kickoffData = {
     id: id,
+    tipoServico: tipoServico,
+    alterationItems: {
+      nome: document.getElementById('chk-alt-nome')?.checked || false,
+      endereco: document.getElementById('chk-alt-endereco')?.checked || false,
+      atividade: document.getElementById('chk-alt-atividade')?.checked || false,
+      socio: document.getElementById('chk-alt-socio')?.checked || false,
+      regime: document.getElementById('chk-alt-regime')?.checked || false,
+      certFiscal: document.getElementById('chk-alt-cert-fiscal')?.checked || false,
+      outros: document.getElementById('chk-alt-outros')?.checked || false,
+      outrosDesc: document.getElementById('alteracao-outros-desc')?.value || ''
+    },
     company: {
       razaoSocial: document.getElementById('company-razao-social').value,
       nomeFantasia: document.getElementById('company-nome-fantasia').value,
@@ -1912,6 +2079,29 @@ window.editClient = async function(id) {
 
     setVal('edit-client-id', item.id);
     
+    // Tipo de Serviço & Alteração Contratual
+    const tipoServico = item.tipoServico || 'abertura';
+    const tipoRadio = document.querySelector(`input[name="tipo_servico"][value="${tipoServico}"]`);
+    if (tipoRadio) tipoRadio.checked = true;
+
+    if (item.alterationItems) {
+      const setChk = (id, val) => {
+        const el = document.getElementById(id);
+        if (el) el.checked = !!val;
+      };
+      setChk('chk-alt-nome', item.alterationItems.nome);
+      setChk('chk-alt-endereco', item.alterationItems.endereco);
+      setChk('chk-alt-atividade', item.alterationItems.atividade);
+      setChk('chk-alt-socio', item.alterationItems.socio);
+      setChk('chk-alt-regime', item.alterationItems.regime);
+      setChk('chk-alt-cert-fiscal', item.alterationItems.certFiscal);
+      setChk('chk-alt-outros', item.alterationItems.outros);
+
+      setVal('alteracao-outros-desc', item.alterationItems.outrosDesc);
+    }
+
+    updateAlterationFieldsVisibility();
+
     const company = item.company || {};
     const activity = item.activity || {};
     const certificate = item.certificate || {};
@@ -2428,6 +2618,13 @@ window.printClientPDF = async function(id) {
       `;
     });
 
+    let printTipoProcesso = 'Empresa Nova (Abertura)';
+    if (item.tipoServico === 'alteracao') {
+      printTipoProcesso = 'Alteração Contratual / Societária';
+    } else if (item.tipoServico === 'migracao' || item.company.prevAccountingHas === 'Migração' || item.company.prevAccountingHas === 'Sim') {
+      printTipoProcesso = 'Migração de Contabilidade';
+    }
+
     // Datas formatadas para exibição
     const partsDate = item.implantation.date ? item.implantation.date.split('-') : [];
     const dateFmt = partsDate.length === 3 ? `${partsDate[2]}/${partsDate[1]}/${partsDate[0]}` : item.implantation.date || '-';
@@ -2622,8 +2819,8 @@ window.printClientPDF = async function(id) {
               <div class="print-field-value">${item.company.regime || '-'}</div>
             </td>
             <td style="width: 40%;">
-              <span class="print-field-label">Tipo de Entrada</span>
-              <div class="print-field-value" style="font-weight:bold;">${item.company.prevAccountingHas === 'Migração' || item.company.prevAccountingHas === 'Sim' ? 'Migração de Contabilidade' : 'Empresa Nova (Abertura)'}</div>
+              <span class="print-field-label">Tipo de Processo</span>
+              <div class="print-field-value" style="font-weight:bold;">${printTipoProcesso}</div>
             </td>
           </tr>
           <tr>
@@ -3015,7 +3212,33 @@ window.viewClient = async function(id) {
       });
     }
 
+    let tipoHeaderHtml = '';
+    if (item.tipoServico === 'alteracao') {
+      let itemsList = [];
+      const alt = item.alterationItems || {};
+      if (alt.nome) itemsList.push('✏️ Razão Social / Fantasia');
+      if (alt.endereco) itemsList.push('📍 Endereço da Empresa');
+      if (alt.atividade) itemsList.push('💼 Atividades (CNAEs)');
+      if (alt.socio) itemsList.push('👥 Quadro Societário');
+      if (alt.regime) itemsList.push('📊 Regime Tributário');
+      if (alt.certFiscal) itemsList.push('🔑 Certificado / Senhas Fiscais');
+      if (alt.outros) itemsList.push('📝 Outras Alterações');
+
+      tipoHeaderHtml = `
+        <div style="background:#fffbeb; border:1px solid var(--accent); border-left:5px solid var(--accent); padding:12px 16px; border-radius:8px; margin-bottom:16px;">
+          <div style="font-weight:800; color:var(--primary); font-size:1.05rem; display:flex; align-items:center; gap:8px;">
+            <span style="font-size:1.2rem;">📝</span> PROCESSO: ALTERAÇÃO CONTRATUAL
+          </div>
+          <div style="font-size:0.875rem; color:var(--text-main); margin-top:6px; font-weight:600;">
+            Itens alterados: <span style="color:var(--primary); font-weight:700;">${itemsList.length > 0 ? itemsList.join(' • ') : 'Nenhum item marcado'}</span>
+          </div>
+          ${alt.outrosDesc ? `<div style="font-size:0.85rem; margin-top:8px; background:#fff; padding:8px 12px; border-radius:6px; border:1px solid var(--border); color:var(--text-main);"><strong>Detalhes das Alterações:</strong><div style="white-space:pre-wrap; margin-top:4px;">${alt.outrosDesc}</div></div>` : ''}
+        </div>
+      `;
+    }
+
     document.getElementById('view-modal-body').innerHTML = `
+      ${tipoHeaderHtml}
       <!-- CARD 1: DADOS PRINCIPAIS DA EMPRESA -->
       <div style="background: #f8fafc; border: 1px solid var(--border); padding: 16px; border-radius: 8px; margin-bottom: 16px;">
         <h4 style="color: var(--primary); font-size: 1rem; margin-top: 0; margin-bottom: 12px; border-bottom: 2px solid var(--accent); padding-bottom: 6px; font-weight: 700; display: flex; align-items: center; gap: 6px;">
