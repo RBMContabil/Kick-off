@@ -668,10 +668,28 @@ function setupEventListeners() {
 
   // Tabs switching
   document.getElementById('tab-dashboard-btn').addEventListener('click', () => switchTab('dashboard'));
-  document.getElementById('tab-formulario-btn').addEventListener('click', () => {
-    resetForm();
-    switchTab('formulario');
-  });
+  
+  const tabFormBtn = document.getElementById('tab-formulario-btn');
+  if (tabFormBtn) {
+    tabFormBtn.addEventListener('click', () => {
+      resetForm();
+      const rad = document.querySelector('input[name="tipo_servico"][value="abertura"]');
+      if (rad) rad.checked = true;
+      updateAlterationFieldsVisibility();
+      switchTab('formulario');
+    });
+  }
+
+  const tabAltBtn = document.getElementById('tab-alteracao-btn');
+  if (tabAltBtn) {
+    tabAltBtn.addEventListener('click', () => {
+      resetForm();
+      const rad = document.querySelector('input[name="tipo_servico"][value="alteracao"]');
+      if (rad) rad.checked = true;
+      updateAlterationFieldsVisibility();
+      switchTab('alteracao');
+    });
+  }
 
   // Dynamic buttons
   document.getElementById('btn-add-partner').addEventListener('click', () => addPartnerCard());
@@ -847,7 +865,13 @@ function switchTab(tabId) {
     document.getElementById('tab-dashboard').classList.add('active');
     renderDashboard();
   } else {
-    document.getElementById('tab-formulario-btn').classList.add('active');
+    if (tabId === 'alteracao') {
+      const tabAltBtn = document.getElementById('tab-alteracao-btn');
+      if (tabAltBtn) tabAltBtn.classList.add('active');
+    } else {
+      const tabFormBtn = document.getElementById('tab-formulario-btn');
+      if (tabFormBtn) tabFormBtn.classList.add('active');
+    }
     document.getElementById('tab-formulario').classList.add('active');
 
     const isClient = checkClientMode();
@@ -3016,9 +3040,9 @@ function applyAdminRestrictions() {
     adminToggleBtn.classList.remove('btn-primary');
     adminToggleBtn.classList.add('btn-outline');
     
-    // Se estiver na aba do formulário, volta para o dashboard
+    // Se estiver na aba do formulário ou alteração, volta para o dashboard
     const currentTabBtn = document.querySelector('.tab-btn.active');
-    if (currentTabBtn && currentTabBtn.id === 'tab-formulario-btn') {
+    if (currentTabBtn && (currentTabBtn.id === 'tab-formulario-btn' || currentTabBtn.id === 'tab-alteracao-btn')) {
       switchTab('dashboard');
     }
   }
