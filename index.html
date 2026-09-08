@@ -254,6 +254,14 @@
                     <span>📊 Regime Tributário</span>
                   </label>
                   <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 0.85rem; font-weight: 600; background: #f1f5f9; padding: 8px 12px; border-radius: 6px; border: 1px solid var(--border);">
+                    <input type="checkbox" id="chk-alt-financas" class="chk-alt-item" value="financas">
+                    <span>💰 Capital Social, Dívidas & Parcelamentos</span>
+                  </label>
+                  <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 0.85rem; font-weight: 600; background: #f1f5f9; padding: 8px 12px; border-radius: 6px; border: 1px solid var(--border);">
+                    <input type="checkbox" id="chk-alt-funcionarios" class="chk-alt-item" value="funcionarios">
+                    <span>👨‍💼 Quadro de Funcionários & Consignado</span>
+                  </label>
+                  <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 0.85rem; font-weight: 600; background: #f1f5f9; padding: 8px 12px; border-radius: 6px; border: 1px solid var(--border);">
                     <input type="checkbox" id="chk-alt-cert-fiscal" class="chk-alt-item" value="cert_fiscal">
                     <span>🔑 Certificado / Senhas Fiscais</span>
                   </label>
@@ -482,16 +490,106 @@
               </div>
             </div>
 
-            <!-- SEÇÃO 4: FUNCIONÁRIOS -->
-            <div class="form-section alt-toggle-block" id="sec-funcionarios">
+            <!-- SEÇÃO 4: CAPITAL SOCIAL, DÍVIDAS E PARCELAMENTOS -->
+            <div class="form-section alt-toggle-block" id="sec-financas">
               <div class="section-header">
                 <span class="section-number">4</span>
-                <h3 class="section-title">Funcionários</h3>
+                <h3 class="section-title">Capital Social, Dívidas & Parcelamentos</h3>
               </div>
-              <div class="grid-3">
+              
+              <div class="grid-3" style="margin-bottom: 1.25rem;">
                 <div class="form-group">
-                  <label for="employees-qty">Quantidade de Funcionários</label>
-                  <input type="number" id="employees-qty" min="0" value="0">
+                  <label for="company-capital-social">Capital Social (R$)</label>
+                  <input type="text" id="company-capital-social" placeholder="Ex: R$ 50.000,00">
+                </div>
+              </div>
+
+              <div class="grid-2" style="gap: 1.25rem;">
+                <!-- Dívidas -->
+                <div class="form-group" style="background: #f8fafc; border: 1px solid var(--border); padding: 12px; border-radius: var(--radius-sm);">
+                  <label style="font-weight:700; color:var(--primary); margin-bottom:8px; display:block;">A empresa possui alguma dívida?</label>
+                  <div style="display: flex; gap: 15px; align-items: center; margin-bottom: 8px;">
+                    <label style="display:flex; align-items:center; gap:6px; cursor:pointer;">
+                      <input type="radio" name="company-debt-has" value="Sim" class="radio-debt-yes"> <span>Sim</span>
+                    </label>
+                    <label style="display:flex; align-items:center; gap:6px; cursor:pointer;">
+                      <input type="radio" name="company-debt-has" value="Não" checked class="radio-debt-no"> <span>Não</span>
+                    </label>
+                    <label style="display:flex; align-items:center; gap:6px; cursor:pointer;">
+                      <input type="radio" name="company-debt-has" value="Não sei" class="radio-debt-dontknow"> <span>Não sei</span>
+                    </label>
+                  </div>
+                  <div id="group-debt-details" style="display:none; margin-top:8px;">
+                    <label for="company-debt-details" style="font-size:0.85rem; font-weight:600;">Qual seria a dívida / Detalhes:</label>
+                    <textarea id="company-debt-details" rows="2" placeholder="Descreva credores, tipos de dívida ou situação bancária/fiscal..." style="font-size:0.85rem;"></textarea>
+                  </div>
+                </div>
+
+                <!-- Parcelamentos -->
+                <div class="form-group" style="background: #f8fafc; border: 1px solid var(--border); padding: 12px; border-radius: var(--radius-sm);">
+                  <label style="font-weight:700; color:var(--primary); margin-bottom:8px; display:block;">A empresa possui algum parcelamento?</label>
+                  <div style="display: flex; gap: 15px; align-items: center; margin-bottom: 8px;">
+                    <label style="display:flex; align-items:center; gap:6px; cursor:pointer;">
+                      <input type="radio" name="company-installment-has" value="Sim" class="radio-installment-yes"> <span>Sim</span>
+                    </label>
+                    <label style="display:flex; align-items:center; gap:6px; cursor:pointer;">
+                      <input type="radio" name="company-installment-has" value="Não" checked class="radio-installment-no"> <span>Não</span>
+                    </label>
+                    <label style="display:flex; align-items:center; gap:6px; cursor:pointer;">
+                      <input type="radio" name="company-installment-has" value="Não sei" class="radio-installment-dontknow"> <span>Não sei</span>
+                    </label>
+                  </div>
+                  <div id="group-installment-details" style="display:none; margin-top:8px;">
+                    <label for="company-installment-details" style="font-size:0.85rem; font-weight:600;">Qual seria o parcelamento / Detalhes:</label>
+                    <textarea id="company-installment-details" rows="2" placeholder="Ex: Simples Nacional, PERT, REFIS, parcelamento fiscal ou bancário..." style="font-size:0.85rem;"></textarea>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- SEÇÃO 5: FUNCIONÁRIOS E EMPRÉSTIMO CONSIGNADO -->
+            <div class="form-section alt-toggle-block" id="sec-funcionarios">
+              <div class="section-header">
+                <span class="section-number">5</span>
+                <h3 class="section-title">Quadro de Funcionários & Empréstimo Consignado</h3>
+              </div>
+              
+              <div class="grid-2" style="gap: 1.25rem;">
+                <!-- Funcionários -->
+                <div class="form-group" style="background: #f8fafc; border: 1px solid var(--border); padding: 12px; border-radius: var(--radius-sm);">
+                  <label style="font-weight:700; color:var(--primary); margin-bottom:8px; display:block;">A empresa possui funcionários?</label>
+                  <div style="display: flex; gap: 15px; align-items: center; margin-bottom: 8px;">
+                    <label style="display:flex; align-items:center; gap:6px; cursor:pointer;">
+                      <input type="radio" name="company-employees-has" value="Sim" class="radio-employees-yes"> <span>Sim</span>
+                    </label>
+                    <label style="display:flex; align-items:center; gap:6px; cursor:pointer;">
+                      <input type="radio" name="company-employees-has" value="Não" checked class="radio-employees-no"> <span>Não</span>
+                    </label>
+                  </div>
+                  <div id="group-employees-count" style="display:none; margin-top:8px;">
+                    <label for="employees-qty" style="font-size:0.85rem; font-weight:600;">Quantos funcionários?</label>
+                    <input type="number" id="employees-qty" min="0" value="0" placeholder="0">
+                  </div>
+                </div>
+
+                <!-- Empréstimo Consignado -->
+                <div class="form-group" style="background: #f8fafc; border: 1px solid var(--border); padding: 12px; border-radius: var(--radius-sm);">
+                  <label style="font-weight:700; color:var(--primary); margin-bottom:8px; display:block;">Existe empréstimo consignado (sócios ou funcionários)?</label>
+                  <div style="display: flex; gap: 15px; align-items: center; margin-bottom: 8px;">
+                    <label style="display:flex; align-items:center; gap:6px; cursor:pointer;">
+                      <input type="radio" name="company-consigned-has" value="Sim" class="radio-consigned-yes"> <span>Sim</span>
+                    </label>
+                    <label style="display:flex; align-items:center; gap:6px; cursor:pointer;">
+                      <input type="radio" name="company-consigned-has" value="Não" checked class="radio-consigned-no"> <span>Não</span>
+                    </label>
+                    <label style="display:flex; align-items:center; gap:6px; cursor:pointer;">
+                      <input type="radio" name="company-consigned-has" value="Não sei" class="radio-consigned-dontknow"> <span>Não sei</span>
+                    </label>
+                  </div>
+                  <div id="group-consigned-details" style="display:none; margin-top:8px;">
+                    <label for="company-consigned-details" style="font-size:0.85rem; font-weight:600;">Detalhes do empréstimo consignado:</label>
+                    <textarea id="company-consigned-details" rows="2" placeholder="Descreva os envolvidos, banco ou detalhes do empréstimo..." style="font-size:0.85rem;"></textarea>
+                  </div>
                 </div>
               </div>
             </div>

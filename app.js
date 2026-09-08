@@ -732,6 +732,35 @@ function setupEventListeners() {
     });
   });
 
+  // Radio toggles para Dívidas, Parcelamentos, Funcionários e Consignados
+  document.querySelectorAll('input[name="company-debt-has"]').forEach(radio => {
+    radio.addEventListener('change', (e) => {
+      const g = document.getElementById('group-debt-details');
+      if (g) g.style.display = (e.target.value === 'Sim') ? 'block' : 'none';
+    });
+  });
+
+  document.querySelectorAll('input[name="company-installment-has"]').forEach(radio => {
+    radio.addEventListener('change', (e) => {
+      const g = document.getElementById('group-installment-details');
+      if (g) g.style.display = (e.target.value === 'Sim') ? 'block' : 'none';
+    });
+  });
+
+  document.querySelectorAll('input[name="company-employees-has"]').forEach(radio => {
+    radio.addEventListener('change', (e) => {
+      const g = document.getElementById('group-employees-count');
+      if (g) g.style.display = (e.target.value === 'Sim') ? 'block' : 'none';
+    });
+  });
+
+  document.querySelectorAll('input[name="company-consigned-has"]').forEach(radio => {
+    radio.addEventListener('change', (e) => {
+      const g = document.getElementById('group-consigned-details');
+      if (g) g.style.display = (e.target.value === 'Sim') ? 'block' : 'none';
+    });
+  });
+
   // File upload change listeners
   document.getElementById('activity-cnaes-file').addEventListener('change', handleFileAttachment);
   document.getElementById('btn-clear-cnaes-file').addEventListener('click', clearAttachedFile);
@@ -818,6 +847,8 @@ function updateAlterationFieldsVisibility() {
     const chkAtividade = document.getElementById('chk-alt-atividade')?.checked;
     const chkSocio = document.getElementById('chk-alt-socio')?.checked;
     const chkRegime = document.getElementById('chk-alt-regime')?.checked;
+    const chkFinancas = document.getElementById('chk-alt-financas')?.checked;
+    const chkFuncionarios = document.getElementById('chk-alt-funcionarios')?.checked;
     const chkCertFiscal = document.getElementById('chk-alt-cert-fiscal')?.checked;
     const chkOutros = document.getElementById('chk-alt-outros')?.checked;
 
@@ -826,9 +857,10 @@ function updateAlterationFieldsVisibility() {
     toggleElementDisplay('sec-atividade', chkAtividade);
     toggleElementDisplay('sec-socios', chkSocio);
     toggleElementDisplay('block-alt-regime', chkRegime);
+    toggleElementDisplay('sec-financas', chkFinancas);
+    toggleElementDisplay('sec-funcionarios', chkFuncionarios);
     toggleElementDisplay('sec-certificado', chkCertFiscal);
     toggleElementDisplay('sec-senhas-fiscais', chkCertFiscal);
-    toggleElementDisplay('sec-funcionarios', chkCertFiscal);
     toggleElementDisplay('block-alt-outros', chkOutros);
 
   } else {
@@ -842,9 +874,10 @@ function updateAlterationFieldsVisibility() {
     toggleElementDisplay('sec-atividade', true);
     toggleElementDisplay('sec-socios', true);
     toggleElementDisplay('block-alt-regime', true);
+    toggleElementDisplay('sec-financas', true);
+    toggleElementDisplay('sec-funcionarios', true);
     toggleElementDisplay('sec-certificado', true);
     toggleElementDisplay('sec-senhas-fiscais', true);
-    toggleElementDisplay('sec-funcionarios', true);
     toggleElementDisplay('block-alt-outros', false);
   }
 }
@@ -1781,6 +1814,35 @@ function resetForm() {
   const outrosDesc = document.getElementById('alteracao-outros-desc');
   if (outrosDesc) outrosDesc.value = '';
 
+  // Reseta campos financeiros e funcionários
+  const setVal = (id, val) => {
+    const el = document.getElementById(id);
+    if (el) el.value = val || '';
+  };
+  setVal('company-capital-social', '');
+  setVal('company-debt-details', '');
+  setVal('company-installment-details', '');
+  setVal('company-consigned-details', '');
+  setVal('employees-qty', '0');
+
+  const rDebtNo = document.querySelector('input[name="company-debt-has"][value="Não"]');
+  if (rDebtNo) rDebtNo.checked = true;
+  const rInstNo = document.querySelector('input[name="company-installment-has"][value="Não"]');
+  if (rInstNo) rInstNo.checked = true;
+  const rEmpNo = document.querySelector('input[name="company-employees-has"][value="Não"]');
+  if (rEmpNo) rEmpNo.checked = true;
+  const rConsNo = document.querySelector('input[name="company-consigned-has"][value="Não"]');
+  if (rConsNo) rConsNo.checked = true;
+
+  const gDebt = document.getElementById('group-debt-details');
+  if (gDebt) gDebt.style.display = 'none';
+  const gInst = document.getElementById('group-installment-details');
+  if (gInst) gInst.style.display = 'none';
+  const gEmp = document.getElementById('group-employees-count');
+  if (gEmp) gEmp.style.display = 'none';
+  const gCons = document.getElementById('group-consigned-details');
+  if (gCons) gCons.style.display = 'none';
+
   // Reseta contabilidade anterior
   document.querySelectorAll('.prev-accounting-fields').forEach(f => f.style.display = 'none');
 
@@ -1897,6 +1959,8 @@ async function handleFormSubmit(e) {
       atividade: document.getElementById('chk-alt-atividade')?.checked || false,
       socio: document.getElementById('chk-alt-socio')?.checked || false,
       regime: document.getElementById('chk-alt-regime')?.checked || false,
+      financas: document.getElementById('chk-alt-financas')?.checked || false,
+      funcionarios: document.getElementById('chk-alt-funcionarios')?.checked || false,
       certFiscal: document.getElementById('chk-alt-cert-fiscal')?.checked || false,
       outros: document.getElementById('chk-alt-outros')?.checked || false,
       outrosDesc: document.getElementById('alteracao-outros-desc')?.value || ''
@@ -1906,6 +1970,14 @@ async function handleFormSubmit(e) {
       nomeFantasia: document.getElementById('company-nome-fantasia').value,
       cnpj: document.getElementById('company-cnpj').value,
       regime: document.getElementById('company-regime').value,
+      capitalSocial: document.getElementById('company-capital-social')?.value || '',
+      debtHas: document.querySelector('input[name="company-debt-has"]:checked')?.value || 'Não',
+      debtDetails: document.getElementById('company-debt-details')?.value || '',
+      installmentHas: document.querySelector('input[name="company-installment-has"]:checked')?.value || 'Não',
+      installmentDetails: document.getElementById('company-installment-details')?.value || '',
+      employeesHas: document.querySelector('input[name="company-employees-has"]:checked')?.value || 'Não',
+      consignedHas: document.querySelector('input[name="company-consigned-has"]:checked')?.value || 'Não',
+      consignedDetails: document.getElementById('company-consigned-details')?.value || '',
       telefone: document.getElementById('company-telefone').value,
       email: document.getElementById('company-email').value,
       cep: document.getElementById('address-cep').value,
@@ -2118,6 +2190,8 @@ window.editClient = async function(id) {
       setChk('chk-alt-atividade', item.alterationItems.atividade);
       setChk('chk-alt-socio', item.alterationItems.socio);
       setChk('chk-alt-regime', item.alterationItems.regime);
+      setChk('chk-alt-financas', item.alterationItems.financas);
+      setChk('chk-alt-funcionarios', item.alterationItems.funcionarios);
       setChk('chk-alt-cert-fiscal', item.alterationItems.certFiscal);
       setChk('chk-alt-outros', item.alterationItems.outros);
 
@@ -2240,8 +2314,36 @@ window.editClient = async function(id) {
       addPartnerCard();
     }
 
-    // Funcionários e Certificado
+    // Dados Financeiros, Dívidas & Consignado
+    setVal('company-capital-social', company.capitalSocial);
+
+    const debtVal = company.debtHas || 'Não';
+    const debtRadio = document.querySelector(`input[name="company-debt-has"][value="${debtVal}"]`);
+    if (debtRadio) debtRadio.checked = true;
+    const gDebt = document.getElementById('group-debt-details');
+    if (gDebt) gDebt.style.display = (debtVal === 'Sim') ? 'block' : 'none';
+    setVal('company-debt-details', company.debtDetails);
+
+    const instVal = company.installmentHas || 'Não';
+    const instRadio = document.querySelector(`input[name="company-installment-has"][value="${instVal}"]`);
+    if (instRadio) instRadio.checked = true;
+    const gInst = document.getElementById('group-installment-details');
+    if (gInst) gInst.style.display = (instVal === 'Sim') ? 'block' : 'none';
+    setVal('company-installment-details', company.installmentDetails);
+
+    const empVal = company.employeesHas || (item.employeesQty > 0 ? 'Sim' : 'Não');
+    const empRadio = document.querySelector(`input[name="company-employees-has"][value="${empVal}"]`);
+    if (empRadio) empRadio.checked = true;
+    const gEmp = document.getElementById('group-employees-count');
+    if (gEmp) gEmp.style.display = (empVal === 'Sim') ? 'block' : 'none';
     setVal('employees-qty', item.employeesQty || 0);
+
+    const consVal = company.consignedHas || 'Não';
+    const consRadio = document.querySelector(`input[name="company-consigned-has"][value="${consVal}"]`);
+    if (consRadio) consRadio.checked = true;
+    const gCons = document.getElementById('group-consigned-details');
+    if (gCons) gCons.style.display = (consVal === 'Sim') ? 'block' : 'none';
+    setVal('company-consigned-details', company.consignedDetails);
     
     const certHasVal = certificate.has || 'Não';
     const certRadio = document.querySelector(`input[name="cert-has"][value="${certHasVal}"]`);
@@ -2917,19 +3019,48 @@ window.printClientPDF = async function(id) {
           ${partnersRows}
         </div>
 
-        <!-- SEÇÃO 4: FUNCIONÁRIOS -->
-        <div class="print-section-title">4. Funcionários</div>
+        <!-- SEÇÃO 4: CAPITAL SOCIAL, DÍVIDAS E PARCELAMENTOS -->
+        <div class="print-section-title">4. Capital Social, Dívidas e Parcelamentos</div>
         <table class="print-table">
           <tr>
-            <td>
-              <span class="print-field-label">Quantidade de Funcionários</span>
-              <div class="print-field-value" style="font-weight:bold; font-size:9.5pt;">${item.employeesQty || 0} funcionários</div>
+            <td style="width: 34%;">
+              <span class="print-field-label">Capital Social</span>
+              <div class="print-field-value" style="font-weight:bold; font-size:9pt;">${item.company.capitalSocial || 'Não informado'}</div>
+            </td>
+            <td style="width: 33%;">
+              <span class="print-field-label">Possui Dívida?</span>
+              <div class="print-field-value">${item.company.debtHas || 'Não'}</div>
+              ${item.company.debtHas === 'Sim' && item.company.debtDetails ? `<div style="font-size:7.5pt; color:#444; margin-top:2px;"><strong>Descrição:</strong> ${item.company.debtDetails}</div>` : ''}
+            </td>
+            <td style="width: 33%;">
+              <span class="print-field-label">Possui Parcelamento?</span>
+              <div class="print-field-value">${item.company.installmentHas || 'Não'}</div>
+              ${item.company.installmentHas === 'Sim' && item.company.installmentDetails ? `<div style="font-size:7.5pt; color:#444; margin-top:2px;"><strong>Descrição:</strong> ${item.company.installmentDetails}</div>` : ''}
             </td>
           </tr>
         </table>
 
-        <!-- SEÇÃO 5: CERTIFICADO DIGITAL -->
-        <div class="print-section-title">5. Certificado Digital</div>
+        <!-- SEÇÃO 5: FUNCIONÁRIOS E EMPRÉSTIMO CONSIGNADO -->
+        <div class="print-section-title">5. Quadro de Funcionários & Empréstimo Consignado</div>
+        <table class="print-table">
+          <tr>
+            <td style="width: 50%;">
+              <span class="print-field-label">Possui Funcionários / Quantidade</span>
+              <div class="print-field-value" style="font-weight:bold; font-size:9.5pt;">
+                ${item.company.employeesHas || (item.employeesQty > 0 ? 'Sim' : 'Não')} 
+                ${item.employeesQty ? '(' + item.employeesQty + ' funcionários)' : ''}
+              </div>
+            </td>
+            <td style="width: 50%;">
+              <span class="print-field-label">Empréstimo Consignado (Sócios ou Funcionários)</span>
+              <div class="print-field-value">${item.company.consignedHas || 'Não'}</div>
+              ${item.company.consignedHas === 'Sim' && item.company.consignedDetails ? `<div style="font-size:7.5pt; color:#444; margin-top:2px;"><strong>Detalhes:</strong> ${item.company.consignedDetails}</div>` : ''}
+            </td>
+          </tr>
+        </table>
+
+        <!-- SEÇÃO 6: CERTIFICADO DIGITAL -->
+        <div class="print-section-title">6. Certificado Digital</div>
         <table class="print-table">
           <tr>
             <td style="width: 33%;">
@@ -3329,19 +3460,46 @@ window.viewClient = async function(id) {
         ${partnersHtml || '<div style="color:var(--text-muted); font-size:0.85rem; font-style:italic;">Nenhum sócio cadastrado.</div>'}
       </div>
 
-      <!-- CARD 4: EQUIPE & CERTIFICADO -->
+      <!-- CARD 4: CAPITAL SOCIAL, DÍVIDAS E PARCELAMENTOS -->
+      <div style="background: #ffffff; border: 1px solid var(--border); padding: 16px; border-radius: 8px; margin-bottom: 16px;">
+        <h4 style="color: var(--primary); font-size: 1rem; margin-top: 0; margin-bottom: 10px; border-bottom: 2px solid var(--accent); padding-bottom: 6px; font-weight: 700;">
+          💰 4. Capital Social, Dívidas & Parcelamentos
+        </h4>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; font-size: 0.9rem;">
+          <div style="background:#f8fafc; padding:10px; border-radius:6px; border:1px solid var(--border);">
+            <span style="color:var(--text-muted); font-size:0.75rem; font-weight:600; text-transform:uppercase; display:block;">Capital Social:</span>
+            <strong style="color:var(--primary); font-size:1rem;">${company.capitalSocial || 'Não informado'}</strong>
+          </div>
+          <div style="background:#f8fafc; padding:10px; border-radius:6px; border:1px solid var(--border);">
+            <span style="color:var(--text-muted); font-size:0.75rem; font-weight:600; text-transform:uppercase; display:block;">Possui Dívida?</span>
+            <strong style="color:${company.debtHas === 'Sim' ? '#dc2626' : 'var(--text-main)'};">${company.debtHas || 'Não'}</strong>
+            ${company.debtHas === 'Sim' && company.debtDetails ? `<div style="font-size:0.8rem; margin-top:4px; color:#475569; white-space:pre-wrap;"><strong>Detalhes:</strong> ${company.debtDetails}</div>` : ''}
+          </div>
+          <div style="background:#f8fafc; padding:10px; border-radius:6px; border:1px solid var(--border);">
+            <span style="color:var(--text-muted); font-size:0.75rem; font-weight:600; text-transform:uppercase; display:block;">Possui Parcelamento?</span>
+            <strong style="color:${company.installmentHas === 'Sim' ? '#d97706' : 'var(--text-main)'};">${company.installmentHas || 'Não'}</strong>
+            ${company.installmentHas === 'Sim' && company.installmentDetails ? `<div style="font-size:0.8rem; margin-top:4px; color:#475569; white-space:pre-wrap;"><strong>Detalhes:</strong> ${company.installmentDetails}</div>` : ''}
+          </div>
+        </div>
+      </div>
+
+      <!-- CARD 5: EQUIPE, CONSIGNADOS & CERTIFICADO -->
       <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;">
         <div style="background: #ffffff; border: 1px solid var(--border); padding: 16px; border-radius: 8px;">
           <h4 style="color: var(--primary); font-size: 1rem; margin-top: 0; margin-bottom: 10px; border-bottom: 2px solid var(--accent); padding-bottom: 6px; font-weight: 700;">
-            👥 4. Funcionários
+            👨‍💼 5. Funcionários & Consignado
           </h4>
-          <div style="font-size: 0.95rem; font-weight: bold; color: var(--primary); padding: 10px; background: #f8fafc; border-radius: 6px; text-align: center;">
-            ${item.employeesQty || 0} colaboradores contratados
+          <div style="font-size: 0.9rem; line-height: 1.45;">
+            <div><strong>Possui Funcionários?</strong> ${company.employeesHas || (item.employeesQty > 0 ? 'Sim' : 'Não')} (${item.employeesQty || 0} colaboradores)</div>
+            <div style="margin-top:8px; border-top:1px dashed var(--border); padding-top:6px;">
+              <strong>Empréstimo Consignado?</strong> ${company.consignedHas || 'Não'}
+              ${company.consignedHas === 'Sim' && company.consignedDetails ? `<div style="font-size:0.8rem; margin-top:4px; color:#475569; white-space:pre-wrap;"><strong>Detalhes:</strong> ${company.consignedDetails}</div>` : ''}
+            </div>
           </div>
         </div>
         <div style="background: #ffffff; border: 1px solid var(--border); padding: 16px; border-radius: 8px;">
           <h4 style="color: var(--primary); font-size: 1rem; margin-top: 0; margin-bottom: 10px; border-bottom: 2px solid var(--accent); padding-bottom: 6px; font-weight: 700;">
-            🔑 5. Certificado Digital
+            🔑 6. Certificado Digital
           </h4>
           <div style="font-size: 0.9rem; line-height: 1.45;">
             <div><strong>Possui Certificado?</strong> ${cert.has === 'Sim' ? '<span style="color:var(--success); font-weight:700;">Sim</span>' : '<span style="color:var(--danger); font-weight:700;">Não</span>'}</div>
