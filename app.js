@@ -474,83 +474,80 @@ async function seedDemoDataIfEmpty() {
   const list = await dbGetAll();
   if (list.length === 0) {
     const demo = {
-      id: 'kickoff_' + Date.now() + '_1',
+      id: 'kickoff_1787081663345',
       company: {
-        razaoSocial: 'RBM Tecnologias Avançadas Ltda',
-        nomeFantasia: 'RBM Tech',
-        cnpj: '12.345.678/0001-99',
+        razaoSocial: 'CASAS DE RAÇÕES NILSON',
+        nomeFantasia: 'CASAS DE RAÇÕES NILSON',
+        cnpj: '',
         regime: 'Simples Nacional',
-        telefone: '(11) 98888-5555',
-        email: 'contato@rbmtech.com.br',
-        cep: '01310-100',
-        logradouro: 'Avenida Paulista',
-        numero: '1000',
-        complemento: 'Sala 152',
-        bairro: 'Bela Vista',
-        cidade: 'São Paulo',
+        telefone: '(11) 96289-6135',
+        email: 'nilsonborgesdossantos3@gmail.com',
+        cep: '09896-340',
+        logradouro: 'RUA ELIS REGINA',
+        numero: '15',
+        complemento: '',
+        bairro: 'PLANALTO',
+        cidade: 'SÃO BERNARDO DO CAMPO',
         uf: 'SP',
         proofAddressFile: null,
-        proofAddressFileName: '',
+        proofAddressFileName: 'comprovante_endereco.jpeg',
         iptuFile: null,
         iptuFileName: '',
         prevAccountingHas: 'Nova',
         prevAccountingName: '',
         prevAccountingPhone: '',
-        prevAccountingContact: ''
+        prevAccountingContact: '',
+        subestablished: 'Não'
       },
       activity: {
-        desc: 'Prestação de serviços de consultoria em TI e desenvolvimento de software sob encomenda.',
-        cnae: '62.01-5-01',
+        desc: 'VENDA RAÇÕES, GAIOLAS, COCA-COLA RETORNÁVEL E CERVEJA',
+        cnae: '4789-0/04',
         cnaesFile: null,
         cnaesFileName: ''
       },
       partners: [
         {
-          id: 'partner_demo_1',
-          name: 'Vivian Ribeiro da Silva',
-          cpf: '123.456.789-00',
-          rg: '12.345.678-9',
-          birthDate: '1990-05-15',
-          nacionalidade: 'Brasileira',
-          maritalStatus: 'Casado(a)',
-          regimeBens: 'Comunhão Parcial de Bens',
-          race: 'Parda',
-          father: 'Manoel da Silva',
-          mother: 'Antonia Ribeiro da Silva',
-          phone: '(11) 97777-4444',
-          email: 'vivian@rbmtech.com.br',
+          id: 'partner_1787081111646_1',
+          name: 'NILSON BORGES DOS SANTOS',
+          cpf: '611.087.155-91',
+          rg: '',
+          birthDate: '1966-03-08',
+          nacionalidade: 'BRASILEIRA',
+          maritalStatus: 'SOLTEIRO(A)',
+          race: 'BRANCA',
+          father: 'ANTONIO BORGES DOS SANTOS',
+          mother: 'RAQUEL ANA DOS SANTOS',
+          phone: '(11) 96289-6135',
+          email: 'NILSONBORGESDOSSANTOS3@GMAIL.COM',
+          educationLevel: 'ENSINO MÉDIO INCOMPLETO',
           isAdmin: true,
-          isRfResp: true,
-          inssContrib: 'Não',
-          inssDetails: '',
-          retired: 'Não',
-          cep: '01310-100',
-          logradouro: 'Avenida Paulista',
-          numCompl: '1000, Apto 152',
-          bairro: 'Bela Vista',
-          cidade: 'São Paulo',
+          isRfResp: false,
+          regimeBens: '',
+          cep: '09896-340',
+          logradouro: 'RUA ELIS REGINA',
+          numCompl: '15',
+          bairro: 'PLANALTO',
+          cidade: 'SÃO BERNARDO DO CAMPO',
           uf: 'SP',
+          inssContrib: 'Sim',
+          inssDetails: 'EMPRESA SULAMERICANA',
+          retired: 'Não',
           photoIdFile: null,
-          photoIdFileName: '',
-          dependents: [
-            {
-              name: 'Matheus Ribeiro Silva',
-              cpf: '987.654.321-11',
-              birthDate: '2016-04-10'
-            }
-          ]
+          photoIdFileName: 'Scan2026-08-18_163724.pdf',
+          dependents: []
         }
       ],
-      employeesQty: 3,
+      employeesQty: 0,
       certificate: {
-        has: 'Sim',
-        type: 'A1 (Arquivo)',
-        validity: '2027-08-15'
+        has: 'Não',
+        type: '',
+        validity: ''
       },
       implantation: {
-        date: '2026-07-13',
-        user: 'Carlos Alberto (Implantação RBM)',
-        signatureName: 'Vivian Ribeiro da Silva'
+        date: '2026-08-18',
+        user: 'VIVIAN',
+        signatureName: '',
+        notes: 'CNAE SECUNDÁRIO - 4723-7/00 \nNÃO TEM FILIAL'
       }
     };
     await dbSave(demo);
