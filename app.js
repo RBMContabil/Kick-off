@@ -1498,62 +1498,76 @@ function addPartnerCard(partnerData = null) {
 
   // Populate data if editing
   if (partnerData) {
-    card.querySelector('.partner-name').value = partnerData.name || '';
-    card.querySelector('.partner-cpf').value = partnerData.cpf || '';
-    card.querySelector('.partner-rg').value = partnerData.rg || '';
-    card.querySelector('.partner-birth').value = partnerData.birthDate || '';
-    card.querySelector('.partner-nacionalidade').value = partnerData.nacionalidade || 'Brasileira';
-    card.querySelector('.partner-marital').value = partnerData.maritalStatus || '';
-    card.querySelector('.partner-race').value = partnerData.race || '';
-    card.querySelector('.partner-father').value = partnerData.father || '';
-    card.querySelector('.partner-mother').value = partnerData.mother || '';
-    card.querySelector('.partner-phone').value = partnerData.phone || '';
-    card.querySelector('.partner-email').value = partnerData.email || '';
+    const setCardVal = (cls, val) => {
+      const el = card.querySelector(cls);
+      if (el) el.value = val || '';
+    };
+
+    setCardVal('.partner-name', partnerData.name);
+    setCardVal('.partner-cpf', partnerData.cpf);
+    setCardVal('.partner-rg', partnerData.rg);
+    setCardVal('.partner-birth', partnerData.birthDate);
+    setCardVal('.partner-nacionalidade', partnerData.nacionalidade || 'Brasileira');
+    setCardVal('.partner-marital', partnerData.maritalStatus);
+    setCardVal('.partner-race', partnerData.race);
+    setCardVal('.partner-father', partnerData.father);
+    setCardVal('.partner-mother', partnerData.mother);
+    setCardVal('.partner-phone', partnerData.phone);
+    setCardVal('.partner-email', partnerData.email);
     
-    card.querySelector('.partner-is-admin').checked = !!partnerData.isAdmin;
-    card.querySelector('.partner-is-rf-resp').checked = !!partnerData.isRfResp;
+    const adminEl = card.querySelector('.partner-is-admin');
+    if (adminEl) adminEl.checked = !!partnerData.isAdmin;
+
+    const rfRespEl = card.querySelector('.partner-is-rf-resp');
+    if (rfRespEl) rfRespEl.checked = !!partnerData.isRfResp;
 
     // INSS
     if (partnerData.inssContrib === 'Sim') {
-      card.querySelector('.partner-inss-contrib-yes').checked = true;
-      inssDetailsGroup.style.display = 'block';
-      card.querySelector('.partner-inss-details').value = partnerData.inssDetails || '';
+      const inssYes = card.querySelector('.partner-inss-contrib-yes');
+      if (inssYes) inssYes.checked = true;
+      if (inssDetailsGroup) inssDetailsGroup.style.display = 'block';
+      setCardVal('.partner-inss-details', partnerData.inssDetails);
     } else {
-      card.querySelector('.partner-inss-contrib-no').checked = true;
+      const inssNo = card.querySelector('.partner-inss-contrib-no');
+      if (inssNo) inssNo.checked = true;
     }
 
     // Aposentado
     if (partnerData.retired === 'Sim') {
-      card.querySelector('.partner-retired-yes').checked = true;
+      const retiredYes = card.querySelector('.partner-retired-yes');
+      if (retiredYes) retiredYes.checked = true;
     } else {
-      card.querySelector('.partner-retired-no').checked = true;
+      const retiredNo = card.querySelector('.partner-retired-no');
+      if (retiredNo) retiredNo.checked = true;
     }
 
     // Pro-labore
     if (partnerData.prolaboreHas === 'Sim') {
-      card.querySelector('.partner-prolabore-yes').checked = true;
-      prolaboreValGroup.style.display = 'block';
-      card.querySelector('.partner-prolabore-val').value = partnerData.prolaboreVal || '';
+      const proYes = card.querySelector('.partner-prolabore-yes');
+      if (proYes) proYes.checked = true;
+      if (prolaboreValGroup) prolaboreValGroup.style.display = 'block';
+      setCardVal('.partner-prolabore-val', partnerData.prolaboreVal);
     } else {
-      card.querySelector('.partner-prolabore-no').checked = true;
+      const proNo = card.querySelector('.partner-prolabore-no');
+      if (proNo) proNo.checked = true;
     }
 
     // Regime de bens
     if (partnerData.maritalStatus === 'Casado(a)' || partnerData.maritalStatus === 'União Estável') {
-      regimeGroup.style.display = 'block';
-      card.querySelector('.partner-regime-bens').value = partnerData.regimeBens || '';
+      if (regimeGroup) regimeGroup.style.display = 'block';
+      setCardVal('.partner-regime-bens', partnerData.regimeBens);
     }
 
     // Endereço Residencial
-    card.querySelector('.partner-cep').value = partnerData.cep || '';
-    card.querySelector('.partner-logradouro').value = partnerData.logradouro || '';
-    card.querySelector('.partner-num-compl').value = partnerData.numCompl || '';
-    card.querySelector('.partner-bairro').value = partnerData.bairro || '';
-    card.querySelector('.partner-cidade').value = partnerData.cidade || '';
-    card.querySelector('.partner-uf').value = partnerData.uf || '';
+    setCardVal('.partner-cep', partnerData.cep);
+    setCardVal('.partner-logradouro', partnerData.logradouro);
+    setCardVal('.partner-num-compl', partnerData.numCompl);
+    setCardVal('.partner-bairro', partnerData.bairro);
+    setCardVal('.partner-cidade', partnerData.cidade);
+    setCardVal('.partner-uf', partnerData.uf);
 
     // Grau de Escolaridade
-    card.querySelector('.partner-education').value = partnerData.educationLevel || '';
+    setCardVal('.partner-education', partnerData.educationLevel);
 
     // Dependentes
     if (partnerData.dependents && partnerData.dependents.length > 0) {
@@ -1639,35 +1653,37 @@ async function handleFormSubmit(e) {
       });
     }
 
-    const inssVal = card.querySelector('.partner-inss-contrib-yes').checked ? 'Sim' : 'Não';
-    const retiredVal = card.querySelector('.partner-retired-yes').checked ? 'Sim' : 'Não';
-    const inssDet = inssVal === 'Sim' ? card.querySelector('.partner-inss-details').value : '';
-    const prolaboreVal = card.querySelector('.partner-prolabore-yes').checked ? 'Sim' : 'Não';
-    const prolaboreAmount = prolaboreVal === 'Sim' ? card.querySelector('.partner-prolabore-val').value : '';
+    const inssVal = card.querySelector('.partner-inss-contrib-yes')?.checked ? 'Sim' : 'Não';
+    const retiredVal = card.querySelector('.partner-retired-yes')?.checked ? 'Sim' : 'Não';
+    const inssDet = inssVal === 'Sim' ? (card.querySelector('.partner-inss-details')?.value || '') : '';
+    const prolaboreVal = card.querySelector('.partner-prolabore-yes')?.checked ? 'Sim' : 'Não';
+    const prolaboreAmount = prolaboreVal === 'Sim' ? (card.querySelector('.partner-prolabore-val')?.value || '') : '';
+
+    const getCardValue = cls => card.querySelector(cls)?.value || '';
 
     partners.push({
       id: card.id,
-      name: card.querySelector('.partner-name').value,
-      cpf: card.querySelector('.partner-cpf').value,
-      rg: card.querySelector('.partner-rg').value,
-      birthDate: card.querySelector('.partner-birth').value,
-      nacionalidade: card.querySelector('.partner-nacionalidade').value,
-      maritalStatus: card.querySelector('.partner-marital').value,
-      race: card.querySelector('.partner-race').value,
-      father: card.querySelector('.partner-father').value,
-      mother: card.querySelector('.partner-mother').value,
-      phone: card.querySelector('.partner-phone').value,
-      email: card.querySelector('.partner-email').value,
-      educationLevel: card.querySelector('.partner-education').value,
-      isAdmin: card.querySelector('.partner-is-admin').checked,
-      isRfResp: card.querySelector('.partner-is-rf-resp').checked,
-      regimeBens: card.querySelector('.partner-regime-bens').value,
-      cep: card.querySelector('.partner-cep').value,
-      logradouro: card.querySelector('.partner-logradouro').value,
-      numCompl: card.querySelector('.partner-num-compl').value,
-      bairro: card.querySelector('.partner-bairro').value,
-      cidade: card.querySelector('.partner-cidade').value,
-      uf: card.querySelector('.partner-uf').value,
+      name: getCardValue('.partner-name'),
+      cpf: getCardValue('.partner-cpf'),
+      rg: getCardValue('.partner-rg'),
+      birthDate: getCardValue('.partner-birth'),
+      nacionalidade: getCardValue('.partner-nacionalidade'),
+      maritalStatus: getCardValue('.partner-marital'),
+      race: getCardValue('.partner-race'),
+      father: getCardValue('.partner-father'),
+      mother: getCardValue('.partner-mother'),
+      phone: getCardValue('.partner-phone'),
+      email: getCardValue('.partner-email'),
+      educationLevel: getCardValue('.partner-education'),
+      isAdmin: card.querySelector('.partner-is-admin')?.checked || false,
+      isRfResp: card.querySelector('.partner-is-rf-resp')?.checked || false,
+      regimeBens: getCardValue('.partner-regime-bens'),
+      cep: getCardValue('.partner-cep'),
+      logradouro: getCardValue('.partner-logradouro'),
+      numCompl: getCardValue('.partner-num-compl'),
+      bairro: getCardValue('.partner-bairro'),
+      cidade: getCardValue('.partner-cidade'),
+      uf: getCardValue('.partner-uf'),
       inssContrib: inssVal,
       inssDetails: inssDet,
       retired: retiredVal,
@@ -1684,9 +1700,10 @@ async function handleFormSubmit(e) {
   }
 
   // Validação rápida do certificado
-  const certHas = document.querySelector('input[name="cert-has"]:checked').value;
-  const certType = certHas === 'Sim' ? document.getElementById('cert-type').value : '';
-  const certValidity = certHas === 'Sim' ? document.getElementById('cert-validity').value : '';
+  const certHasEl = document.querySelector('input[name="cert-has"]:checked');
+  const certHas = certHasEl ? certHasEl.value : 'Não';
+  const certType = certHas === 'Sim' ? (document.getElementById('cert-type')?.value || '') : '';
+  const certValidity = certHas === 'Sim' ? (document.getElementById('cert-validity')?.value || '') : '';
 
   // Identificador único
   let id = document.getElementById('edit-client-id').value;
@@ -1891,19 +1908,32 @@ window.editClient = async function(id) {
 
     resetForm();
 
-    document.getElementById('edit-client-id').value = item.id;
-    document.getElementById('form-action-title').textContent = 'Alterar Kick-off: ' + (item.company.razaoSocial || 'Empresa sem nome');
+    const setVal = (id, val) => {
+      const el = document.getElementById(id);
+      if (el) el.value = val || '';
+    };
+
+    setVal('edit-client-id', item.id);
+    
+    const company = item.company || {};
+    const activity = item.activity || {};
+    const certificate = item.certificate || {};
+    const implantation = item.implantation || {};
+    const fiscalPasswords = item.fiscalPasswords || {};
+
+    const actionTitle = document.getElementById('form-action-title');
+    if (actionTitle) actionTitle.textContent = 'Alterar Kick-off: ' + (company.razaoSocial || 'Empresa sem nome');
 
     // Dados da Empresa
-    document.getElementById('company-razao-social').value = item.company.razaoSocial || '';
-    document.getElementById('company-nome-fantasia').value = item.company.nomeFantasia || '';
-    document.getElementById('company-cnpj').value = item.company.cnpj || '';
-    document.getElementById('company-regime').value = item.company.regime || '';
-    document.getElementById('company-telefone').value = item.company.telefone || '';
-    document.getElementById('company-email').value = item.company.email || '';
+    setVal('company-razao-social', company.razaoSocial);
+    setVal('company-nome-fantasia', company.nomeFantasia);
+    setVal('company-cnpj', company.cnpj);
+    setVal('company-regime', company.regime);
+    setVal('company-telefone', company.telefone);
+    setVal('company-email', company.email);
     
     // Subestabelecimento
-    const subestVal = item.company.subestablished || 'Não';
+    const subestVal = company.subestablished || 'Não';
     const yesRadio = document.getElementById('company-subestablished-yes');
     const noRadio = document.getElementById('company-subestablished-no');
     if (yesRadio && noRadio) {
@@ -1914,39 +1944,47 @@ window.editClient = async function(id) {
       }
     }
     
-    document.getElementById('address-cep').value = item.company.cep || '';
-    document.getElementById('address-logradouro').value = item.company.logradouro || '';
-    document.getElementById('address-numero').value = item.company.numero || '';
-    document.getElementById('address-complemento').value = item.company.complemento || '';
-    document.getElementById('address-bairro').value = item.company.bairro || '';
-    document.getElementById('address-cidade').value = item.company.cidade || '';
-    document.getElementById('address-uf').value = item.company.uf || '';
+    setVal('address-cep', company.cep);
+    setVal('address-logradouro', company.logradouro);
+    setVal('address-numero', company.numero);
+    setVal('address-complemento', company.complemento);
+    setVal('address-bairro', company.bairro);
+    setVal('address-cidade', company.cidade);
+    setVal('address-uf', company.uf);
 
     // Company files
-    if (item.company.proofAddressFile) {
-      attachedProofAddressBase64 = item.company.proofAddressFile;
-      attachedProofAddressName = item.company.proofAddressFileName || 'comprovante_endereco.pdf';
-      document.getElementById('company-proof-address-file-status').textContent = `Anexado: ${attachedProofAddressName}`;
-      document.getElementById('btn-clear-company-proof-address').style.display = 'inline-block';
+    if (company.proofAddressFile) {
+      attachedProofAddressBase64 = company.proofAddressFile;
+      attachedProofAddressName = company.proofAddressFileName || 'comprovante_endereco.pdf';
+      const statusEl = document.getElementById('company-proof-address-file-status');
+      if (statusEl) statusEl.textContent = `Anexado: ${attachedProofAddressName}`;
+      const clearBtn = document.getElementById('btn-clear-company-proof-address');
+      if (clearBtn) clearBtn.style.display = 'inline-block';
       const dlBtn = document.getElementById('btn-download-company-proof-address');
-      dlBtn.href = attachedProofAddressBase64;
-      dlBtn.download = attachedProofAddressName;
-      dlBtn.style.display = 'inline-block';
+      if (dlBtn) {
+        dlBtn.href = attachedProofAddressBase64;
+        dlBtn.download = attachedProofAddressName;
+        dlBtn.style.display = 'inline-block';
+      }
     }
     
-    if (item.company.iptuFile) {
-      attachedIptuBase64 = item.company.iptuFile;
-      attachedIptuName = item.company.iptuFileName || 'iptu.pdf';
-      document.getElementById('company-iptu-file-status').textContent = `Anexado: ${attachedIptuName}`;
-      document.getElementById('btn-clear-company-iptu').style.display = 'inline-block';
+    if (company.iptuFile) {
+      attachedIptuBase64 = company.iptuFile;
+      attachedIptuName = company.iptuFileName || 'iptu.pdf';
+      const statusEl = document.getElementById('company-iptu-file-status');
+      if (statusEl) statusEl.textContent = `Anexado: ${attachedIptuName}`;
+      const clearBtn = document.getElementById('btn-clear-company-iptu');
+      if (clearBtn) clearBtn.style.display = 'inline-block';
       const dlBtn = document.getElementById('btn-download-company-iptu');
-      dlBtn.href = attachedIptuBase64;
-      dlBtn.download = attachedIptuName;
-      dlBtn.style.display = 'inline-block';
+      if (dlBtn) {
+        dlBtn.href = attachedIptuBase64;
+        dlBtn.download = attachedIptuName;
+        dlBtn.style.display = 'inline-block';
+      }
     }
 
     // Previous Accounting
-    let prevAccVal = item.company.prevAccountingHas || 'Nova';
+    let prevAccVal = company.prevAccountingHas || 'Nova';
     if (prevAccVal === 'Sim') prevAccVal = 'Migração';
     if (prevAccVal === 'Não') prevAccVal = 'Nova';
 
@@ -1956,30 +1994,35 @@ window.editClient = async function(id) {
     const prevAccFields = document.querySelectorAll('.prev-accounting-fields');
     if (prevAccVal === 'Migração') {
       prevAccFields.forEach(f => f.style.display = 'block');
-      document.getElementById('prev-accounting-name').value = item.company.prevAccountingName || '';
-      document.getElementById('prev-accounting-phone').value = item.company.prevAccountingPhone || '';
-      document.getElementById('prev-accounting-contact').value = item.company.prevAccountingContact || '';
+      setVal('prev-accounting-name', company.prevAccountingName);
+      setVal('prev-accounting-phone', company.prevAccountingPhone);
+      setVal('prev-accounting-contact', company.prevAccountingContact);
     } else {
       prevAccFields.forEach(f => f.style.display = 'none');
     }
 
     // Atividade
-    document.getElementById('activity-desc').value = item.activity.desc || '';
-    document.getElementById('activity-cnae').value = item.activity.cnae || '';
-    if (item.activity.cnaesFile) {
-      attachedFileBase64 = item.activity.cnaesFile;
-      attachedFileName = item.activity.cnaesFileName || 'relatorio_cnaes.pdf';
-      document.getElementById('cnaes-file-status').textContent = `Anexado: ${attachedFileName}`;
-      document.getElementById('btn-clear-cnaes-file').style.display = 'inline-block';
+    setVal('activity-desc', activity.desc);
+    setVal('activity-cnae', activity.cnae);
+    if (activity.cnaesFile) {
+      attachedFileBase64 = activity.cnaesFile;
+      attachedFileName = activity.cnaesFileName || 'relatorio_cnaes.pdf';
+      const statusEl = document.getElementById('cnaes-file-status');
+      if (statusEl) statusEl.textContent = `Anexado: ${attachedFileName}`;
+      const clearBtn = document.getElementById('btn-clear-cnaes-file');
+      if (clearBtn) clearBtn.style.display = 'inline-block';
       
       const dlBtn = document.getElementById('btn-download-cnaes-file');
-      dlBtn.href = attachedFileBase64;
-      dlBtn.download = attachedFileName;
-      dlBtn.style.display = 'inline-block';
+      if (dlBtn) {
+        dlBtn.href = attachedFileBase64;
+        dlBtn.download = attachedFileName;
+        dlBtn.style.display = 'inline-block';
+      }
     }
 
     // Sócios
-    document.getElementById('partners-container').innerHTML = '';
+    const partnersContainer = document.getElementById('partners-container');
+    if (partnersContainer) partnersContainer.innerHTML = '';
     if (item.partners && item.partners.length > 0) {
       item.partners.forEach(partner => addPartnerCard(partner));
     } else {
@@ -1987,33 +2030,42 @@ window.editClient = async function(id) {
     }
 
     // Funcionários e Certificado
-    document.getElementById('employees-qty').value = item.employeesQty || 0;
+    setVal('employees-qty', item.employeesQty || 0);
     
-    const certHasVal = item.certificate.has || 'Não';
-    document.querySelector(`input[name="cert-has"][value="${certHasVal}"]`).checked = true;
+    const certHasVal = certificate.has || 'Não';
+    const certRadio = document.querySelector(`input[name="cert-has"][value="${certHasVal}"]`);
+    if (certRadio) {
+      certRadio.checked = true;
+    } else {
+      const fallbackRadio = document.querySelector('input[name="cert-has"][value="Não"]') || document.querySelector('input[name="cert-has"]');
+      if (fallbackRadio) fallbackRadio.checked = true;
+    }
+
     if (certHasVal === 'Sim') {
       document.querySelectorAll('.cert-fields').forEach(f => f.style.display = 'block');
-      document.getElementById('cert-type').value = item.certificate.type || '';
-      document.getElementById('cert-validity').value = item.certificate.validity || '';
+      setVal('cert-type', certificate.type);
+      setVal('cert-validity', certificate.validity);
+    } else {
+      document.querySelectorAll('.cert-fields').forEach(f => f.style.display = 'none');
     }
 
     // Senhas de Acesso
-    const fp = item.fiscalPasswords || {};
-    document.getElementById('fiscal-pwd-web').value = fp.web || '';
-    document.getElementById('fiscal-pwd-prodigi').value = fp.prodigi || '';
-    document.getElementById('fiscal-pwd-ginfes').value = fp.ginfes || '';
-    document.getElementById('fiscal-pwd-giss').value = fp.giss || '';
-    document.getElementById('fiscal-pwd-simples').value = fp.simples || '';
-    document.getElementById('fiscal-pwd-state').value = fp.state || '';
-    document.getElementById('fiscal-pwd-others').value = fp.others || '';
+    setVal('fiscal-pwd-web', fiscalPasswords.web);
+    setVal('fiscal-pwd-prodigi', fiscalPasswords.prodigi);
+    setVal('fiscal-pwd-ginfes', fiscalPasswords.ginfes);
+    setVal('fiscal-pwd-giss', fiscalPasswords.giss);
+    setVal('fiscal-pwd-simples', fiscalPasswords.simples);
+    setVal('fiscal-pwd-state', fiscalPasswords.state);
+    setVal('fiscal-pwd-others', fiscalPasswords.others);
 
     // Implantação
-    document.getElementById('kickoff-date').value = item.implantation.date || '';
-    document.getElementById('kickoff-user').value = item.implantation.user || '';
-    document.getElementById('implantation-notes').value = item.implantation.notes || '';
+    setVal('kickoff-date', implantation.date);
+    setVal('kickoff-user', implantation.user);
+    setVal('implantation-notes', implantation.notes);
 
     switchTab('formulario');
   } catch (error) {
+    console.error("Erro ao editar registro:", error);
     alert("Erro ao editar registro: " + error.message);
   }
 };
