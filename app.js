@@ -149,12 +149,57 @@ async function sendEmailNotification(kickoff) {
   }
 }
 
-// --- AUTO-SALVAMENTO DE RASCUNHO (CLIENTE) ---
+// --- AUTO-SALVAMENTO DE RASCUNHO (CLIENTE E ADMIN) ---
 function saveFormDraft() {
-  if (!checkClientMode()) return; // So salva rascunho em modo cliente
-
   const tipoServicoRadio = document.querySelector('input[name="tipo_servico"]:checked');
   const tipoServico = tipoServicoRadio ? tipoServicoRadio.value : 'abertura';
+
+  const partners = [];
+  const partnerCards = document.querySelectorAll('.partner-card');
+  for (let card of partnerCards) {
+    const getCardValue = cls => card.querySelector(cls)?.value || '';
+    
+    const partnerDeps = [];
+    const depRows = card.querySelectorAll('.partner-deps-body tr');
+    for (let row of depRows) {
+      partnerDeps.push({
+        name: row.querySelector('.dep-name')?.value || '',
+        cpf: row.querySelector('.dep-cpf')?.value || '',
+        birthDate: row.querySelector('.dep-birth')?.value || ''
+      });
+    }
+
+    partners.push({
+      id: card.id,
+      name: getCardValue('.partner-name'),
+      cpf: getCardValue('.partner-cpf'),
+      rg: getCardValue('.partner-rg'),
+      birthDate: getCardValue('.partner-birth'),
+      nacionalidade: getCardValue('.partner-nacionalidade'),
+      maritalStatus: getCardValue('.partner-marital'),
+      race: getCardValue('.partner-race'),
+      father: getCardValue('.partner-father'),
+      mother: getCardValue('.partner-mother'),
+      phone: getCardValue('.partner-phone'),
+      email: getCardValue('.partner-email'),
+      educationLevel: getCardValue('.partner-education'),
+      isAdmin: card.querySelector('.partner-is-admin')?.checked || false,
+      isRfResp: card.querySelector('.partner-is-rf-resp')?.checked || false,
+      regimeBens: getCardValue('.partner-regime-bens'),
+      cep: getCardValue('.partner-cep'),
+      logradouro: getCardValue('.partner-logradouro'),
+      numCompl: getCardValue('.partner-num-compl'),
+      bairro: getCardValue('.partner-bairro'),
+      cidade: getCardValue('.partner-cidade'),
+      uf: getCardValue('.partner-uf'),
+      inssContrib: card.querySelector('.partner-inss-contrib-yes')?.checked ? 'Sim' : 'Não',
+      inssDetails: card.querySelector('.partner-inss-details')?.value || '',
+      retired: card.querySelector('.partner-retired-yes')?.checked ? 'Sim' : 'Não',
+      prolaboreHas: card.querySelector('.partner-prolabore-yes')?.checked ? 'Sim' : 'Não',
+      prolaboreVal: card.querySelector('.partner-prolabore-val')?.value || '',
+      dependents: partnerDeps
+    });
+  }
 
   const draftData = {
     tipoServico: tipoServico,
@@ -169,45 +214,46 @@ function saveFormDraft() {
       outrosDesc: document.getElementById('alteracao-outros-desc')?.value || ''
     },
     company: {
-      razaoSocial: document.getElementById('company-razao-social').value,
+      razaoSocial: document.getElementById('company-razao-social')?.value || '',
       razaoSocial2: document.getElementById('company-razao-social-2')?.value || '',
       razaoSocial3: document.getElementById('company-razao-social-3')?.value || '',
-      nomeFantasia: document.getElementById('company-nome-fantasia').value,
-      cnpj: document.getElementById('company-cnpj').value,
-      regime: document.getElementById('company-regime').value,
-      telefone: document.getElementById('company-telefone').value,
-      email: document.getElementById('company-email').value,
-      cep: document.getElementById('address-cep').value,
-      logradouro: document.getElementById('address-logradouro').value,
-      numero: document.getElementById('address-numero').value,
-      complemento: document.getElementById('address-complemento').value,
-      bairro: document.getElementById('address-bairro').value,
-      cidade: document.getElementById('address-cidade').value,
-      uf: document.getElementById('address-uf').value,
+      nomeFantasia: document.getElementById('company-nome-fantasia')?.value || '',
+      cnpj: document.getElementById('company-cnpj')?.value || '',
+      regime: document.getElementById('company-regime')?.value || '',
+      telefone: document.getElementById('company-telefone')?.value || '',
+      email: document.getElementById('company-email')?.value || '',
+      cep: document.getElementById('address-cep')?.value || '',
+      logradouro: document.getElementById('address-logradouro')?.value || '',
+      numero: document.getElementById('address-numero')?.value || '',
+      complemento: document.getElementById('address-complemento')?.value || '',
+      bairro: document.getElementById('address-bairro')?.value || '',
+      cidade: document.getElementById('address-cidade')?.value || '',
+      uf: document.getElementById('address-uf')?.value || '',
       prevAccountingHas: document.querySelector('input[name="prev-accounting-has"]:checked') ? document.querySelector('input[name="prev-accounting-has"]:checked').value : 'Nova',
-      prevAccountingName: document.getElementById('prev-accounting-name').value,
-      prevAccountingPhone: document.getElementById('prev-accounting-phone').value,
-      prevAccountingContact: document.getElementById('prev-accounting-contact').value,
+      prevAccountingName: document.getElementById('prev-accounting-name')?.value || '',
+      prevAccountingPhone: document.getElementById('prev-accounting-phone')?.value || '',
+      prevAccountingContact: document.getElementById('prev-accounting-contact')?.value || '',
       subestablished: document.querySelector('input[name="company-subestablished"]:checked') ? document.querySelector('input[name="company-subestablished"]:checked').value : 'Não'
     },
     activity: {
-      desc: document.getElementById('activity-desc').value,
-      cnae: document.getElementById('activity-cnae').value
+      desc: document.getElementById('activity-desc')?.value || '',
+      cnae: document.getElementById('activity-cnae')?.value || ''
     },
-    employeesQty: document.getElementById('employees-qty').value,
+    partners: partners,
+    employeesQty: document.getElementById('employees-qty')?.value || '0',
     certificate: {
       has: document.querySelector('input[name="cert-has"]:checked') ? document.querySelector('input[name="cert-has"]:checked').value : 'Não',
-      type: document.getElementById('cert-type').value,
-      validity: document.getElementById('cert-validity').value
+      type: document.getElementById('cert-type')?.value || '',
+      validity: document.getElementById('cert-validity')?.value || ''
     },
     fiscalPasswords: {
-      web: document.getElementById('fiscal-pwd-web').value,
-      prodigi: document.getElementById('fiscal-pwd-prodigi').value,
-      ginfes: document.getElementById('fiscal-pwd-ginfes').value,
-      giss: document.getElementById('fiscal-pwd-giss').value,
-      simples: document.getElementById('fiscal-pwd-simples').value,
-      state: document.getElementById('fiscal-pwd-state').value,
-      others: document.getElementById('fiscal-pwd-others').value
+      web: document.getElementById('fiscal-pwd-web')?.value || '',
+      prodigi: document.getElementById('fiscal-pwd-prodigi')?.value || '',
+      ginfes: document.getElementById('fiscal-pwd-ginfes')?.value || '',
+      giss: document.getElementById('fiscal-pwd-giss')?.value || '',
+      simples: document.getElementById('fiscal-pwd-simples')?.value || '',
+      state: document.getElementById('fiscal-pwd-state')?.value || '',
+      others: document.getElementById('fiscal-pwd-others')?.value || ''
     }
   };
 
@@ -215,7 +261,6 @@ function saveFormDraft() {
 }
 
 function loadFormDraft() {
-  if (!checkClientMode()) return;
   const raw = localStorage.getItem('rbm_kickoff_draft');
   if (!raw) return;
 
@@ -248,21 +293,21 @@ function loadFormDraft() {
     updateAlterationFieldsVisibility();
 
     if (draft.company) {
-      document.getElementById('company-razao-social').value = draft.company.razaoSocial || '';
+      if (document.getElementById('company-razao-social')) document.getElementById('company-razao-social').value = draft.company.razaoSocial || '';
       if (document.getElementById('company-razao-social-2')) document.getElementById('company-razao-social-2').value = draft.company.razaoSocial2 || '';
       if (document.getElementById('company-razao-social-3')) document.getElementById('company-razao-social-3').value = draft.company.razaoSocial3 || '';
-      document.getElementById('company-nome-fantasia').value = draft.company.nomeFantasia || '';
-      document.getElementById('company-cnpj').value = draft.company.cnpj || '';
-      if (draft.company.regime) document.getElementById('company-regime').value = draft.company.regime;
-      document.getElementById('company-telefone').value = draft.company.telefone || '';
-      document.getElementById('company-email').value = draft.company.email || '';
-      document.getElementById('address-cep').value = draft.company.cep || '';
-      document.getElementById('address-logradouro').value = draft.company.logradouro || '';
-      document.getElementById('address-numero').value = draft.company.numero || '';
-      document.getElementById('address-complemento').value = draft.company.complemento || '';
-      document.getElementById('address-bairro').value = draft.company.bairro || '';
-      document.getElementById('address-cidade').value = draft.company.cidade || '';
-      document.getElementById('address-uf').value = draft.company.uf || '';
+      if (document.getElementById('company-nome-fantasia')) document.getElementById('company-nome-fantasia').value = draft.company.nomeFantasia || '';
+      if (document.getElementById('company-cnpj')) document.getElementById('company-cnpj').value = draft.company.cnpj || '';
+      if (draft.company.regime && document.getElementById('company-regime')) document.getElementById('company-regime').value = draft.company.regime;
+      if (document.getElementById('company-telefone')) document.getElementById('company-telefone').value = draft.company.telefone || '';
+      if (document.getElementById('company-email')) document.getElementById('company-email').value = draft.company.email || '';
+      if (document.getElementById('address-cep')) document.getElementById('address-cep').value = draft.company.cep || '';
+      if (document.getElementById('address-logradouro')) document.getElementById('address-logradouro').value = draft.company.logradouro || '';
+      if (document.getElementById('address-numero')) document.getElementById('address-numero').value = draft.company.numero || '';
+      if (document.getElementById('address-complemento')) document.getElementById('address-complemento').value = draft.company.complemento || '';
+      if (document.getElementById('address-bairro')) document.getElementById('address-bairro').value = draft.company.bairro || '';
+      if (document.getElementById('address-cidade')) document.getElementById('address-cidade').value = draft.company.cidade || '';
+      if (document.getElementById('address-uf')) document.getElementById('address-uf').value = draft.company.uf || '';
 
       if (draft.company.prevAccountingHas) {
         const rad = document.querySelector(`input[name="prev-accounting-has"][value="${draft.company.prevAccountingHas}"]`);
@@ -271,9 +316,9 @@ function loadFormDraft() {
           rad.dispatchEvent(new Event('change'));
         }
       }
-      document.getElementById('prev-accounting-name').value = draft.company.prevAccountingName || '';
-      document.getElementById('prev-accounting-phone').value = draft.company.prevAccountingPhone || '';
-      document.getElementById('prev-accounting-contact').value = draft.company.prevAccountingContact || '';
+      if (document.getElementById('prev-accounting-name')) document.getElementById('prev-accounting-name').value = draft.company.prevAccountingName || '';
+      if (document.getElementById('prev-accounting-phone')) document.getElementById('prev-accounting-phone').value = draft.company.prevAccountingPhone || '';
+      if (document.getElementById('prev-accounting-contact')) document.getElementById('prev-accounting-contact').value = draft.company.prevAccountingContact || '';
 
       if (draft.company.subestablished) {
         const radSub = document.querySelector(`input[name="company-subestablished"][value="${draft.company.subestablished}"]`);
@@ -282,11 +327,17 @@ function loadFormDraft() {
     }
 
     if (draft.activity) {
-      document.getElementById('activity-desc').value = draft.activity.desc || '';
-      document.getElementById('activity-cnae').value = draft.activity.cnae || '';
+      if (document.getElementById('activity-desc')) document.getElementById('activity-desc').value = draft.activity.desc || '';
+      if (document.getElementById('activity-cnae')) document.getElementById('activity-cnae').value = draft.activity.cnae || '';
     }
 
-    if (draft.employeesQty) {
+    if (draft.partners && Array.isArray(draft.partners) && draft.partners.length > 0) {
+      const partnersContainer = document.getElementById('partners-container');
+      if (partnersContainer) partnersContainer.innerHTML = '';
+      draft.partners.forEach(partner => addPartnerCard(partner));
+    }
+
+    if (draft.employeesQty && document.getElementById('employees-qty')) {
       document.getElementById('employees-qty').value = draft.employeesQty;
     }
 
@@ -298,18 +349,18 @@ function loadFormDraft() {
           radCert.dispatchEvent(new Event('change'));
         }
       }
-      if (draft.certificate.type) document.getElementById('cert-type').value = draft.certificate.type;
-      if (draft.certificate.validity) document.getElementById('cert-validity').value = draft.certificate.validity;
+      if (draft.certificate.type && document.getElementById('cert-type')) document.getElementById('cert-type').value = draft.certificate.type;
+      if (draft.certificate.validity && document.getElementById('cert-validity')) document.getElementById('cert-validity').value = draft.certificate.validity;
     }
 
     if (draft.fiscalPasswords) {
-      document.getElementById('fiscal-pwd-web').value = draft.fiscalPasswords.web || '';
-      document.getElementById('fiscal-pwd-prodigi').value = draft.fiscalPasswords.prodigi || '';
-      document.getElementById('fiscal-pwd-ginfes').value = draft.fiscalPasswords.ginfes || '';
-      document.getElementById('fiscal-pwd-giss').value = draft.fiscalPasswords.giss || '';
-      document.getElementById('fiscal-pwd-simples').value = draft.fiscalPasswords.simples || '';
-      document.getElementById('fiscal-pwd-state').value = draft.fiscalPasswords.state || '';
-      document.getElementById('fiscal-pwd-others').value = draft.fiscalPasswords.others || '';
+      if (document.getElementById('fiscal-pwd-web')) document.getElementById('fiscal-pwd-web').value = draft.fiscalPasswords.web || '';
+      if (document.getElementById('fiscal-pwd-prodigi')) document.getElementById('fiscal-pwd-prodigi').value = draft.fiscalPasswords.prodigi || '';
+      if (document.getElementById('fiscal-pwd-ginfes')) document.getElementById('fiscal-pwd-ginfes').value = draft.fiscalPasswords.ginfes || '';
+      if (document.getElementById('fiscal-pwd-giss')) document.getElementById('fiscal-pwd-giss').value = draft.fiscalPasswords.giss || '';
+      if (document.getElementById('fiscal-pwd-simples')) document.getElementById('fiscal-pwd-simples').value = draft.fiscalPasswords.simples || '';
+      if (document.getElementById('fiscal-pwd-state')) document.getElementById('fiscal-pwd-state').value = draft.fiscalPasswords.state || '';
+      if (document.getElementById('fiscal-pwd-others')) document.getElementById('fiscal-pwd-others').value = draft.fiscalPasswords.others || '';
     }
   } catch (err) {
     console.error("Erro ao carregar rascunho:", err);
@@ -678,10 +729,10 @@ function setupEventListeners() {
   const tabFormBtn = document.getElementById('tab-formulario-btn');
   if (tabFormBtn) {
     tabFormBtn.addEventListener('click', () => {
-      resetForm();
-      const rad = document.querySelector('input[name="tipo_servico"][value="abertura"]');
-      if (rad) rad.checked = true;
-      updateAlterationFieldsVisibility();
+      const editId = document.getElementById('edit-client-id')?.value;
+      if (!editId) {
+        loadFormDraft();
+      }
       switchTab('formulario');
     });
   }
@@ -689,7 +740,6 @@ function setupEventListeners() {
   const tabAltBtn = document.getElementById('tab-alteracao-btn');
   if (tabAltBtn) {
     tabAltBtn.addEventListener('click', () => {
-      resetForm();
       const rad = document.querySelector('input[name="tipo_servico"][value="alteracao"]');
       if (rad) rad.checked = true;
       updateAlterationFieldsVisibility();
