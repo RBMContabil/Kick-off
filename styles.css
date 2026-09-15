@@ -39,7 +39,7 @@
 }
 
 body {
-  font-family: 'Outfit', sans-serif;
+  font-family: 'Outfit', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   background-color: var(--bg-main);
   color: var(--text-main);
   line-height: 1.5;
