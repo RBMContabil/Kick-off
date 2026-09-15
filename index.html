@@ -301,14 +301,27 @@
 
               <!-- Bloco: Razão Social e Fantasia -->
               <div id="block-alt-nome" class="alt-toggle-block" style="margin-top:1.25rem;">
-                <div class="grid-2">
+                <div class="grid-3">
                   <div class="form-group">
-                    <label for="company-razao-social">Razão Social</label>
-                    <input type="text" id="company-razao-social" placeholder="Ex: RBM Contabilidade S/S Ltda">
+                    <label for="company-razao-social">1ª Opção de Razão Social <span style="color:var(--danger)">*</span></label>
+                    <input type="text" id="company-razao-social" placeholder="Ex: Silva & Santos Serviços Ltda">
                   </div>
                   <div class="form-group">
-                    <label for="company-nome-fantasia">Nome Fantasia</label>
-                    <input type="text" id="company-nome-fantasia" placeholder="Nome Comercial da Empresa">
+                    <label for="company-razao-social-2">2ª Opção de Razão Social</label>
+                    <input type="text" id="company-razao-social-2" placeholder="Ex: Silva Serviços de Saúde Ltda">
+                  </div>
+                  <div class="form-group">
+                    <label for="company-razao-social-3">3ª Opção de Razão Social</label>
+                    <input type="text" id="company-razao-social-3" placeholder="Ex: SS Medicina e Negócios Ltda">
+                  </div>
+                </div>
+                <div class="info-box" style="margin-top: 8px; font-size: 0.825rem; color: var(--text-muted); background: #f8fafc; border-left: 3px solid var(--accent); padding: 8px 12px; border-radius: 4px;">
+                  💡 <strong>Por que indicar 3 opções de Razão Social?</strong> Em processos de Abertura de Empresa, a Junta Comercial exige a consulta prévia de viabilidade de nome empresarial para evitar rejeições caso a 1ª opção já pertença a outra empresa.
+                </div>
+                <div class="grid-2" style="margin-top: 1rem;">
+                  <div class="form-group">
+                    <label for="company-nome-fantasia">Nome Fantasia (Marca Comercial Desejada)</label>
+                    <input type="text" id="company-nome-fantasia" placeholder="Nome Comercial da Empresa (Ex: Clínica Saúde Mais)">
                   </div>
                 </div>
               </div>

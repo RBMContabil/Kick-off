@@ -121,7 +121,9 @@ async function sendEmailNotification(kickoff) {
       _subject: `Novo Kick-off Recebido [${tipoLabel}]: ${kickoff.company.razaoSocial || 'Empresa sem Razao Social'}`,
       _template: 'table',
       "Tipo de Processo": tipoLabel,
-      "Razao Social": kickoff.company.razaoSocial || 'Empresa sem Razao Social',
+      "Razao Social (1a Opcao)": kickoff.company.razaoSocial || 'Empresa sem Razao Social',
+      "Razao Social (2a Opcao)": kickoff.company.razaoSocial2 || '-',
+      "Razao Social (3a Opcao)": kickoff.company.razaoSocial3 || '-',
       "CNPJ": kickoff.company.cnpj || 'Nao Informado',
       "E-mail da Empresa": kickoff.company.email || 'Nao Informado',
       "Telefone da Empresa": kickoff.company.telefone || 'Nao Informado',
@@ -168,6 +170,8 @@ function saveFormDraft() {
     },
     company: {
       razaoSocial: document.getElementById('company-razao-social').value,
+      razaoSocial2: document.getElementById('company-razao-social-2')?.value || '',
+      razaoSocial3: document.getElementById('company-razao-social-3')?.value || '',
       nomeFantasia: document.getElementById('company-nome-fantasia').value,
       cnpj: document.getElementById('company-cnpj').value,
       regime: document.getElementById('company-regime').value,
@@ -245,6 +249,8 @@ function loadFormDraft() {
 
     if (draft.company) {
       document.getElementById('company-razao-social').value = draft.company.razaoSocial || '';
+      if (document.getElementById('company-razao-social-2')) document.getElementById('company-razao-social-2').value = draft.company.razaoSocial2 || '';
+      if (document.getElementById('company-razao-social-3')) document.getElementById('company-razao-social-3').value = draft.company.razaoSocial3 || '';
       document.getElementById('company-nome-fantasia').value = draft.company.nomeFantasia || '';
       document.getElementById('company-cnpj').value = draft.company.cnpj || '';
       if (draft.company.regime) document.getElementById('company-regime').value = draft.company.regime;
@@ -1220,6 +1226,7 @@ function clearIptuFile() {
 function addPartnerCard(partnerData = null) {
   const container = document.getElementById('partners-container');
   const partnerId = partnerData ? partnerData.id : 'partner_' + Date.now() + '_' + (++partnerIdCounter);
+  const partnerNum = container.children.length + 1;
 
   const card = document.createElement('div');
   card.className = 'partner-card';
@@ -1227,7 +1234,7 @@ function addPartnerCard(partnerData = null) {
 
   card.innerHTML = `
     <div class="partner-card-header">
-      <span class="partner-title">Dados do Sócio</span>
+      <span class="partner-title">Dados do ${partnerNum}º Sócio ${partnerNum === 1 ? '(Sócio Principal / Administrador)' : ''}</span>
       <button type="button" class="btn-remove-partner" onclick="removePartnerCard('${partnerId}')">Excluir Sócio</button>
     </div>
     
@@ -1379,7 +1386,10 @@ function addPartnerCard(partnerData = null) {
 
     <!-- Endereço Residencial do Sócio -->
     <div style="margin-top: 1.25rem; border-top: 1px dashed var(--border); padding-top: 1rem;">
-      <h5 style="font-size:0.8rem; font-weight:700; color:var(--primary-light); margin-bottom:0.75rem; text-transform:uppercase; border-left:3px solid var(--accent); padding-left:6px;">Endereço Residencial</h5>
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.75rem;">
+        <h5 style="font-size:0.8rem; font-weight:700; color:var(--primary-light); margin:0; text-transform:uppercase; border-left:3px solid var(--accent); padding-left:6px;">Endereço Residencial</h5>
+        ${partnerNum > 1 ? `<button type="button" class="btn btn-outline btn-sm" onclick="copyPartner1Address('${partnerId}')" style="font-size:0.75rem; padding:2px 8px;">📋 Copiar Endereço do 1º Sócio</button>` : ''}
+      </div>
       <div class="grid-4">
         <div class="form-group">
           <label>CEP Residencial</label>
@@ -1789,8 +1799,45 @@ function addPartnerCard(partnerData = null) {
 
 window.removePartnerCard = function(partnerId) {
   const card = document.getElementById(partnerId);
-  if (card) card.remove();
+  if (card) {
+    card.remove();
+    updatePartnerCardTitles();
+  }
 };
+
+window.copyPartner1Address = function(targetPartnerId) {
+  const container = document.getElementById('partners-container');
+  if (!container || container.children.length === 0) return;
+  const firstCard = container.children[0];
+  const targetCard = document.getElementById(targetPartnerId);
+  if (!firstCard || !targetCard || firstCard === targetCard) return;
+
+  const copyVal = (selector) => {
+    const src = firstCard.querySelector(selector);
+    const dest = targetCard.querySelector(selector);
+    if (src && dest) dest.value = src.value || '';
+  };
+
+  copyVal('.partner-cep');
+  copyVal('.partner-logradouro');
+  copyVal('.partner-num-compl');
+  copyVal('.partner-bairro');
+  copyVal('.partner-cidade');
+  copyVal('.partner-uf');
+};
+
+function updatePartnerCardTitles() {
+  const container = document.getElementById('partners-container');
+  if (!container) return;
+  const cards = container.querySelectorAll('.partner-card');
+  cards.forEach((c, idx) => {
+    const num = idx + 1;
+    const titleEl = c.querySelector('.partner-title');
+    if (titleEl) {
+      titleEl.textContent = `Dados do ${num}º Sócio ${num === 1 ? '(Sócio Principal / Administrador)' : ''}`;
+    }
+  });
+}
 
 // --- 9. LIMPAR E REORGANIZAR FORMULÁRIO ---
 function resetForm() {
@@ -1967,6 +2014,8 @@ async function handleFormSubmit(e) {
     },
     company: {
       razaoSocial: document.getElementById('company-razao-social').value,
+      razaoSocial2: document.getElementById('company-razao-social-2')?.value || '',
+      razaoSocial3: document.getElementById('company-razao-social-3')?.value || '',
       nomeFantasia: document.getElementById('company-nome-fantasia').value,
       cnpj: document.getElementById('company-cnpj').value,
       regime: document.getElementById('company-regime').value,
@@ -2211,6 +2260,8 @@ window.editClient = async function(id) {
 
     // Dados da Empresa
     setVal('company-razao-social', company.razaoSocial);
+    setVal('company-razao-social-2', company.razaoSocial2);
+    setVal('company-razao-social-3', company.razaoSocial3);
     setVal('company-nome-fantasia', company.nomeFantasia);
     setVal('company-cnpj', company.cnpj);
     setVal('company-regime', company.regime);
@@ -2927,8 +2978,10 @@ window.printClientPDF = async function(id) {
         <table class="print-table">
           <tr>
             <td colspan="2" style="width: 60%;">
-              <span class="print-field-label">Razão Social</span>
+              <span class="print-field-label">1ª Opção de Razão Social</span>
               <div class="print-field-value" style="font-weight:bold;">${item.company.razaoSocial || 'Sem nome'}</div>
+              ${item.company.razaoSocial2 ? `<div style="font-size:7.5pt; color:#444; margin-top:2px;"><strong>2ª Opção:</strong> ${item.company.razaoSocial2}</div>` : ''}
+              ${item.company.razaoSocial3 ? `<div style="font-size:7.5pt; color:#444; margin-top:2px;"><strong>3ª Opção:</strong> ${item.company.razaoSocial3}</div>` : ''}
             </td>
             <td style="width: 40%;">
               <span class="print-field-label">Nome Fantasia</span>
@@ -3400,7 +3453,12 @@ window.viewClient = async function(id) {
           🏢 1. Dados da Empresa
         </h4>
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; font-size: 0.9rem; line-height: 1.4;">
-          <div><span style="color: var(--text-muted); font-weight: 600; font-size: 0.75rem; display: block; text-transform: uppercase;">Razão Social:</span><strong style="color: var(--primary); font-size: 0.95rem;">${company.razaoSocial || '-'}</strong></div>
+          <div>
+            <span style="color: var(--text-muted); font-weight: 600; font-size: 0.75rem; display: block; text-transform: uppercase;">1ª Opção de Razão Social:</span>
+            <strong style="color: var(--primary); font-size: 0.95rem;">${company.razaoSocial || '-'}</strong>
+            ${company.razaoSocial2 ? `<div style="font-size:0.8rem; color:var(--text-muted); margin-top:2px;"><strong>2ª Opção:</strong> ${company.razaoSocial2}</div>` : ''}
+            ${company.razaoSocial3 ? `<div style="font-size:0.8rem; color:var(--text-muted); margin-top:2px;"><strong>3ª Opção:</strong> ${company.razaoSocial3}</div>` : ''}
+          </div>
           <div><span style="color: var(--text-muted); font-weight: 600; font-size: 0.75rem; display: block; text-transform: uppercase;">Nome Fantasia:</span><strong>${company.nomeFantasia || '-'}</strong></div>
           <div><span style="color: var(--text-muted); font-weight: 600; font-size: 0.75rem; display: block; text-transform: uppercase;">CNPJ:</span><strong>${company.cnpj || '-'}</strong></div>
           <div><span style="color: var(--text-muted); font-weight: 600; font-size: 0.75rem; display: block; text-transform: uppercase;">Regime Tributário:</span><span class="tag tag-simples" style="font-size:0.8rem; padding: 2px 6px;">${company.regime || '-'}</span></div>
