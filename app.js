@@ -442,7 +442,7 @@ async function dbGetAll() {
       });
       if (response.ok) {
         const rows = await response.json();
-        records = rows.map(r => r.data);
+        records = rows.map(r => r.data).filter(item => item && item.company && typeof item.company.razaoSocial === 'string');
         
         // Atualiza o IndexedDB local com os dados atualizados da nuvem
         const transaction = db.transaction([STORE_NAME], 'readwrite');
@@ -466,9 +466,14 @@ async function dbGetAll() {
       const store = transaction.objectStore(STORE_NAME);
       const request = store.getAll();
 
-      request.onsuccess = () => resolve(request.result || []);
+      request.onsuccess = () => {
+        const res = request.result || [];
+        resolve(res.filter(item => item && item.company && typeof item.company.razaoSocial === 'string'));
+      };
       request.onerror = () => reject(request.error);
     });
+  } else {
+    records = records.filter(item => item && item.company && typeof item.company.razaoSocial === 'string');
   }
 
   // Converte dinamicamente todas as strings para maiúsculas (menos e-mail e senhas)
@@ -2178,11 +2183,15 @@ async function renderDashboard() {
   const filterRegime = document.getElementById('filter-regime').value;
 
   const filtered = list.filter(item => {
+    if (!item || !item.company) return false;
+    const razao = (item.company.razaoSocial || '').toLowerCase();
+    const cnpj = item.company.cnpj || '';
+    const user = (item.implantation && item.implantation.user) ? item.implantation.user.toLowerCase() : '';
     const matchesSearch = 
-      item.company.razaoSocial.toLowerCase().includes(searchVal) ||
-      (item.company.cnpj && item.company.cnpj.includes(searchVal)) ||
-      (item.implantation.user && item.implantation.user.toLowerCase().includes(searchVal)) ||
-      (item.partners && item.partners.some(p => p.name.toLowerCase().includes(searchVal)));
+      razao.includes(searchVal) ||
+      cnpj.includes(searchVal) ||
+      user.includes(searchVal) ||
+      (item.partners && item.partners.some(p => p && p.name && p.name.toLowerCase().includes(searchVal)));
 
     const matchesRegime = filterRegime === '' || item.company.regime === filterRegime;
 
@@ -2190,9 +2199,9 @@ async function renderDashboard() {
   });
 
   document.getElementById('metric-total').textContent = list.length;
-  document.getElementById('metric-simples').textContent = list.filter(item => item.company.regime === 'Simples Nacional').length;
-  document.getElementById('metric-presumido').textContent = list.filter(item => item.company.regime === 'Lucro Presumido').length;
-  document.getElementById('metric-real').textContent = list.filter(item => item.company.regime === 'Lucro Real' || item.company.regime === 'MEI' || item.company.regime === 'Outros').length;
+  document.getElementById('metric-simples').textContent = list.filter(item => item.company && item.company.regime === 'Simples Nacional').length;
+  document.getElementById('metric-presumido').textContent = list.filter(item => item.company && item.company.regime === 'Lucro Presumido').length;
+  document.getElementById('metric-real').textContent = list.filter(item => item.company && (item.company.regime === 'Lucro Real' || item.company.regime === 'MEI' || item.company.regime === 'Outros')).length;
 
   if (filtered.length === 0) {
     emptyState.style.display = 'block';
