@@ -2614,84 +2614,1469 @@ document.addEventListener('DOMContentLoaded', async () => {
 async function seedDemoDataIfEmpty() {
   const list = await dbGetAll();
   if (list.length === 0) {
-    const demo = {
-      id: 'kickoff_1787081663345',
-      company: {
-        razaoSocial: 'CASAS DE RAÇÕES NILSON',
-        nomeFantasia: 'CASAS DE RAÇÕES NILSON',
-        cnpj: '',
-        regime: 'Simples Nacional',
-        telefone: '(11) 96289-6135',
-        email: 'nilsonborgesdossantos3@gmail.com',
-        cep: '09896-340',
-        logradouro: 'RUA ELIS REGINA',
-        numero: '15',
-        complemento: '',
-        bairro: 'PLANALTO',
-        cidade: 'SÃO BERNARDO DO CAMPO',
-        uf: 'SP',
-        proofAddressFile: null,
-        proofAddressFileName: 'comprovante_endereco.jpeg',
-        iptuFile: null,
-        iptuFileName: '',
-        prevAccountingHas: 'Nova',
-        prevAccountingName: '',
-        prevAccountingPhone: '',
-        prevAccountingContact: '',
-        subestablished: 'Não'
-      },
-      activity: {
-        desc: 'VENDA RAÇÕES, GAIOLAS, COCA-COLA RETORNÁVEL E CERVEJA',
-        cnae: '4789-0/04',
-        cnaesFile: null,
-        cnaesFileName: ''
-      },
-      partners: [
-        {
-          id: 'partner_1787081111646_1',
-          name: 'NILSON BORGES DOS SANTOS',
-          cpf: '611.087.155-91',
-          rg: '',
-          birthDate: '1966-03-08',
-          nacionalidade: 'BRASILEIRA',
-          maritalStatus: 'SOLTEIRO(A)',
-          race: 'BRANCA',
-          father: 'ANTONIO BORGES DOS SANTOS',
-          mother: 'RAQUEL ANA DOS SANTOS',
-          phone: '(11) 96289-6135',
-          email: 'NILSONBORGESDOSSANTOS3@GMAIL.COM',
-          educationLevel: 'ENSINO MÉDIO INCOMPLETO',
-          isAdmin: true,
-          isRfResp: false,
-          regimeBens: '',
-          cep: '09896-340',
-          logradouro: 'RUA ELIS REGINA',
-          numCompl: '15',
-          bairro: 'PLANALTO',
-          cidade: 'SÃO BERNARDO DO CAMPO',
-          uf: 'SP',
-          inssContrib: 'Sim',
-          inssDetails: 'EMPRESA SULAMERICANA',
-          retired: 'Não',
-          photoIdFile: null,
-          photoIdFileName: 'Scan2026-08-18_163724.pdf',
-          dependents: []
-        }
-      ],
-      employeesQty: 0,
-      certificate: {
-        has: 'Não',
-        type: '',
-        validity: ''
-      },
-      implantation: {
-        date: '2026-08-18',
-        user: 'VIVIAN',
-        signatureName: '',
-        notes: 'CNAE SECUNDÁRIO - 4723-7/00 \nNÃO TEM FILIAL'
+    const initialClients = [
+  {
+    "id": "kickoff_1785159921896",
+    "company": {
+      "uf": "SP",
+      "cep": "09890-320",
+      "cnpj": "",
+      "email": "",
+      "bairro": "Planalto",
+      "cidade": "São Bernardo do Campo",
+      "numero": "188",
+      "regime": "Simples Nacional",
+      "iptuFile": null,
+      "telefone": "(11) 95145-0431",
+      "logradouro": "Rua Padre Cícero",
+      "complemento": "",
+      "razaoSocial": "Lucas Ambrósio de Sousa ",
+      "iptuFileName": "",
+      "nomeFantasia": "L.C compressores",
+      "subestablished": "Sim",
+      "proofAddressFile": null,
+      "prevAccountingHas": "Nova",
+      "prevAccountingName": "",
+      "prevAccountingPhone": "",
+      "proofAddressFileName": "",
+      "prevAccountingContact": ""
+    },
+    "activity": {
+      "cnae": "",
+      "desc": "Vendas de peças, manutenção em compressores em toda rede de ar comprimido ",
+      "cnaesFile": null,
+      "cnaesFileName": ""
+    },
+    "partners": [
+      {
+        "id": "partner_1785159607245_2",
+        "rg": "431950647",
+        "uf": "SP",
+        "cep": "04072-000",
+        "cpf": "336.505.928-86",
+        "name": "LUCAS AMBROSIO DE SOUSA",
+        "race": "Branca",
+        "email": "ls634995@gmail.com",
+        "phone": "(11) 95145-0431",
+        "bairro": "Planalto Paulista",
+        "cidade": "São Paulo",
+        "father": "lucas sousa",
+        "mother": "Maria do Carmo de Sousa canales",
+        "isAdmin": true,
+        "retired": "Não",
+        "isRfResp": false,
+        "numCompl": "27",
+        "birthDate": "1984-12-04",
+        "dependents": [],
+        "logradouro": "Avenida Jurandir",
+        "regimeBens": "",
+        "inssContrib": "Não",
+        "inssDetails": "",
+        "photoIdFile": null,
+        "photoIdFiles": [
+          {
+            "file": null,
+            "name": "0b0610be-ea7e-45f9-beb5-ab9a158e45da.jpg"
+          }
+        ],
+        "maritalStatus": "Casado(a)",
+        "nacionalidade": "Brasileira",
+        "educationLevel": "Ensino Médio Completo",
+        "photoIdFileName": "0b0610be-ea7e-45f9-beb5-ab9a158e45da.jpg"
       }
-    };
-    await dbSave(demo);
+    ],
+    "certificate": {
+      "has": "Não",
+      "type": "",
+      "validity": ""
+    },
+    "employeesQty": 0,
+    "implantation": {
+      "date": "2026-07-27",
+      "user": "",
+      "notes": "",
+      "signatureName": ""
+    },
+    "fiscalPasswords": {
+      "web": "",
+      "giss": "",
+      "state": "",
+      "ginfes": "",
+      "others": "",
+      "prodigi": "",
+      "simples": ""
+    }
+  },
+  {
+    "id": "kickoff_1784719847930",
+    "company": {
+      "uf": "SP",
+      "cep": "01410-000",
+      "cnpj": "",
+      "email": "m.ramos1813@gmail.com",
+      "bairro": "Cerqueira César",
+      "cidade": "São Paulo",
+      "numero": "628",
+      "regime": "",
+      "iptuFile": null,
+      "telefone": "",
+      "logradouro": "Alameda Ministro Rocha Azevedo",
+      "complemento": "APTO 82",
+      "razaoSocial": "KDOBIZ Estratégia e Negócios Ltda",
+      "iptuFileName": "IPTU 2026 TUNIS Apto 82 e 1 Vaga.pdf",
+      "nomeFantasia": "KDOBIZ",
+      "subestablished": "Não",
+      "proofAddressFile": null,
+      "prevAccountingHas": "Nova",
+      "prevAccountingName": "",
+      "prevAccountingPhone": "",
+      "proofAddressFileName": "Enel 07-2026 - Marcelo de A Ramos - TUNIS.pdf",
+      "prevAccountingContact": ""
+    },
+    "activity": {
+      "cnae": "7020-4/00",
+      "desc": null,
+      "cnaesFile": null,
+      "cnaesFileName": "CNAES.pdf"
+    },
+    "partners": [
+      {
+        "id": "partner_1784718751235_1",
+        "rg": "14010035-0",
+        "uf": "SP",
+        "cep": "01410-000",
+        "cpf": "064.715.068-99",
+        "name": "Marcelo de Almeida Ramos",
+        "race": "Branca",
+        "email": "m.ramos1813@gmail.com",
+        "phone": "(11) 99198-9732",
+        "bairro": "Cerqueira César",
+        "cidade": "São Paulo",
+        "father": "LORENZO RAMOS DEL AMO",
+        "mother": "MARIA GOMES DE SOUSA RAMOS",
+        "isAdmin": true,
+        "retired": "Sim",
+        "isRfResp": true,
+        "numCompl": "628 APTO 82",
+        "birthDate": "1965-03-18",
+        "dependents": [],
+        "logradouro": "Alameda Ministro Rocha Azevedo",
+        "regimeBens": "Separação Total de Bens",
+        "inssContrib": "Sim",
+        "inssDetails": "Sócio administrador da RIO TERA PARTICIPACOES LTDA.",
+        "photoIdFile": null,
+        "photoIdFiles": [
+          {
+            "file": null,
+            "name": "CNH-e Marcelo de A Ramos (nova).pdf"
+          },
+          {
+            "file": null,
+            "name": "rg.jpg"
+          }
+        ],
+        "maritalStatus": "Casado(a)",
+        "nacionalidade": "Brasileira",
+        "educationLevel": "Pós-graduação / Especialização",
+        "photoIdFileName": "CNH-e Marcelo de A Ramos (nova).pdf"
+      }
+    ],
+    "certificate": {
+      "has": "Não",
+      "type": "",
+      "validity": ""
+    },
+    "employeesQty": 0,
+    "implantation": {
+      "date": "2026-07-22",
+      "user": "VIVIAN",
+      "notes": "Capital Social, estará confirmando com o Marcio Lira\nE-mail: m.ramos1813@gmail.com (temporário, até criar kdobiz@gmail.com ou outro)\nTerá pró-labore, valor a definir\nO endereço é o mesmo para casa e para empresa.\nÁrea utilizada (m²):  O imóvel do endereço possui 96m2. Uma dos quartos é o escritório que possui 12m2",
+      "signatureName": ""
+    },
+    "fiscalPasswords": {
+      "web": "",
+      "giss": "",
+      "state": "",
+      "ginfes": "",
+      "others": "",
+      "prodigi": "",
+      "simples": ""
+    }
+  },
+  {
+    "id": "kickoff_1788186090270",
+    "company": {
+      "uf": "SP",
+      "cep": "09608-000",
+      "cnpj": "66.089.020/0001-99",
+      "email": "botelho_danilo@yahoo.com.br",
+      "bairro": "Anchieta",
+      "cidade": "São Bernardo do Campo",
+      "numero": "636",
+      "regime": "Lucro Presumido",
+      "iptuFile": null,
+      "telefone": "",
+      "logradouro": "Rua Universal",
+      "complemento": "SALA 1",
+      "razaoSocial": "RENAS ELEVADORES LTDA",
+      "iptuFileName": "",
+      "nomeFantasia": "RENAS ELEVADORES LTDA",
+      "alterationType": "Novo Cliente - Alteração",
+      "subestablished": "SIM",
+      "alterationItems": [
+        "SOCIOS"
+      ],
+      "proofAddressFile": null,
+      "prevAccountingHas": "Migração",
+      "prevAccountingName": "",
+      "prevAccountingPhone": "",
+      "proofAddressFileName": "",
+      "prevAccountingContact": ""
+    },
+    "activity": {
+      "cnae": "",
+      "desc": "",
+      "cnaesFile": null,
+      "cnaesFileName": ""
+    },
+    "partners": [
+      {
+        "id": "partner_1788182019172_1",
+        "rg": "",
+        "uf": "",
+        "cep": "",
+        "cpf": "326.310.708-95",
+        "name": "DANIELE PERES BOTELHO (NOVO SÓCIO)",
+        "race": "Branca",
+        "email": "danieleperesbotelho@gmail.com",
+        "phone": "(11) 96512-5110",
+        "bairro": "",
+        "cidade": "",
+        "father": "OTAVIO RODRIGUES PEREZ",
+        "mother": "MARIA AUGUSTA PERES",
+        "isAdmin": true,
+        "retired": "Não",
+        "isRfResp": true,
+        "numCompl": "",
+        "birthDate": "1983-08-31",
+        "dependents": [],
+        "logradouro": "",
+        "regimeBens": "Comunhão Parcial de Bens",
+        "inssContrib": "Sim",
+        "inssDetails": "",
+        "photoIdFile": null,
+        "photoIdFiles": [
+          {
+            "file": null,
+            "name": "CNH Daniele.jpg"
+          },
+          {
+            "file": null,
+            "name": "IMG-20260825-WA0133.jpg"
+          },
+          {
+            "file": null,
+            "name": "IMG-20260825-WA0132.jpg"
+          }
+        ],
+        "prolaboreHas": "Não",
+        "prolaboreVal": "",
+        "maritalStatus": "Casado(a)",
+        "nacionalidade": "Brasileira",
+        "educationLevel": "Ensino Superior Completo",
+        "photoIdFileName": "CNH Daniele.jpg"
+      }
+    ],
+    "certificate": {
+      "has": "Não",
+      "type": "",
+      "validity": ""
+    },
+    "employeesQty": 0,
+    "implantation": {
+      "date": "2026-08-31",
+      "user": "VIVIAN",
+      "notes": "NOVO CLIENTE: TRATA-SE DA COMPRA DE UM CNPJ, E O ADQUIRENTE PASSARÁ A SER CLIENTE DA RBM. SERÁ REALIZADA A ALTERAÇÃO DE SÓCIO, JÁ COM OS DADOS E DOCUMENTOS DA NOVA SÓCIA PREENCHIDOS. A CONTABILIDADE ANTERIOR ENVIARÁ O CERTIFICADO DIGITAL, SENDO NECESSÁRIO PROVIDENCIAR UM NOVO, CUJO VALOR JÁ FOI COBRADO JUNTO COM A ALTERAÇÃO CONTRATUAL. A PARTIR DE 01/09, A EMPRESA PASSA A SER DE RESPONSABILIDADE DA RBM.",
+      "signatureName": ""
+    },
+    "fiscalPasswords": {
+      "web": "",
+      "giss": "",
+      "state": "",
+      "ginfes": "",
+      "others": "",
+      "prodigi": "",
+      "simples": ""
+    }
+  },
+  {
+    "id": "kickoff_1783974382148",
+    "company": {
+      "uf": "SP",
+      "cep": "09732-590",
+      "cnpj": "45.499.144/0001-72",
+      "email": "ARILDOSBC2@GMAIL.COM",
+      "bairro": "Anchieta",
+      "cidade": "São Bernardo do Campo",
+      "numero": "252",
+      "regime": "Simples Nacional",
+      "telefone": "(11) 99250-6633",
+      "logradouro": "Rua Ana Guilhermina",
+      "complemento": "",
+      "razaoSocial": "45.499.144 ARILDO ALVES ABRAHAO",
+      "nomeFantasia": ""
+    },
+    "activity": {
+      "cnae": "15.29-7-00",
+      "desc": "Fabricação de artefatos e embalagens para acondicionamento e apresentação de joias, bijuterias e acessórios, incluindo caixas, estojos, mostruários, expositores e produtos revestidos em couro sintético, veludo e materiais similares.",
+      "cnaesFile": null,
+      "cnaesFileName": "Comprovante de Inscrição e Situação Cadastral.pdf"
+    },
+    "partners": [
+      {
+        "id": "partner_1783972499205_1",
+        "uf": "SP",
+        "cep": "09732-590",
+        "cpf": "271.305.208-59",
+        "name": "ARILDO ALVES ABRAHAO",
+        "race": "Branca",
+        "email": "ARILDOSBC2@GMAIL.COM",
+        "phone": "(11) 99250-6633",
+        "bairro": "Anchieta",
+        "cidade": "São Bernardo do Campo",
+        "isAdmin": true,
+        "isRfResp": true,
+        "numCompl": "252",
+        "logradouro": "Rua Ana Guilhermina",
+        "regimeBens": "",
+        "maritalStatus": "Divorciado(a)"
+      }
+    ],
+    "dependents": [],
+    "certificate": {
+      "has": "Sim",
+      "type": "A1 (Arquivo)",
+      "validity": "2027-05-29"
+    },
+    "previdencia": {
+      "retired": "Sim",
+      "inssContrib": "Não",
+      "inssDetails": ""
+    },
+    "employeesQty": 4,
+    "implantation": {
+      "date": "2026-07-13",
+      "user": "Vivian",
+      "signatureName": "Arildo"
+    }
+  },
+  {
+    "id": "kickoff_silvia_regina_ramos_perez",
+    "company": {
+      "cnpj": "PENDENTE",
+      "email": "",
+      "regime": "Simples Nacional",
+      "telefone": "",
+      "razaoSocial": "SILVIA REGINA RAMOS PEREZ",
+      "nomeFantasia": "SILVIA REGINA RAMOS PEREZ",
+      "subestablished": "NÃ£o",
+      "prevAccountingHas": "MigraÃ§Ã£o"
+    },
+    "activity": {
+      "cnae": "",
+      "desc": "PrestaÃ§Ã£o de ServiÃ§os"
+    },
+    "partners": [
+      {
+        "id": "partner_silvia_1",
+        "name": "SILVIA REGINA RAMOS PEREZ",
+        "isAdmin": true,
+        "isRfResp": true
+      }
+    ],
+    "certificate": {
+      "has": "NÃ£o"
+    },
+    "employeesQty": 0,
+    "implantation": {
+      "date": "2026-07-27",
+      "user": "ImplantaÃ§Ã£o RBM",
+      "notes": "Ficha recuperada a partir do PDF exportado"
+    }
+  },
+  {
+    "id": "kickoff_ana_lucia_braggio",
+    "company": {
+      "cnpj": "PENDENTE",
+      "email": "",
+      "regime": "Simples Nacional",
+      "telefone": "",
+      "razaoSocial": "ANA LUCIA BRAGGIO",
+      "nomeFantasia": "ANA LUCIA BRAGGIO",
+      "subestablished": "NÃ£o",
+      "prevAccountingHas": "MigraÃ§Ã£o"
+    },
+    "activity": {
+      "cnae": "",
+      "desc": "PrestaÃ§Ã£o de ServiÃ§os"
+    },
+    "partners": [
+      {
+        "id": "partner_ana_1",
+        "name": "ANA LUCIA BRAGGIO",
+        "isAdmin": true,
+        "isRfResp": true
+      }
+    ],
+    "certificate": {
+      "has": "NÃ£o"
+    },
+    "employeesQty": 0,
+    "implantation": {
+      "date": "2026-07-27",
+      "user": "ImplantaÃ§Ã£o RBM",
+      "notes": "Ficha recuperada a partir do PDF exportado"
+    }
+  },
+  {
+    "id": "kickoff_1784149100119",
+    "company": {
+      "uf": "SP",
+      "cep": "09960-010",
+      "cnpj": "35.000.966/0001-03",
+      "email": "silviarramos@bol.com.br",
+      "bairro": "Piraporinha",
+      "cidade": "Diadema",
+      "numero": "479",
+      "regime": "Lucro Presumido",
+      "iptuFile": null,
+      "telefone": "(11) 99434-1850",
+      "logradouro": "Avenida Encarnação",
+      "complemento": "SALA 02",
+      "razaoSocial": "CLAUDINEI GONZALEZ PEREZ",
+      "iptuFileName": "",
+      "nomeFantasia": "",
+      "proofAddressFile": null,
+      "prevAccountingHas": "Migração",
+      "prevAccountingName": " On Line On Line",
+      "prevAccountingPhone": "(11) 94709-8086",
+      "proofAddressFileName": "",
+      "prevAccountingContact": "Eveline"
+    },
+    "activity": {
+      "cnae": "8630-5/03",
+      "desc": "Atividade médica ambulatorial restrita a consultas",
+      "cnaesFile": null,
+      "cnaesFileName": ""
+    },
+    "partners": [
+      {
+        "id": "partner_1784147106893_3",
+        "rg": "",
+        "uf": "SP",
+        "cep": "09860-060",
+        "cpf": "062.829.318-60",
+        "name": "CLAUDINEI GONZALEZ PEREZ",
+        "race": "Branca",
+        "email": "silviarramos@bol.com.br",
+        "phone": "(11) 99434-1850",
+        "bairro": "Independência",
+        "cidade": "São Bernardo do Campo",
+        "father": "FRANCISCO GONZALEZ PEREZ",
+        "mother": "ARMINDA PEREZ GONZALEZ",
+        "isAdmin": true,
+        "retired": "Não",
+        "isRfResp": true,
+        "numCompl": "361",
+        "birthDate": "1962-11-08",
+        "dependents": [],
+        "logradouro": "Rua dos Brejais",
+        "regimeBens": "Comunhão Parcial de Bens",
+        "inssContrib": "Sim",
+        "inssDetails": "Ele tem outra empresa, precisa verificar se ele retira por lá também.",
+        "photoIdFile": null,
+        "maritalStatus": "Casado(a)",
+        "nacionalidade": "Brasileira",
+        "educationLevel": "Ensino Superior Completo",
+        "photoIdFileName": ""
+      }
+    ],
+    "certificate": {
+      "has": "Sim",
+      "type": "A1 (Arquivo)",
+      "validity": "2026-12-09"
+    },
+    "employeesQty": 0,
+    "implantation": {
+      "date": "2026-07-15",
+      "user": "Vivian",
+      "notes": "Ambos são separados porém no papel são casados ainda - Quem administra tudo é a Silvia\nEle tem 2 caseiros no CPF dele, um esta afastado pelo INSS, tem guias, conforme a Silvia for informando vamos emitir para ela fazer o pagamento.",
+      "signatureName": ""
+    },
+    "fiscalPasswords": {
+      "web": "",
+      "giss": "",
+      "state": "",
+      "ginfes": "",
+      "others": "",
+      "prodigi": "",
+      "simples": ""
+    }
+  },
+  {
+    "id": "kickoff_1784146334343",
+    "company": {
+      "uf": "SP",
+      "cep": "09890-400",
+      "cnpj": "67.756.453/0001-13",
+      "email": "victoreulalio2017@gmail.com",
+      "bairro": "Planalto",
+      "cidade": "São Bernardo do Campo",
+      "numero": "1039",
+      "regime": "Simples Nacional",
+      "iptuFile": null,
+      "telefone": "(11) 9717-6224",
+      "logradouro": "Rua Oragnof",
+      "complemento": "",
+      "razaoSocial": "VICTOR EULALIO DA SILVA LTDA",
+      "iptuFileName": "",
+      "nomeFantasia": "",
+      "proofAddressFile": null,
+      "prevAccountingHas": "Não",
+      "prevAccountingName": "",
+      "prevAccountingPhone": "",
+      "proofAddressFileName": "",
+      "prevAccountingContact": ""
+    },
+    "activity": {
+      "cnae": "9313-1/00",
+      "desc": "Atividades de condicionamento físico",
+      "cnaesFile": null,
+      "cnaesFileName": ""
+    },
+    "partners": [
+      {
+        "id": "partner_1784146015440_3",
+        "rg": "",
+        "uf": "SP",
+        "cep": "09890-400",
+        "cpf": "416.538.878-50",
+        "name": "VICTOR EULALIO DA SILVA",
+        "race": "Branca",
+        "email": "victoreulalio2017@gmail.com",
+        "phone": "(11) 97146-2024",
+        "bairro": "Planalto",
+        "cidade": "São Bernardo do Campo",
+        "father": "MARCELO EULALIO DA SILVA",
+        "mother": "PAULA ADRIANA PEREIRA DA SILVA",
+        "isAdmin": false,
+        "retired": "Não",
+        "isRfResp": false,
+        "numCompl": "1039",
+        "dependents": [],
+        "logradouro": "Rua Oragnof",
+        "regimeBens": "",
+        "inssContrib": "Não",
+        "inssDetails": "",
+        "photoIdFile": null,
+        "maritalStatus": "Solteiro(a)",
+        "nacionalidade": "Brasileira",
+        "educationLevel": "Ensino Superior Completo",
+        "photoIdFileName": ""
+      }
+    ],
+    "certificate": {
+      "has": "Não",
+      "type": "",
+      "validity": ""
+    },
+    "employeesQty": 0,
+    "implantation": {
+      "date": "2026-07-15",
+      "user": "Vivian",
+      "notes": "EMPRESA NOVA - NASCIMENTO 24/01/1994",
+      "signatureName": ""
+    },
+    "fiscalPasswords": {
+      "web": "",
+      "giss": "",
+      "state": "",
+      "ginfes": "",
+      "others": "",
+      "prodigi": "",
+      "simples": ""
+    }
+  },
+  {
+    "id": "kickoff_marcina_dantas_da_silva",
+    "company": {
+      "cnpj": "PENDENTE",
+      "email": "",
+      "regime": "Simples Nacional",
+      "telefone": "",
+      "razaoSocial": "MARCINA DANTAS DA SILVA",
+      "nomeFantasia": "MARCINA DANTAS DA SILVA",
+      "subestablished": "NÃ£o",
+      "prevAccountingHas": "MigraÃ§Ã£o"
+    },
+    "activity": {
+      "cnae": "",
+      "desc": "PrestaÃ§Ã£o de ServiÃ§os"
+    },
+    "partners": [
+      {
+        "id": "partner_marcina_1",
+        "name": "MARCINA DANTAS DA SILVA",
+        "isAdmin": true,
+        "isRfResp": true
+      }
+    ],
+    "certificate": {
+      "has": "NÃ£o"
+    },
+    "employeesQty": 0,
+    "implantation": {
+      "date": "2026-07-27",
+      "user": "ImplantaÃ§Ã£o RBM",
+      "notes": "Ficha recuperada a partir do PDF exportado"
+    }
+  },
+  {
+    "id": "kickoff_1787081663345",
+    "company": {
+      "uf": "SP",
+      "cep": "09896-340",
+      "cnpj": "",
+      "email": "nilsonborgesdossantos3@gmail.com",
+      "bairro": "Planalto",
+      "cidade": "São Bernardo do Campo",
+      "numero": "15",
+      "regime": "Simples Nacional",
+      "iptuFile": null,
+      "telefone": "(11) 96289-6135",
+      "logradouro": "Rua Elis Regina",
+      "complemento": "",
+      "razaoSocial": "Casas de Raçoes Nilson",
+      "iptuFileName": "",
+      "nomeFantasia": "Casas de Raçoes Nilson",
+      "subestablished": "Não",
+      "proofAddressFile": null,
+      "prevAccountingHas": "Nova",
+      "prevAccountingName": "",
+      "prevAccountingPhone": "",
+      "proofAddressFileName": "WhatsApp Image 2026-08-18 at 16.34.57 (1).jpeg",
+      "prevAccountingContact": ""
+    },
+    "activity": {
+      "cnae": "4789-0/04",
+      "desc": "VENDA RAÇÕES, GAIOLAS, COCA-COLA RETORNÁVEL E CERVEJA\n",
+      "cnaesFile": null,
+      "cnaesFileName": ""
+    },
+    "partners": [
+      {
+        "id": "partner_1787081111646_1",
+        "rg": "",
+        "uf": "SP",
+        "cep": "09896-340",
+        "cpf": "611.087.155-91",
+        "name": "Nilson Borges dos Santos",
+        "race": "Branca",
+        "email": "NILSONBORGESDOSSANTOS3@GMAIL.COM",
+        "phone": "(11) 96289-6135",
+        "bairro": "Planalto",
+        "cidade": "São Bernardo do Campo",
+        "father": "ANTONIO BORGES DOS SANTOS",
+        "mother": "RAQUEL ANA DOS SANTOS",
+        "isAdmin": true,
+        "retired": "Não",
+        "isRfResp": false,
+        "numCompl": "15",
+        "birthDate": "1966-03-08",
+        "dependents": [],
+        "logradouro": "Rua Elis Regina",
+        "regimeBens": "",
+        "inssContrib": "Sim",
+        "inssDetails": "EMPRESA SULAMERICANA ",
+        "photoIdFile": null,
+        "photoIdFiles": [
+          {
+            "file": null,
+            "name": "Scan2026-08-18_163724.pdf"
+          }
+        ],
+        "maritalStatus": "Solteiro(a)",
+        "nacionalidade": "Brasileira",
+        "educationLevel": "Ensino Médio Incompleto",
+        "photoIdFileName": "Scan2026-08-18_163724.pdf"
+      }
+    ],
+    "certificate": {
+      "has": "Não",
+      "type": "",
+      "validity": ""
+    },
+    "employeesQty": 0,
+    "implantation": {
+      "date": "2026-08-18",
+      "user": "Vivian",
+      "notes": "CNAE secundário - 4723-7/00 \nNão tem filial\nEncerramento da empresa anterior 291861340001-20\nSócia não terá retirada de prólabore.",
+      "signatureName": ""
+    },
+    "fiscalPasswords": {
+      "web": "",
+      "giss": "",
+      "state": "",
+      "ginfes": "",
+      "others": "",
+      "prodigi": "",
+      "simples": ""
+    }
+  },
+  {
+    "id": "kickoff_1789070732623",
+    "company": {
+      "uf": "",
+      "cep": "",
+      "cnpj": "34.367.741/0001-27",
+      "email": "",
+      "bairro": "",
+      "cidade": "",
+      "numero": "",
+      "regime": "SIMPLES NACIONAL",
+      "debtHas": "NÃO",
+      "iptuFile": null,
+      "telefone": "",
+      "logradouro": "",
+      "complemento": "",
+      "debtDetails": "",
+      "razaoSocial": "ESPAÇO RUBI EVENTOS",
+      "consignedHas": "NÃO",
+      "employeesHas": "NÃO",
+      "iptuFileName": "",
+      "nomeFantasia": "ESPAÇO RUBI",
+      "capitalSocial": "100.000,00",
+      "installmentHas": "NÃO",
+      "subestablished": "NÃO",
+      "consignedDetails": "",
+      "proofAddressFile": null,
+      "prevAccountingHas": "NOVA",
+      "installmentDetails": "",
+      "prevAccountingName": "",
+      "prevAccountingPhone": "",
+      "proofAddressFileName": "",
+      "prevAccountingContact": ""
+    },
+    "activity": {
+      "cnae": "",
+      "desc": "",
+      "cnaesFile": null,
+      "cnaesFileName": ""
+    },
+    "partners": [
+      {
+        "id": "partner_1789070071200_1",
+        "rg": "24799497",
+        "uf": "SP",
+        "cep": "09980-550",
+        "cpf": "155.353.778-56",
+        "name": "CLEIDE BATISTA DA SILVA DAVID",
+        "race": "BRANCA",
+        "email": "",
+        "phone": "",
+        "bairro": "SERRARIA",
+        "cidade": "DIADEMA",
+        "father": "DIJALMA BATISTA DA SILVA",
+        "mother": "INACIA EDITE DA SILVA",
+        "isAdmin": false,
+        "retired": "NÃO",
+        "isRfResp": false,
+        "numCompl": "490 CASA 02",
+        "birthDate": "1971-11-01",
+        "dependents": [],
+        "logradouro": "AVENIDA AFONSO MONTEIRO DA CRUZ",
+        "regimeBens": "COMUNHÃO PARCIAL DE BENS",
+        "inssContrib": "SIM",
+        "inssDetails": "BIROUTEC",
+        "photoIdFile": null,
+        "photoIdFiles": [
+          {
+            "file": null,
+            "name": "CNH CLEIDE.JPG"
+          }
+        ],
+        "prolaboreHas": "NÃO",
+        "prolaboreVal": "",
+        "maritalStatus": "CASADO(A)",
+        "nacionalidade": "BRASILEIRA",
+        "educationLevel": "",
+        "photoIdFileName": "CNH Cleide.jpg"
+      }
+    ],
+    "certificate": {
+      "has": "SIM",
+      "type": "",
+      "validity": ""
+    },
+    "tipoServico": "MIGRACAO",
+    "employeesQty": 0,
+    "implantation": {
+      "date": "2026-09-10",
+      "user": "",
+      "notes": "",
+      "signatureName": ""
+    },
+    "alterationItems": {
+      "nome": false,
+      "socio": false,
+      "outros": false,
+      "regime": false,
+      "endereco": false,
+      "financas": false,
+      "atividade": false,
+      "certFiscal": false,
+      "outrosDesc": "",
+      "funcionarios": false
+    },
+    "fiscalPasswords": {
+      "web": "",
+      "giss": "",
+      "state": "",
+      "ginfes": "",
+      "others": "",
+      "prodigi": "",
+      "simples": ""
+    }
+  },
+  {
+    "id": "kickoff_1789071002197",
+    "company": {
+      "uf": "",
+      "cep": "",
+      "cnpj": "01.197.484/0001-73",
+      "email": "cleide@biroutec.com.br",
+      "bairro": "",
+      "cidade": "",
+      "numero": "",
+      "regime": "SIMPLES NACIONAL",
+      "debtHas": "NÃO SEI",
+      "iptuFile": null,
+      "telefone": "(11) 98953-8742",
+      "logradouro": "",
+      "complemento": "",
+      "debtDetails": "",
+      "razaoSocial": " BIROUTEC COMERCIO DE MAQUINAS E SERVICOS ",
+      "consignedHas": "NÃO SEI",
+      "employeesHas": "SIM",
+      "iptuFileName": "",
+      "nomeFantasia": "",
+      "capitalSocial": "10.000,00",
+      "installmentHas": "NÃO SEI",
+      "subestablished": "NÃO",
+      "consignedDetails": "",
+      "proofAddressFile": null,
+      "prevAccountingHas": "NOVA",
+      "installmentDetails": "",
+      "prevAccountingName": "",
+      "prevAccountingPhone": "",
+      "proofAddressFileName": "",
+      "prevAccountingContact": ""
+    },
+    "activity": {
+      "cnae": "",
+      "desc": "",
+      "cnaesFile": null,
+      "cnaesFileName": ""
+    },
+    "partners": [
+      {
+        "id": "partner_1789070764024_1",
+        "rg": "24799497",
+        "uf": "SP",
+        "cep": "09980-550",
+        "cpf": "155.353.778-56",
+        "name": "CLEIDE BATISTA DA SILVA DAVID",
+        "race": "",
+        "email": "",
+        "phone": "",
+        "bairro": "SERRARIA",
+        "cidade": "DIADEMA",
+        "father": "DIJALMA BATISTA DA SILVA",
+        "mother": "INACIA EDITE DA SILVA",
+        "isAdmin": false,
+        "retired": "NÃO",
+        "isRfResp": false,
+        "numCompl": "490",
+        "birthDate": "1971-11-01",
+        "dependents": [],
+        "logradouro": "AVENIDA AFONSO MONTEIRO DA CRUZ",
+        "regimeBens": "",
+        "inssContrib": "NÃO",
+        "inssDetails": "",
+        "photoIdFile": null,
+        "photoIdFiles": [
+          {
+            "file": null,
+            "name": "CNH CLEIDE.JPG"
+          }
+        ],
+        "prolaboreHas": "NÃO",
+        "prolaboreVal": "",
+        "maritalStatus": "",
+        "nacionalidade": "BRASILEIRA",
+        "educationLevel": "",
+        "photoIdFileName": "CNH CLEIDE.JPG"
+      }
+    ],
+    "certificate": {
+      "has": "SIM",
+      "type": "",
+      "validity": ""
+    },
+    "tipoServico": "MIGRACAO",
+    "employeesQty": 0,
+    "implantation": {
+      "date": "2026-09-10",
+      "user": "",
+      "notes": "DADOS BÁSICOS, PREENCHIDOS",
+      "signatureName": ""
+    },
+    "alterationItems": {
+      "nome": false,
+      "socio": false,
+      "outros": false,
+      "regime": false,
+      "endereco": false,
+      "financas": false,
+      "atividade": false,
+      "certFiscal": false,
+      "outrosDesc": "",
+      "funcionarios": false
+    },
+    "fiscalPasswords": {
+      "web": "",
+      "giss": "",
+      "state": "",
+      "ginfes": "",
+      "others": "",
+      "prodigi": "",
+      "simples": ""
+    }
+  },
+  {
+    "id": "kickoff_1789479479731",
+    "company": {
+      "uf": "SP",
+      "cep": "13140-248",
+      "cnpj": "",
+      "email": "jasmimdesign3d@gmail.com",
+      "bairro": "JARDIM DE ITAPOAN",
+      "cidade": "PAULÍNIA",
+      "numero": "444",
+      "regime": "",
+      "debtHas": "NÃO",
+      "iptuFile": null,
+      "telefone": "(19) 99557-9565",
+      "logradouro": "AVENIDA ARMELINDA PADULA PIETROBOM",
+      "complemento": "",
+      "debtDetails": "",
+      "razaoSocial": "BEVIK TECH E SOLUTIONS LTDA",
+      "consignedHas": "NÃO",
+      "employeesHas": "NÃO",
+      "iptuFileName": "IPTU EMPRESA KATHIA.pdf",
+      "nomeFantasia": "BEVIK TECH 3D",
+      "razaoSocial2": "",
+      "razaoSocial3": "",
+      "capitalSocial": "200.000,00",
+      "installmentHas": "NÃO",
+      "subestablished": "NÃO",
+      "consignedDetails": "",
+      "proofAddressFile": null,
+      "prevAccountingHas": "NOVA",
+      "installmentDetails": "",
+      "prevAccountingName": "",
+      "prevAccountingPhone": "",
+      "proofAddressFileName": "",
+      "prevAccountingContact": ""
+    },
+    "activity": {
+      "cnae": "4751-2/00 4789-0/99 2229-3/01 2229-3/99 3240-0/99 4763-6/01 9511-8/00 5211-7/99 8599-6/99",
+      "desc": "COMERCIO DE IMPRESSORAS 3D, INSUMOS, FABRICAÇÃO E COMERCIALIZAÇÃO DE PRODUTOS IMPRESSOS EM 3D, ASSISTÊNCIA TÉCNICA",
+      "cnaesFile": null,
+      "cnaesFileName": ""
+    },
+    "partners": [
+      {
+        "id": "partner_1789474580766_1",
+        "rg": "",
+        "uf": "SP",
+        "cep": "13142-543",
+        "cpf": "296.060.488-10",
+        "name": " KATHIA SHIRLEY KREPSKY FRANCO",
+        "race": "",
+        "email": "jasmimdesign3d@gmail.com",
+        "phone": "(11) 95091-0051",
+        "bairro": "SÃO BENTO",
+        "cidade": "PAULÍNIA",
+        "father": "IVO KREPSKY",
+        "mother": "MARLY PEIXER KREPSKI",
+        "isAdmin": true,
+        "retired": "NÃO",
+        "isRfResp": true,
+        "numCompl": "229",
+        "birthDate": "1983-02-14",
+        "dependents": [],
+        "logradouro": "RUA EMBAÚBA",
+        "regimeBens": "",
+        "inssContrib": "NÃO",
+        "inssDetails": "",
+        "photoIdFile": null,
+        "photoIdFiles": [
+          {
+            "file": null,
+            "name": "CNH KATHIA VAL 2036.PDF"
+          },
+          {
+            "file": null,
+            "name": "FATURA-9111629543275-1789418634264.PDF"
+          }
+        ],
+        "prolaboreHas": "NÃO",
+        "prolaboreVal": "",
+        "maritalStatus": "",
+        "nacionalidade": "BRASILEIRA",
+        "educationLevel": "",
+        "photoIdFileName": "CNH KATHIA VAL 2036.PDF"
+      },
+      {
+        "id": "partner_1789477972978_2",
+        "rg": "",
+        "uf": "SP",
+        "cep": "13142-543",
+        "cpf": "296.060.488-10",
+        "name": "RAFAEL FRANCO",
+        "race": "",
+        "email": "",
+        "phone": "",
+        "bairro": "SÃO BENTO",
+        "cidade": "PAULÍNIA",
+        "father": "GILBERTO ALVARO FRANCO",
+        "mother": "LUZILEI VILERA FRANCO",
+        "isAdmin": false,
+        "retired": "NÃO",
+        "isRfResp": false,
+        "numCompl": "229",
+        "birthDate": "1983-02-14",
+        "dependents": [],
+        "logradouro": "RUA EMBAÚBA",
+        "regimeBens": "",
+        "inssContrib": "NÃO",
+        "inssDetails": "",
+        "photoIdFile": null,
+        "photoIdFiles": [
+          {
+            "file": null,
+            "name": "CNH RAFAEL NOVA.PDF"
+          },
+          {
+            "file": null,
+            "name": "BOLETOLINK.ASPX.PDF"
+          }
+        ],
+        "prolaboreHas": "NÃO",
+        "prolaboreVal": "",
+        "maritalStatus": "",
+        "nacionalidade": "BRASILEIRA",
+        "educationLevel": "",
+        "photoIdFileName": "CNH RAFAEL NOVA.PDF"
+      }
+    ],
+    "certificate": {
+      "has": "NÃO",
+      "type": "",
+      "validity": ""
+    },
+    "tipoServico": "ABERTURA",
+    "employeesQty": 0,
+    "implantation": {
+      "date": "2026-09-15",
+      "user": "",
+      "notes": "OS 2 SÓCIOS TERÁ RETIRADA DE PRO LABORE DE 1 SALÁRIO MÍNIMO\n",
+      "signatureName": ""
+    },
+    "alterationItems": {
+      "nome": false,
+      "socio": false,
+      "outros": false,
+      "regime": false,
+      "endereco": false,
+      "financas": false,
+      "atividade": false,
+      "certFiscal": false,
+      "outrosDesc": "",
+      "funcionarios": false
+    },
+    "fiscalPasswords": {
+      "web": "",
+      "giss": "",
+      "state": "",
+      "ginfes": "",
+      "others": "",
+      "prodigi": "",
+      "simples": ""
+    }
+  },
+  {
+    "id": "kickoff_1788877984491",
+    "company": {
+      "uf": "SP",
+      "cep": "09725-620",
+      "cnpj": "34.286.717/0001-63",
+      "email": "sivonaldojesusdasilva@gmail.com",
+      "bairro": "CENTRO",
+      "cidade": "SÃO BERNARDO DO CAMPO",
+      "numero": "292",
+      "regime": "",
+      "debtHas": "NÃO",
+      "iptuFile": null,
+      "telefone": "(11) 94983-8854",
+      "logradouro": "RUA JURUBATUBA",
+      "complemento": "SALA 16",
+      "debtDetails": "",
+      "razaoSocial": " SIVONALDO DA SILVA 42829397886",
+      "consignedHas": "NÃO",
+      "employeesHas": "NÃO",
+      "iptuFileName": "IPTU.jpg",
+      "nomeFantasia": "",
+      "capitalSocial": "",
+      "installmentHas": "NÃO",
+      "subestablished": "NÃO",
+      "consignedDetails": "",
+      "proofAddressFile": null,
+      "prevAccountingHas": "NOVA",
+      "installmentDetails": "",
+      "prevAccountingName": "",
+      "prevAccountingPhone": "",
+      "proofAddressFileName": "",
+      "prevAccountingContact": ""
+    },
+    "activity": {
+      "cnae": "",
+      "desc": "",
+      "cnaesFile": null,
+      "cnaesFileName": ""
+    },
+    "partners": [
+      {
+        "id": "partner_1788876946933_1",
+        "rg": "",
+        "uf": "",
+        "cep": "",
+        "cpf": "",
+        "name": "SIVONALDO DA SILVA",
+        "race": "",
+        "email": "",
+        "phone": "",
+        "bairro": "",
+        "cidade": "",
+        "father": "",
+        "mother": "",
+        "isAdmin": false,
+        "retired": "NÃO",
+        "isRfResp": false,
+        "numCompl": "",
+        "birthDate": "",
+        "dependents": [],
+        "logradouro": "",
+        "regimeBens": "",
+        "inssContrib": "NÃO",
+        "inssDetails": "",
+        "photoIdFile": null,
+        "photoIdFiles": [],
+        "prolaboreHas": "NÃO",
+        "prolaboreVal": "",
+        "maritalStatus": "",
+        "nacionalidade": "BRASILEIRA",
+        "educationLevel": "",
+        "photoIdFileName": ""
+      }
+    ],
+    "certificate": {
+      "has": "NÃO",
+      "type": "",
+      "validity": ""
+    },
+    "tipoServico": "ABERTURA",
+    "employeesQty": 0,
+    "implantation": {
+      "date": "2026-09-08",
+      "user": "VIVIAN",
+      "notes": "ALTERAÇÃO CONTRATUAL",
+      "signatureName": ""
+    },
+    "alterationItems": {
+      "nome": false,
+      "socio": false,
+      "outros": false,
+      "regime": false,
+      "endereco": true,
+      "financas": false,
+      "atividade": false,
+      "certFiscal": false,
+      "outrosDesc": "",
+      "funcionarios": false
+    },
+    "fiscalPasswords": {
+      "web": "",
+      "giss": "",
+      "state": "",
+      "ginfes": "",
+      "others": "",
+      "prodigi": "",
+      "simples": ""
+    }
+  },
+  {
+    "id": "kickoff_1789065753971",
+    "company": {
+      "uf": "SP",
+      "cep": "09040-270",
+      "cnpj": "63.795.007/0001-67",
+      "email": "generalbikestore@gmail.com",
+      "bairro": "JARDIM BELA VISTA",
+      "cidade": "SANTO ANDRÉ",
+      "numero": "107",
+      "regime": "",
+      "debtHas": "NÃO",
+      "iptuFile": null,
+      "telefone": "(11) 99124-5031",
+      "logradouro": "RUA DA FONTE",
+      "complemento": "2 ANDAR, APTO24",
+      "debtDetails": "",
+      "razaoSocial": "GENERAL BIKE STORE LTDA",
+      "consignedHas": "NÃO",
+      "employeesHas": "NÃO",
+      "iptuFileName": "IPTU Andre.jpg",
+      "nomeFantasia": "",
+      "capitalSocial": "",
+      "installmentHas": "NÃO",
+      "subestablished": "NÃO",
+      "consignedDetails": "",
+      "proofAddressFile": null,
+      "prevAccountingHas": "NOVA",
+      "installmentDetails": "",
+      "prevAccountingName": "",
+      "prevAccountingPhone": "",
+      "proofAddressFileName": "",
+      "prevAccountingContact": ""
+    },
+    "activity": {
+      "cnae": "",
+      "desc": "",
+      "cnaesFile": null,
+      "cnaesFileName": ""
+    },
+    "partners": [
+      {
+        "id": "partner_1789065592900_1",
+        "rg": "",
+        "uf": "",
+        "cep": "",
+        "cpf": "",
+        "name": "SOCIO GENERAL BIKE STORE",
+        "race": "",
+        "email": "",
+        "phone": "",
+        "bairro": "",
+        "cidade": "",
+        "father": "",
+        "mother": "",
+        "isAdmin": false,
+        "retired": "NÃO",
+        "isRfResp": false,
+        "numCompl": "",
+        "birthDate": "",
+        "dependents": [],
+        "logradouro": "",
+        "regimeBens": "",
+        "inssContrib": "NÃO",
+        "inssDetails": "",
+        "photoIdFile": null,
+        "photoIdFiles": [],
+        "prolaboreHas": "NÃO",
+        "prolaboreVal": "",
+        "maritalStatus": "",
+        "nacionalidade": "BRASILEIRA",
+        "educationLevel": "",
+        "photoIdFileName": ""
+      }
+    ],
+    "certificate": {
+      "has": "NÃO",
+      "type": "",
+      "validity": ""
+    },
+    "tipoServico": "ABERTURA",
+    "employeesQty": 0,
+    "implantation": {
+      "date": "2026-09-10",
+      "user": "VIVIAN",
+      "notes": "",
+      "signatureName": ""
+    },
+    "alterationItems": {
+      "nome": false,
+      "socio": false,
+      "outros": false,
+      "regime": false,
+      "endereco": true,
+      "financas": false,
+      "atividade": false,
+      "certFiscal": false,
+      "outrosDesc": "",
+      "funcionarios": false
+    },
+    "fiscalPasswords": {
+      "web": "",
+      "giss": "",
+      "state": "",
+      "ginfes": "",
+      "others": "",
+      "prodigi": "",
+      "simples": ""
+    }
+  },
+  {
+    "id": "kickoff_1789569682743",
+    "company": {
+      "uf": "SP",
+      "cep": "09911-140",
+      "cnpj": "",
+      "email": "joycepadilha13@gmail.com",
+      "bairro": "CENTRO",
+      "cidade": "DIADEMA",
+      "numero": "257",
+      "regime": "",
+      "debtHas": "NÃO",
+      "iptuFile": null,
+      "telefone": "(11) 99349-1839",
+      "logradouro": "PRAÇA LAURO MICHELS",
+      "complemento": "03",
+      "debtDetails": "",
+      "razaoSocial": "JMSABINO",
+      "consignedHas": "NÃO",
+      "employeesHas": "NÃO",
+      "iptuFileName": "",
+      "nomeFantasia": "JM IMOVEIS",
+      "razaoSocial2": "",
+      "razaoSocial3": "",
+      "capitalSocial": "1.000,00",
+      "installmentHas": "NÃO",
+      "subestablished": "NÃO",
+      "consignedDetails": "",
+      "proofAddressFile": null,
+      "prevAccountingHas": "NOVA",
+      "installmentDetails": "",
+      "prevAccountingName": "",
+      "prevAccountingPhone": "",
+      "proofAddressFileName": "",
+      "prevAccountingContact": ""
+    },
+    "activity": {
+      "cnae": "",
+      "desc": "VENDA DE IMOVEIS",
+      "cnaesFile": null,
+      "cnaesFileName": ""
+    },
+    "partners": [
+      {
+        "id": "partner_1789568770726_1",
+        "rg": "",
+        "uf": "SP",
+        "cep": "09911-010",
+        "cpf": "313.565.848-10",
+        "name": "JOYCE MEIRE PADILHA DE QUEIROZ GOES",
+        "race": "",
+        "email": "joycepadilha13@gmail.com",
+        "phone": "(11) 99349-1839",
+        "bairro": "CENTRO",
+        "cidade": "DIADEMA",
+        "father": "MILTON FERREIRA GOES",
+        "mother": "ROSIMEIRE PADILHA DE QUEIROZ",
+        "isAdmin": true,
+        "retired": "NÃO",
+        "isRfResp": true,
+        "numCompl": "170 APT0 211",
+        "birthDate": "1983-08-13",
+        "dependents": [
+          {
+            "cpf": "549.490.108-40",
+            "name": "HELENA QUEIROZ SABINO",
+            "birthDate": "2018-04-26"
+          }
+        ],
+        "logradouro": "RUA ARTHUR SAMPAIO MOREIRA",
+        "regimeBens": "",
+        "inssContrib": "NÃO",
+        "inssDetails": "",
+        "photoIdFile": null,
+        "photoIdFiles": [
+          {
+            "file": null,
+            "name": "WHATSAPP IMAGE 2026-09-16 AT 11.39.27.JPG"
+          },
+          {
+            "file": null,
+            "name": "WHATSAPP IMAGE 2026-09-16 AT 11.40.50.JPG"
+          }
+        ],
+        "prolaboreHas": "NÃO",
+        "prolaboreVal": "",
+        "maritalStatus": "",
+        "nacionalidade": "BRASILEIRA",
+        "educationLevel": "",
+        "photoIdFileName": "WHATSAPP IMAGE 2026-09-16 AT 11.39.27.JPG"
+      }
+    ],
+    "certificate": {
+      "has": "NÃO",
+      "type": "",
+      "validity": ""
+    },
+    "tipoServico": "ABERTURA",
+    "employeesQty": 0,
+    "implantation": {
+      "date": "2026-09-16",
+      "user": "",
+      "notes": "INDEPENDENTE DE MOVIMENTAÇÃO TERÁ RETIRADA DE PROLABORE.",
+      "signatureName": ""
+    },
+    "alterationItems": {
+      "nome": false,
+      "socio": false,
+      "outros": false,
+      "regime": false,
+      "endereco": false,
+      "financas": false,
+      "atividade": false,
+      "certFiscal": false,
+      "outrosDesc": "",
+      "funcionarios": false
+    },
+    "fiscalPasswords": {
+      "web": "",
+      "giss": "",
+      "state": "",
+      "ginfes": "",
+      "others": "",
+      "prodigi": "",
+      "simples": ""
+    }
+  }
+];
+    for (let client of initialClients) {
+      await dbSave(client);
+    }
   }
 }
 

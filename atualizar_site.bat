@@ -54,24 +54,22 @@ echo Detectando alteracoes locais...
 git add .
 
 git diff-index --quiet HEAD --
-if %errorlevel% equ 0 (
-    echo Nao ha novas alteracoes para enviar. O site ja esta atualizado!
+if %errorlevel% neq 0 (
     echo.
-    timeout /t 3 >nul
-    exit /b
+    echo Criando novo ponto de atualizacao...
+    git commit -m "Atualizacao automatica RBM de dados e sistema"
 )
 
 echo.
-echo Enviando as alteracoes para o GitHub...
-git commit -m "Atualizacao automatica RBM"
+echo Sincronizando e enviando para o GitHub (Netlify)...
 git push origin main
 
 if %errorlevel% equ 0 (
     echo.
-    echo [SUCESSO] Site atualizado com sucesso no GitHub!
+    echo [SUCESSO] Site atualizado com sucesso no GitHub e Netlify!
 ) else (
     echo.
-    echo [ERRO] Falha ao enviar para o GitHub.
+    echo [ERRO] Falha ao enviar para o GitHub. Verifique sua conexao.
 )
 
 echo.
