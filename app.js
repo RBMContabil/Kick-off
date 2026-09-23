@@ -3583,6 +3583,22 @@ async function renderDashboard() {
     return matchesSearch && matchesRegime;
   });
 
+    // Ordena por ordem de chegada (a empresa mais recente/última que entrou fica no topo)
+  filtered.sort((a, b) => {
+    const getSortKey = (item) => {
+      if (!item) return 0;
+      if (item.id) {
+        const match = item.id.match(/\d+/);
+        if (match) return parseInt(match[0]);
+      }
+      if (item.implantation && item.implantation.date) {
+        return new Date(item.implantation.date).getTime() || 0;
+      }
+      return 0;
+    };
+    return getSortKey(b) - getSortKey(a);
+  });
+
   document.getElementById('metric-total').textContent = list.length;
   document.getElementById('metric-simples').textContent = list.filter(item => item.company && item.company.regime === 'Simples Nacional').length;
   document.getElementById('metric-presumido').textContent = list.filter(item => item.company && item.company.regime === 'Lucro Presumido').length;
